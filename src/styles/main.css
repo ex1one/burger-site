@@ -1,0 +1,20 @@
+@import './fonts.css';
+@import './normalize.css';
+
+:root {
+	/* COLORS */
+
+	--white: #fff;
+	--main-color: #131316;
+	--secondary-color: #1c1c21;
+	--gray-color: '#8585ad';
+	--primary-light: '#f2f2f3';
+
+	/* VARIABLES */
+}
+
+* {
+	font-family: JetBrains Mono, sans-serif;
+	font-weight: 400;
+	box-sizing: border-box;
+}

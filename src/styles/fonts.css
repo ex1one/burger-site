@@ -1,0 +1,12 @@
+@font-face {
+	font-family: 'JetBrains Mono';
+	src: url('../../public/fonts/JetBrains_Mono/JetBrainsMono-Regular.ttf'),
+		url('../../public/fonts/JetBrains_Mono/JetBrainsMono-Medium.ttf'),
+		url('../../public/fonts/JetBrains_Mono/JetBrainsMono-Bold.ttf'),
+		url('../../public/fonts/JetBrains_Mono/JetBrainsMono-SemiBold.ttf');
+}
+
+@font-face {
+	font-family: 'Iceland';
+	src: url('../../public/fonts/Iceland/Iceland-Regular.ttf');
+}
