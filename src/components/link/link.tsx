@@ -2,6 +2,8 @@ import { icons } from '@src/consts';
 import { ReactNode, Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 
+import styles from './link.module.css';
+
 interface LinkProps {
 	to: string;
 	children: ReactNode;
@@ -14,9 +16,7 @@ export function Link({ to, children, leftIcon }: LinkProps) {
 	return (
 		<NavLink
 			to={to}
-			// TODO: Убрать style. После того как создам стили для текста
-			style={{ display: 'flex', gap: 8, alignItems: 'center' }}
-			className='text text_type_main-small'
+			className={styles.link}
 		>
 			{({ isActive }) => {
 				return (

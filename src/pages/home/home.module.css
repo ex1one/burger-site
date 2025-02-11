@@ -37,7 +37,8 @@
 }
 
 .tabsList {
-	display: flex;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
 }
 
 .menuItemsWrapper {
@@ -88,10 +89,6 @@
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
-}
-
-.constructorListBurgerItem {
-	/* margin-left: 32px; */
 }
 
 .price {

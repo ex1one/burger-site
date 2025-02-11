@@ -1,34 +1,32 @@
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
-import styles from './menu-items.module.css';
+import { Ingredient, Ingredients } from '@src/api/ingredients/types';
 
-interface Item {
-	_id: string;
-	name: string;
-	type: string;
-	proteins: number;
-	fat: number;
-	carbohydrates: number;
-	calories: number;
-	price: number;
-	image: string;
-	image_mobile: string;
-	image_large: string;
-}
+import styles from './menu-items.module.css';
 
 interface MenuItemsProps {
 	title: string;
-	items: Item[];
+	items: Ingredients;
+	onClickItem?: (ingredient: Ingredient) => void;
 }
 // TODO: Переименовать этот компонент
-export function MenuItems({ title, items }: MenuItemsProps) {
+export function MenuItems({ title, items, onClickItem }: MenuItemsProps) {
+	const handleClick = (ingredient: Ingredient) => {
+		onClickItem?.(ingredient);
+	};
+
 	return (
 		<div className={styles.wrapper}>
 			<h4 className='text text_type_main-medium'>{title}</h4>
 			<div className={styles.list}>
 				{items.map((el) => {
 					return (
-						<div className={styles.item}>
+						<div
+							key={el._id}
+							className={styles.item}
+							onClick={() => handleClick(el)}
+							style={{ cursor: 'pointer' }}
+						>
 							<img
 								loading='lazy'
 								src={el.image}

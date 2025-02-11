@@ -1,0 +1,38 @@
+.content {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.image {
+	aspect-ratio: 3 / 2;
+	object-fit: cover;
+}
+
+.info {
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	gap: 16px;
+}
+
+.ingredientName {
+	color: var(--primary-light);
+	composes: text text_type_main-medium from global;
+}
+
+.nutrientsInfo {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 32px;
+	text-align: center;
+}
+
+.nutrient {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
