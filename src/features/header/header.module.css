@@ -1,0 +1,22 @@
+.header {
+	padding: 16px 0;
+	background-color: var(--secondary-color);
+}
+
+.nav {
+	display: flex;
+	justify-content: space-between;
+	gap: 20px;
+	align-items: center;
+}
+
+.navList {
+	display: flex;
+	gap: 20px;
+	align-items: center;
+}
+
+.logoContainer {
+	display: flex;
+	justify-content: center;
+}

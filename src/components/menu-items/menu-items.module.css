@@ -1,0 +1,38 @@
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.list {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 24px;
+}
+
+.item {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+.image {
+	aspect-ratio: 3/2;
+	object-fit: cover;
+}
+
+.itemContentWrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.itemContentHeader {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
