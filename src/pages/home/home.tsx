@@ -1,37 +1,76 @@
-import {
-	Tab,
-	CurrencyIcon,
-	ConstructorElement,
-	Button,
-	DragIcon,
-} from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState } from 'react';
-import { mockData } from '@src/consts';
-import { useGetIngredients } from '@src/hooks';
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useEffect, useRef, useState } from 'react';
 import { Header } from '@src/features';
-import { Container, IngredientDetailsModal, MenuItems, OrderDetailModal } from '@src/components';
-import { Ingredient, Ingredients } from '@src/api/ingredients/types';
+import {
+	Container,
+	IngredientDetailsModal,
+	BurgerIngredients,
+	OrderDetailModal,
+	BurgerConstructor,
+	CheckoutButton,
+} from '@src/components';
+import { Ingredient } from '@src/api/ingredients/types';
+import { useAppDispatch, useAppSelector } from '@src/hooks';
+// TODO: Не нравится импорты selectors. Их наверное стоит хранить в отдельной директории.
+import { fetchIngredients, ingredientsSelector } from '@src/services/ingredients/ingredientsSlice';
 
 import styles from './home.module.css';
+import { openModal } from '@src/services/modals/modalsSlice';
+import { setIngredientDetail } from '@src/services/ingredientDetail/ingredientDetailSlice';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export function Home() {
-	const { data: ingredients, isLoading, error } = useGetIngredients();
-	const [selectedTab, setSelectedTab] = useState('rolls');
-	const [open, setOpen] = useState(false);
-	const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>();
-	const [isOpenOrderDetailModal, setIsOpenOrderDetailModal] = useState(false);
+	const dispatch = useAppDispatch();
+	const { ingredients, isLoading, error } = useAppSelector(ingredientsSelector);
 
-	const [order, setOrder] = useState<Ingredients>([]);
+	const [selectedTab, setSelectedTab] = useState('rolls');
+	const menuItemsRef = useRef<HTMLDivElement>(null);
 
 	const handleIngredientClick = (ingredient: Ingredient) => {
-		setSelectedIngredient(ingredient);
-		setOpen(true);
+		dispatch(setIngredientDetail(ingredient));
+		dispatch(openModal('INGREDIENT_DETAIL_MODAL'));
 	};
 
-	const handleIngredientDetailsModalClose = () => {
-		setOpen(false);
-		setSelectedIngredient(undefined);
+	// TODO: Переписать
+	const handleScroll = () => {
+		const wrapperRect = menuItemsRef.current?.getBoundingClientRect();
+		// @ts-expect-error
+		const itemElements = Array.from(menuItemsRef.current?.children);
+
+		let closestTab = undefined;
+		let closestDistance = Infinity;
+		const wrapperTop = wrapperRect?.top || 0;
+
+		itemElements.forEach((item) => {
+			const rect = item.getBoundingClientRect();
+			const itemTop = rect.top;
+			const distance = Math.abs(itemTop - wrapperTop);
+
+			if (distance < closestDistance) {
+				closestDistance = distance;
+				// @ts-expect-error
+				closestTab = item.dataset.tab;
+			}
+		});
+
+		if (closestTab && closestTab !== selectedTab) {
+			setSelectedTab(closestTab);
+		}
 	};
+
+	const handleTabClick = (value: string) => {
+		setSelectedTab(value);
+		const targetItem = menuItemsRef.current?.querySelector(`[data-tab="${value}"]`);
+		if (targetItem) {
+			targetItem.scrollIntoView({ behavior: 'smooth' });
+		}
+	};
+
+	// TODO: Убрать после интеграции с react-router-dom
+	useEffect(() => {
+		dispatch(fetchIngredients());
+	}, []);
 
 	if (isLoading) {
 		return 'Загрузка...';
@@ -47,127 +86,79 @@ export function Home() {
 
 	return (
 		<>
-			<div className={styles.container}>
-				<Header />
-				<main role={styles.mainContent}>
-					<Container>
-						<div className={styles.wrapperSections}>
-							<section className={styles.menuSection}>
-								<h1 className='text text_type_main-large'>Соберите бургер</h1>
-								<div className={styles.menuList}>
-									<div className={styles.tabsList}>
-										<Tab
-											value='rolls'
-											active={selectedTab === 'rolls'}
-											onClick={setSelectedTab}
-										>
-											Булки
-										</Tab>
-										<Tab
-											value='sauce'
-											active={selectedTab === 'sauce'}
-											onClick={setSelectedTab}
-										>
-											Соусы
-										</Tab>
-										<Tab
-											value='toppings'
-											active={selectedTab === 'toppings'}
-											onClick={setSelectedTab}
-										>
-											Начинки
-										</Tab>
-									</div>
-									<div className={styles.menuItemsWrapper}>
-										<MenuItems
-											key='burgers'
-											title='Булки'
-											items={burgers}
-											onClickItem={handleIngredientClick}
-										/>
-										<MenuItems
-											key='sauces'
-											title='Соусы'
-											items={sauces}
-											onClickItem={handleIngredientClick}
-										/>
-										<MenuItems
-											key='toppings'
-											title='Начинки'
-											items={toppings}
-											onClickItem={handleIngredientClick}
-										/>
-									</div>
-								</div>
-							</section>
-							<section className={styles.constructorSection}>
-								<div className={styles.constructorList}>
-									<ConstructorElement
-										type='top'
-										price={20}
-										text='Краторная булка N-200i (верх)'
-										thumbnail={'/images/Краторная булка.png'}
-										isLocked
-										extraClass={styles.constructorListBurgerItem}
-									/>
-									<div className={styles.ingredientsList}>
-										{mockData.map((ingredient) => (
-											<div
-												key={ingredient._id}
-												className={styles.ingredientsListItem}
+			<DndProvider backend={HTML5Backend}>
+				<div className={styles.container}>
+					<Header />
+					<main role={styles.mainContent}>
+						<Container>
+							<div className={styles.wrapperSections}>
+								<section className={styles.menuSection}>
+									<h1 className='text text_type_main-large'>Соберите бургер</h1>
+									<div className={styles.menuList}>
+										<div className={styles.tabsList}>
+											<Tab
+												value='rolls'
+												active={selectedTab === 'rolls'}
+												onClick={handleTabClick}
 											>
-												<DragIcon
-													type='primary'
-													className={styles.dragonIcon}
-												/>
-												<ConstructorElement
-													text={ingredient.name}
-													price={ingredient.price}
-													thumbnail={ingredient.image}
-												/>
-											</div>
-										))}
+												Булки
+											</Tab>
+											<Tab
+												value='sauces'
+												active={selectedTab === 'sauces'}
+												onClick={handleTabClick}
+											>
+												Соусы
+											</Tab>
+											<Tab
+												value='toppings'
+												active={selectedTab === 'toppings'}
+												onClick={handleTabClick}
+											>
+												Начинки
+											</Tab>
+										</div>
+										<div
+											className={styles.burgerIngredientsWrapper}
+											ref={menuItemsRef}
+											onScroll={handleScroll}
+										>
+											<BurgerIngredients
+												key='rolls'
+												name='rolls'
+												title='Булки'
+												items={burgers}
+												onClickItem={handleIngredientClick}
+											/>
+											<BurgerIngredients
+												key='sauces'
+												name='sauces'
+												title='Соусы'
+												items={sauces}
+												onClickItem={handleIngredientClick}
+											/>
+											<BurgerIngredients
+												key='toppings'
+												name='toppings'
+												title='Начинки'
+												items={toppings}
+												onClickItem={handleIngredientClick}
+											/>
+										</div>
 									</div>
-									<ConstructorElement
-										type='bottom'
-										price={20}
-										text='Краторная булка N-200i (низ)'
-										thumbnail={'/images/Краторная булка.png'}
-										isLocked
-										extraClass={styles.constructorListBurgerItem}
-									/>
-								</div>
-								<div className={styles.constructorSectionFooter}>
-									<div className={styles.price}>
-										<p className='text text_type_digits-medium'>610</p>
-										<CurrencyIcon
-											type='primary'
-											className={styles.priceIcon}
-										/>
-									</div>
-									<Button
-										htmlType='button'
-										type='primary'
-										size='large'
-										onClick={() => setIsOpenOrderDetailModal(true)}
-									>
-										Оформить заказ
-									</Button>
-								</div>
-							</section>
-						</div>
-					</Container>
-				</main>
-			</div>
-			<IngredientDetailsModal
-				isOpen={open}
-				onClose={handleIngredientDetailsModalClose}
-				ingredient={selectedIngredient}
-			/>
-			<OrderDetailModal
-				isOpen={isOpenOrderDetailModal}
-				onClose={() => setIsOpenOrderDetailModal(false)}
-			/>
+								</section>
+								<section className={styles.constructorSection}>
+									<BurgerConstructor />
+									<CheckoutButton />
+								</section>
+							</div>
+						</Container>
+					</main>
+				</div>
+			</DndProvider>
+
+			<IngredientDetailsModal />
+			<OrderDetailModal />
 		</>
 	);
 }

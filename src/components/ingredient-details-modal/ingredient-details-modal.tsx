@@ -1,20 +1,34 @@
-import { Ingredient } from '@src/api/ingredients/types';
-
+import { useAppDispatch, useAppSelector } from '@src/hooks';
 import { Modal } from '../modal';
 
 import styles from './ingredient-details-modal.module.css';
+import {
+	clearIngredientDetail,
+	ingredientDetailSelector,
+} from '@src/services/ingredientDetail/ingredientDetailSlice';
+import { closeModal, modalSelector } from '@src/services/modals/modalsSlice';
 
-interface IngredientDetailsModalProps {
-	isOpen: boolean;
-	ingredient?: Ingredient;
-	onClose?: VoidFunction;
-}
+export function IngredientDetailsModal() {
+	const dispatch = useAppDispatch();
 
-export function IngredientDetailsModal({ isOpen, ingredient, onClose }: IngredientDetailsModalProps) {
+	const ingredientDetail = useAppSelector(ingredientDetailSelector);
+	const isOpen = useAppSelector((state) => modalSelector(state, 'INGREDIENT_DETAIL_MODAL'));
+
+	const handleClose = () => {
+		dispatch(closeModal('INGREDIENT_DETAIL_MODAL'));
+		dispatch(clearIngredientDetail());
+	};
+
+	if (!ingredientDetail) {
+		return null;
+	}
+
+	const ingredient = ingredientDetail;
+
 	return (
 		<Modal
 			isOpen={isOpen}
-			onClose={onClose}
+			onClose={handleClose}
 			title='Детали ингредиента'
 		>
 			<div className={styles.content}>
