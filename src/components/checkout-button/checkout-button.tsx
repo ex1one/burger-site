@@ -6,6 +6,7 @@ import { CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-co
 import { useMemo } from 'react';
 
 import styles from './checkout-button.module.css';
+import { NAMES_OF_MODALS } from '@src/consts';
 
 export const CheckoutButton = () => {
 	const dispatch = useAppDispatch();
@@ -18,7 +19,7 @@ export const CheckoutButton = () => {
 
 	const handleClick = () => {
 		dispatch(createOrderThunk(ingredients.map((el) => el._id)));
-		dispatch(openModal('ORDER_DETAIL_MODAL'));
+		dispatch(openModal(NAMES_OF_MODALS.ORDER_DETAIL_MODAL));
 	};
 
 	return (

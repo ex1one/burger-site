@@ -22,7 +22,8 @@
 		"react-dnd-html5-backend": "16.0.1",
 		"react-dom": "18.2.0",
 		"react-redux": "9.2.0",
-		"react-router-dom": "7.1.5"
+		"react-router-dom": "7.1.5",
+		"uuid": "11.1.0"
 	},
 	"devDependencies": {
 		"@types/node": "22.13.1",

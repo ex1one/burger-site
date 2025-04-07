@@ -8,17 +8,18 @@ import { clearOrder, orderSelector } from '@src/services/order/orderSlice';
 import { closeModal, modalSelector } from '@src/services/modals/modalsSlice';
 import { useMemo } from 'react';
 import { clearConstructor } from '@src/services/constructorIngredients/constructorIngredientsSlice';
+import { NAMES_OF_MODALS } from '@src/consts';
 
 export function OrderDetailModal() {
 	const dispatch = useAppDispatch();
 
 	const { order, isLoading, error } = useAppSelector(orderSelector);
-	const isOpen = useAppSelector((state) => modalSelector(state, 'ORDER_DETAIL_MODAL'));
+	const isOpen = useAppSelector((state) => modalSelector(state, NAMES_OF_MODALS.ORDER_DETAIL_MODAL));
 
 	const handleClose = () => {
 		dispatch(clearOrder());
 		dispatch(clearConstructor());
-		dispatch(closeModal('ORDER_DETAIL_MODAL'));
+		dispatch(closeModal(NAMES_OF_MODALS.ORDER_DETAIL_MODAL));
 	};
 
 	const content = useMemo(() => {

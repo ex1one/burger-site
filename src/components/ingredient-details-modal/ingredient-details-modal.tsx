@@ -7,15 +7,16 @@ import {
 	ingredientDetailSelector,
 } from '@src/services/ingredientDetail/ingredientDetailSlice';
 import { closeModal, modalSelector } from '@src/services/modals/modalsSlice';
+import { NAMES_OF_MODALS } from '@src/consts';
 
 export function IngredientDetailsModal() {
 	const dispatch = useAppDispatch();
 
 	const ingredientDetail = useAppSelector(ingredientDetailSelector);
-	const isOpen = useAppSelector((state) => modalSelector(state, 'INGREDIENT_DETAIL_MODAL'));
+	const isOpen = useAppSelector((state) => modalSelector(state, NAMES_OF_MODALS.INGREDIENT_DETAIL_MODAL));
 
 	const handleClose = () => {
-		dispatch(closeModal('INGREDIENT_DETAIL_MODAL'));
+		dispatch(closeModal(NAMES_OF_MODALS.INGREDIENT_DETAIL_MODAL));
 		dispatch(clearIngredientDetail());
 	};
 

@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Ingredient, Ingredients } from '@src/api/ingredients/types';
+import { Ingredient, IngredientWithUniqueId } from '@src/api/ingredients/types';
+import { v4 as uuid4 } from 'uuid';
 
-const initialState: { ingredients: Ingredients } = {
+const initialState: { ingredients: IngredientWithUniqueId[] } = {
 	ingredients: [],
 };
 
@@ -9,36 +10,57 @@ const constructorIngredientsSlice = createSlice({
 	name: 'constructorIngredients',
 	initialState,
 	reducers: {
-		addIngredient(state, action: PayloadAction<Ingredient>) {
-			state.ingredients.splice(state.ingredients.length - 1, 0, action.payload);
+		addIngredient: {
+			reducer(state, action: PayloadAction<IngredientWithUniqueId>) {
+				state.ingredients.splice(state.ingredients.length - 1, 0, action.payload);
+			},
+			prepare(payload: Ingredient) {
+				return { payload: { ...payload, uniqueId: uuid4() } };
+			},
 		},
-		removeIngredient(state, action: PayloadAction<number>) {
-			state.ingredients = state.ingredients.filter((_, index) => index !== action.payload);
+		removeIngredient(state, action: PayloadAction<string>) {
+			state.ingredients = state.ingredients.filter((ingredient) => ingredient.uniqueId !== action.payload);
 		},
-		addBun(state, action: PayloadAction<Ingredient>) {
-			const existingBun = state.ingredients.find((el) => el.type === 'bun');
+		addBun: {
+			reducer(state, action: PayloadAction<IngredientWithUniqueId>) {
+				const existingBun = state.ingredients.find((el) => el.type === 'bun');
 
-			if (existingBun) {
-				const newEl = state.ingredients.filter((el) => el.type !== 'bun');
-				newEl.unshift(action.payload);
-				newEl.push(action.payload);
-				state.ingredients = newEl;
-				return;
-			}
+				if (existingBun) {
+					const newEl = state.ingredients.filter((el) => el.type !== 'bun');
+					newEl.unshift(action.payload);
+					newEl.push(action.payload);
+					state.ingredients = newEl;
+					return;
+				}
 
-			state.ingredients.unshift(action.payload);
-			state.ingredients.push(action.payload);
+				state.ingredients.unshift(action.payload);
+				state.ingredients.push(action.payload);
+			},
+			prepare(payload: Ingredient) {
+				return { payload: { ...payload, uniqueId: uuid4() } };
+			},
 		},
-		reorderIngredients(state, action: PayloadAction<{ dragIndex: number; hoverIndex: number }>) {
-			const index1 = action.payload.dragIndex;
-			const index2 = action.payload.hoverIndex;
+		reorderIngredients(state, action: PayloadAction<{ dragIngredientId: string; hoverIngredientId: string }>) {
+			const dragIngredientIndex = state.ingredients.findIndex(
+				(el) => el.uniqueId === action.payload.dragIngredientId,
+			);
+			const hoverIngredientIndex = state.ingredients.findIndex(
+				(el) => el.uniqueId === action.payload.hoverIngredientId,
+			);
+
+			if (!dragIngredientIndex || !hoverIngredientIndex) return;
+
+			const dragIngredient = state.ingredients[dragIngredientIndex];
+			const hoverIngredient = state.ingredients[hoverIngredientIndex];
+
+			if (!dragIngredient || !hoverIngredient) return;
+
+			if (hoverIngredient.type === 'bun') return;
+
 			const arr = [...state.ingredients];
-			if (index1 < 0 || index1 >= arr.length || index2 < 0 || index2 >= arr.length) {
-				return;
-			}
-			const temp = arr[index1];
-			arr[index1] = arr[index2];
-			arr[index2] = temp;
+			arr[dragIngredientIndex] = hoverIngredient;
+			arr[hoverIngredientIndex] = dragIngredient;
+
 			state.ingredients = arr;
 		},
 		clearConstructor(state) {

@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { NAMES_OF_MODALS } from '@src/consts';
 
-const initialState = {
+const initialState: Record<keyof typeof NAMES_OF_MODALS, boolean> = {
 	ORDER_DETAIL_MODAL: false,
 	INGREDIENT_DETAIL_MODAL: false,
 };
@@ -9,18 +10,18 @@ const modalsSlice = createSlice({
 	name: 'modals',
 	initialState,
 	reducers: {
-		openModal: (state, action: PayloadAction<keyof typeof initialState>) => {
+		openModal: (state, action: PayloadAction<keyof typeof NAMES_OF_MODALS>) => {
 			state[action.payload] = true;
 		},
-		closeModal: (state, action: PayloadAction<keyof typeof initialState>) => {
+		closeModal: (state, action: PayloadAction<keyof typeof NAMES_OF_MODALS>) => {
 			state[action.payload] = false;
 		},
-		toggleModal: (state, action: PayloadAction<keyof typeof initialState>) => {
+		toggleModal: (state, action: PayloadAction<keyof typeof NAMES_OF_MODALS>) => {
 			state[action.payload] = !state[action.payload];
 		},
 	},
 	selectors: {
-		modalSelector: (state, modal: keyof typeof initialState) => state[modal],
+		modalSelector: (state, modal: keyof typeof NAMES_OF_MODALS) => state[modal],
 	},
 });
 

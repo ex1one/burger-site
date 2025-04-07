@@ -1,17 +1,17 @@
 import { Ingredient } from '@src/api/ingredients/types';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDrag } from 'react-dnd';
-
-import styles from '../burger-ingredients.module.css';
 import { useAppSelector } from '@src/hooks';
 import { constructorIngredientsSelector } from '@src/services/constructorIngredients/constructorIngredientsSlice';
 
-interface BurgerIngredientProps {
+import styles from '../ingredients-list.module.css';
+
+interface IngredientItemProps {
 	ingredient: Ingredient;
 	onClick?: (ingredient: Ingredient) => void;
 }
 
-export const BurgerIngredient = ({ ingredient, onClick }: BurgerIngredientProps) => {
+export const IngredientItem = ({ ingredient, onClick }: IngredientItemProps) => {
 	const { ingredients } = useAppSelector(constructorIngredientsSelector);
 
 	const countOfSelectedIngredient = ingredients.reduce((acc, el) => {

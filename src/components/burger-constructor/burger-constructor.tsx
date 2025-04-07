@@ -34,12 +34,12 @@ export const BurgerConstructor = () => {
 		}),
 	}));
 
-	const handleRemoveClick = (ingredientIndex: number) => () => {
+	const handleRemoveClick = (ingredientIndex: string) => () => {
 		dispatch(removeIngredient(ingredientIndex));
 	};
 
-	const moveIngredient = (dragIndex: number, hoverIndex: number) => {
-		dispatch(reorderIngredients({ dragIndex, hoverIndex }));
+	const moveIngredient = (dragIngredientId: string, hoverIngredientId: string) => {
+		dispatch(reorderIngredients({ dragIngredientId, hoverIngredientId }));
 	};
 
 	return (
@@ -52,10 +52,10 @@ export const BurgerConstructor = () => {
 				{ingredients.map((ingredient, index) => {
 					return (
 						<BurgerConstructorIngredient
-							key={`${ingredient._id}-${index}`}
-							ingredient={ingredient}
 							position={index}
-							onClick={handleRemoveClick(index)}
+							key={ingredient.uniqueId}
+							ingredient={ingredient}
+							onClick={handleRemoveClick(ingredient.uniqueId)}
 							move={moveIngredient}
 						/>
 					);

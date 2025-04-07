@@ -1,13 +1,13 @@
-import { Ingredient } from '@src/api/ingredients/types';
+import { IngredientWithUniqueId } from '@src/api/ingredients/types';
 import { DragIcon, ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDrag, useDrop } from 'react-dnd';
 
 import styles from './burger-constructor-ingredient.module.css';
 
 interface BurgerConstructorIngredientProps {
-	ingredient: Ingredient;
+	ingredient: IngredientWithUniqueId;
 	position: number;
-	move: (dragIndex: number, hoverIndex: number) => void;
+	move: (dragIngredientId: string, hoverIngredientId: string) => void;
 	onClick: VoidFunction;
 }
 
@@ -21,7 +21,7 @@ export const BurgerConstructorIngredient = ({
 
 	const [{ isDragging }, drag] = useDrag(() => ({
 		type: ingredient.type,
-		item: { position },
+		item: { uniqueId: ingredient.uniqueId },
 		collect: (monitor) => ({
 			isDragging: monitor.isDragging(),
 		}),
@@ -29,11 +29,11 @@ export const BurgerConstructorIngredient = ({
 
 	const [, drop] = useDrop(() => ({
 		accept: ['main', 'sauce'],
-		drop: (item: { position: number }) => {
-			if (!item.position) return;
+		drop: (item: { uniqueId: string }) => {
+			if (!item.uniqueId) return;
 
-			if (item.position !== position) {
-				move(item.position, position);
+			if (item.uniqueId !== ingredient.uniqueId) {
+				move(item.uniqueId, ingredient.uniqueId);
 			}
 		},
 	}));

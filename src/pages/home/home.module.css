@@ -16,32 +16,6 @@
 	gap: 72px;
 }
 
-.menuSection {
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-	padding: 40px 0;
-}
-
-.menuList {
-	display: flex;
-	flex-direction: column;
-	gap: 40px;
-}
-
-.tabsList {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-}
-
-.burgerIngredientsWrapper {
-	display: flex;
-	flex-direction: column;
-	gap: 40px;
-	overflow: auto;
-	max-height: 664px;
-}
-
 .constructorSection {
 	display: flex;
 	flex-direction: column;
