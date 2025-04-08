@@ -47,7 +47,7 @@ export const BurgerConstructorIngredient = ({
 			{isBun ? (
 				<ConstructorElement
 					type={position === 0 ? 'top' : 'bottom'}
-					text={ingredient.name}
+					text={`${ingredient.name} ${position === 0 ? '(верх)' : '(низ)'}`}
 					price={ingredient.price}
 					thumbnail={ingredient.image}
 					isLocked

@@ -28,13 +28,13 @@ const constructorIngredientsSlice = createSlice({
 				if (existingBun) {
 					const newEl = state.ingredients.filter((el) => el.type !== 'bun');
 					newEl.unshift(action.payload);
-					newEl.push(action.payload);
+					newEl.push({ ...action.payload, uniqueId: uuid4() });
 					state.ingredients = newEl;
 					return;
 				}
 
 				state.ingredients.unshift(action.payload);
-				state.ingredients.push(action.payload);
+				state.ingredients.push({ ...action.payload, uniqueId: uuid4() });
 			},
 			prepare(payload: Ingredient) {
 				return { payload: { ...payload, uniqueId: uuid4() } };
