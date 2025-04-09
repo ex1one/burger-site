@@ -3,21 +3,40 @@ import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-component
 import { Modal } from '../modal';
 
 import styles from './order-details-modal.module.css';
+import { useAppDispatch, useAppSelector } from '@src/hooks';
+import { clearOrder, orderSelector } from '@src/services/order/orderSlice';
+import { closeModal, modalSelector } from '@src/services/modals/modalsSlice';
+import { useMemo } from 'react';
+import { clearConstructor } from '@src/services/constructorIngredients/constructorIngredientsSlice';
+import { NAMES_OF_MODALS } from '@src/consts';
 
-interface OrderDetailModalProps {
-	isOpen: boolean;
-	onClose?: VoidFunction;
-}
+export function OrderDetailModal() {
+	const dispatch = useAppDispatch();
 
-export function OrderDetailModal({ isOpen, onClose }: OrderDetailModalProps) {
-	return (
-		<Modal
-			isOpen={isOpen}
-			onClose={onClose}
-		>
+	const { order, isLoading, error } = useAppSelector(orderSelector);
+	const isOpen = useAppSelector((state) => modalSelector(state, NAMES_OF_MODALS.ORDER_DETAIL_MODAL));
+
+	const handleClose = () => {
+		dispatch(clearOrder());
+		dispatch(clearConstructor());
+		dispatch(closeModal(NAMES_OF_MODALS.ORDER_DETAIL_MODAL));
+	};
+
+	const content = useMemo(() => {
+		if (isLoading) {
+			return 'Формирование заказа...';
+		}
+
+		if (error) {
+			return 'Ошибка формирования заказа...';
+		}
+
+		if (!order) return 'Произошла непредвиденная ошибка...';
+
+		return (
 			<div className={styles.content}>
 				<div className={styles.header}>
-					<h4 className='text text_type_digits-large'>034536</h4>
+					<h4 className='text text_type_digits-large'>{order.number}</h4>
 					<p className='text text_type_main-medium'>идентификатор заказа</p>
 				</div>
 				<div className={styles.accept}>
@@ -33,6 +52,15 @@ export function OrderDetailModal({ isOpen, onClose }: OrderDetailModalProps) {
 					</p>
 				</div>
 			</div>
+		);
+	}, [order, isLoading, error]);
+
+	return (
+		<Modal
+			isOpen={isOpen}
+			onClose={handleClose}
+		>
+			{content}
 		</Modal>
 	);
 }

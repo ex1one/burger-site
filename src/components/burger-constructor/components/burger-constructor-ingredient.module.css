@@ -1,0 +1,10 @@
+.wrapper {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.dragIcon {
+	width: 24px;
+	height: 24px;
+}

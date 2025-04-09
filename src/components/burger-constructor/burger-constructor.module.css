@@ -1,0 +1,16 @@
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	height: 100%;
+}
+
+.list {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	overflow: auto;
+	max-height: 660px;
+	/* margin-left: -32px; */
+	height: 100%;
+}

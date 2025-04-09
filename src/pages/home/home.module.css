@@ -16,88 +16,10 @@
 	gap: 72px;
 }
 
-.menuSection {
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-	padding: 40px 0;
-}
-
 .constructorSection {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	padding: 96px 0 40px 0;
-}
-
-.menuList {
-	display: flex;
-	flex-direction: column;
 	gap: 40px;
-}
-
-.tabsList {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-}
-
-.menuItemsWrapper {
-	display: flex;
-	flex-direction: column;
-	gap: 40px;
-	overflow: auto;
-	max-height: 664px;
-}
-
-.constructorSection {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	padding-bottom: 40px;
-	padding-top: 96px;
-	gap: 40px;
-}
-
-.ingredientsList {
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
-	overflow: auto;
-	max-height: 464px;
-	margin-left: -32px;
-}
-
-.ingredientsListItem {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-}
-
-.dragonIcon {
-	width: 24px;
-	height: 24px;
-}
-
-.constructorSectionFooter {
-	display: flex;
-	align-items: center;
-	justify-content: end;
-	gap: 40px;
-}
-
-.constructorList {
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
-}
-
-.price {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-}
-
-.priceIcon {
-	width: 36px;
-	height: 36px;
 }

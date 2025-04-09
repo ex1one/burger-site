@@ -12,4 +12,8 @@ export interface Ingredient {
 	image_large: string;
 }
 
+export interface IngredientWithUniqueId extends Ingredient {
+	uniqueId: string;
+}
+
 export type Ingredients = Ingredient[];
