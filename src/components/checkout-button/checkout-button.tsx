@@ -1,17 +1,17 @@
 import { useAppDispatch, useAppSelector } from '@src/hooks';
-import { constructorIngredientsSelector } from '@src/services/constructorIngredients/constructorIngredientsSlice';
-import { openModal } from '@src/services/modals/modalsSlice';
-import { createOrderThunk } from '@src/services/order/orderSlice';
 import { CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useMemo } from 'react';
 
 import styles from './checkout-button.module.css';
 import { NAMES_OF_MODALS } from '@src/consts';
+import { constructorIngredientsSelectors } from '@src/services/constructorIngredients';
+import { createOrderThunk } from '@src/services/order/thunks';
+import { modalsActions } from '@src/services/modals';
 
 export const CheckoutButton = () => {
 	const dispatch = useAppDispatch();
 
-	const { ingredients } = useAppSelector(constructorIngredientsSelector);
+	const { ingredients } = useAppSelector(constructorIngredientsSelectors.constructorIngredientsSelector);
 
 	const totalPrice = useMemo(() => {
 		return ingredients.reduce((acc, el) => acc + el.price, 0);
@@ -19,7 +19,7 @@ export const CheckoutButton = () => {
 
 	const handleClick = () => {
 		dispatch(createOrderThunk(ingredients.map((el) => el._id)));
-		dispatch(openModal(NAMES_OF_MODALS.ORDER_DETAIL_MODAL));
+		dispatch(modalsActions.openModal(NAMES_OF_MODALS.ORDER_DETAIL_MODAL));
 	};
 
 	return (

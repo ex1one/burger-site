@@ -4,22 +4,23 @@ import { Modal } from '../modal';
 
 import styles from './order-details-modal.module.css';
 import { useAppDispatch, useAppSelector } from '@src/hooks';
-import { clearOrder, orderSelector } from '@src/services/order/orderSlice';
-import { closeModal, modalSelector } from '@src/services/modals/modalsSlice';
 import { useMemo } from 'react';
-import { clearConstructor } from '@src/services/constructorIngredients/constructorIngredientsSlice';
 import { NAMES_OF_MODALS } from '@src/consts';
+import { orderActions, orderSelectors } from '@src/services/order/slice';
+import { constructorIngredientsActions } from '@src/services/constructorIngredients';
+import { modalsActions, modalsSelectors } from '@src/services/modals';
 
 export function OrderDetailModal() {
 	const dispatch = useAppDispatch();
-
-	const { order, isLoading, error } = useAppSelector(orderSelector);
-	const isOpen = useAppSelector((state) => modalSelector(state, NAMES_OF_MODALS.ORDER_DETAIL_MODAL));
+	const { order, isLoading, error } = useAppSelector(orderSelectors.orderSelector);
+	const isOpen = useAppSelector((state) =>
+		modalsSelectors.modalSelector(state, NAMES_OF_MODALS.ORDER_DETAIL_MODAL),
+	);
 
 	const handleClose = () => {
-		dispatch(clearOrder());
-		dispatch(clearConstructor());
-		dispatch(closeModal(NAMES_OF_MODALS.ORDER_DETAIL_MODAL));
+		dispatch(orderActions.clearOrder());
+		dispatch(constructorIngredientsActions.clearConstructor());
+		dispatch(modalsActions.closeModal(NAMES_OF_MODALS.ORDER_DETAIL_MODAL));
 	};
 
 	const content = useMemo(() => {

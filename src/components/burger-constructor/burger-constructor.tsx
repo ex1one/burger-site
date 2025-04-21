@@ -1,21 +1,17 @@
 import { Ingredient } from '@src/api/ingredients/types';
-import { useAppDispatch, useAppSelector } from '@src/hooks';
-import {
-	constructorIngredientsSelector,
-	addBun,
-	addIngredient,
-	removeIngredient,
-	reorderIngredients,
-} from '@src/services/constructorIngredients/constructorIngredientsSlice';
+import { useActionCreator, useAppSelector } from '@src/hooks';
 import { useDrop } from 'react-dnd';
 import { BurgerConstructorIngredient } from './components';
+import {
+	constructorIngredientsActions,
+	constructorIngredientsSelectors,
+} from '@src/services/constructorIngredients';
 
 import styles from './burger-constructor.module.css';
 
 export const BurgerConstructor = () => {
-	const dispatch = useAppDispatch();
-
-	const { ingredients } = useAppSelector(constructorIngredientsSelector);
+	const { ingredients } = useAppSelector(constructorIngredientsSelectors.constructorIngredientsSelector);
+	const actions = useActionCreator(constructorIngredientsActions);
 
 	const [{ canDrop }, drop] = useDrop(() => ({
 		accept: ['bun', 'main', 'sauce'],
@@ -23,11 +19,11 @@ export const BurgerConstructor = () => {
 			if (!ingredient) return;
 
 			if (ingredient.type === 'bun') {
-				dispatch(addBun(ingredient));
+				actions.addBun(ingredient);
 				return;
 			}
 
-			dispatch(addIngredient(ingredient));
+			actions.addIngredient(ingredient);
 		},
 		collect: (monitor) => ({
 			canDrop: monitor.canDrop(),
@@ -35,11 +31,11 @@ export const BurgerConstructor = () => {
 	}));
 
 	const handleRemoveClick = (ingredientIndex: string) => () => {
-		dispatch(removeIngredient(ingredientIndex));
+		actions.removeIngredient(ingredientIndex);
 	};
 
 	const moveIngredient = (dragIngredientId: string, hoverIngredientId: string) => {
-		dispatch(reorderIngredients({ dragIngredientId, hoverIngredientId }));
+		actions.reorderIngredients({ dragIngredientId, hoverIngredientId });
 	};
 
 	return (

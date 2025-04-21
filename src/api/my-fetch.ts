@@ -1,7 +1,8 @@
 import { TKeyofMethods } from './types/methods';
 import { queryStringify } from './utils/query-stringify';
 import METHODS from './config/methods';
-import { isValidJSON } from '@src/api/utils';
+import { getCookie, isValidJSON, setCookie } from '@src/api/utils';
+import API from '.';
 
 export interface Options {
 	method: TKeyofMethods;
@@ -23,6 +24,10 @@ class HTTPTransport {
 		return this.request(url, { ...options, method: METHODS.PUT });
 	};
 
+	patch: HTTPMethod = (url, options) => {
+		return this.request(url, { ...options, method: METHODS.PATCH });
+	};
+
 	post: HTTPMethod = (url, options) => {
 		return this.request(url, { ...options, method: METHODS.POST });
 	};
@@ -42,6 +47,7 @@ class HTTPTransport {
 
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
+
 			const isGet = method === METHODS.GET;
 
 			// TODO: Поменять на true
@@ -59,8 +65,43 @@ class HTTPTransport {
 			xhr.onerror = reject;
 			xhr.ontimeout = reject;
 
-			xhr.onload = () => {
+			xhr.onload = async () => {
 				try {
+					console.log({ xhr });
+					if (xhr.status === 403) {
+						const responseData = isValidJSON(xhr.response) ? JSON.parse(xhr.response) : xhr.response;
+
+						if (responseData.message === 'jwt expired') {
+							// TODO: Сюда надо пихать refreshToken
+							const token = getCookie('token');
+
+							if (token) {
+								const { accessToken, refreshToken } = await API.user.refreshAccessToken(token);
+								setCookie(refreshToken, 'token');
+								console.log({ accessToken, refreshToken });
+
+								xhr.open(method, isGet && !!data ? `${url}${queryStringify(data)}` : url, true);
+
+								Object.entries(headers).forEach(([key, value]) => {
+									xhr.setRequestHeader(key, value);
+								});
+							}
+
+							if (method === METHODS.GET || !data) {
+								xhr.send();
+							} else {
+								if (data instanceof FormData) {
+									xhr.send(data);
+								} else {
+									xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+									xhr.send(JSON.stringify(data));
+								}
+							}
+
+							return;
+						}
+					}
+
 					if (xhr.status > 299) {
 						reject(xhr.responseText);
 					}
@@ -76,7 +117,7 @@ class HTTPTransport {
 				if (data instanceof FormData) {
 					xhr.send(data);
 				} else {
-					xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+					xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 					xhr.send(JSON.stringify(data));
 				}
 			}
@@ -84,6 +125,7 @@ class HTTPTransport {
 	}
 }
 
+// TODO: Добавить abort реализацию
 const myFetch = new HTTPTransport();
 
 export default myFetch;

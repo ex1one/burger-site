@@ -1,19 +1,12 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Home } from './pages';
+import { RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store';
+import { router } from './router';
 
 export default function App() {
 	return (
 		<Provider store={store}>
-			<BrowserRouter>
-				<Routes>
-					<Route
-						path='/'
-						element={<Home />}
-					/>
-				</Routes>
-			</BrowserRouter>
+			<RouterProvider router={router} />
 		</Provider>
 	);
 }

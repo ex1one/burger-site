@@ -1,5 +1,5 @@
-import type { Action, ThunkAction } from '@reduxjs/toolkit';
 import { configureStore } from '@reduxjs/toolkit';
+import { router } from '@src/router';
 import { rootReducer } from '@src/services';
 import { compose } from 'redux';
 
@@ -10,12 +10,12 @@ const composeEnhancers =
 		  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
 		: compose;
 
+export const extraArgument = {
+	router,
+};
+
 export const store = configureStore({
 	reducer: rootReducer,
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: { extraArgument } }),
 	devTools: composeEnhancers(),
 });
-
-export type AppStore = typeof store;
-export type RootState = ReturnType<AppStore['getState']>;
-export type AppDispatch = AppStore['dispatch'];
-export type AppThunk<ThunkReturnType = void> = ThunkAction<ThunkReturnType, RootState, unknown, Action>;

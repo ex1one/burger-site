@@ -1,4 +1,4 @@
-import { Ingredient, Ingredients } from '@src/api/ingredients/types';
+import { Ingredients } from '@src/api/ingredients/types';
 import { IngredientItem } from './components';
 
 import styles from './ingredients-list.module.css';
@@ -7,14 +7,9 @@ interface IngredientsListProps {
 	title: string;
 	name: string;
 	items: Ingredients;
-	onClickItem?: (ingredient: Ingredient) => void;
 }
 
-export function IngredientsList({ title, name, items, onClickItem }: IngredientsListProps) {
-	const handleClick = (ingredient: Ingredient) => {
-		onClickItem?.(ingredient);
-	};
-
+export function IngredientsList({ title, name, items }: IngredientsListProps) {
 	return (
 		<div
 			className={styles.wrapper}
@@ -26,7 +21,6 @@ export function IngredientsList({ title, name, items, onClickItem }: Ingredients
 					<IngredientItem
 						key={el._id}
 						ingredient={el}
-						onClick={handleClick}
 					/>
 				))}
 			</div>

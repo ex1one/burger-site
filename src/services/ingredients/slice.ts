@@ -1,25 +1,18 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { getIngredients } from '@src/api/ingredients';
+import { createSlice } from '@reduxjs/toolkit';
 import { Ingredients } from '@src/api/ingredients/types';
 
-export const fetchIngredients = createAsyncThunk('ingredients/fetchIngredients', async () => {
-	const response = await getIngredients();
+import { selectors } from './selectors';
+import { actions } from './actions';
+import { fetchIngredients } from './thunks';
 
-	if (!response.success) {
-		throw new Error('Error while request ingredients');
-	}
-
-	return response.data;
-});
-
-interface IngredientsSliceState {
+export interface TInitialState {
 	ingredients: Ingredients;
 	isLoading: boolean;
 	status: 'pending' | 'success' | 'error';
 	error: any;
 }
 
-const initialState: IngredientsSliceState = {
+export const initialState: TInitialState = {
 	ingredients: [],
 	status: 'pending',
 	isLoading: false,
@@ -29,11 +22,7 @@ const initialState: IngredientsSliceState = {
 const ingredientsSlice = createSlice({
 	name: 'ingredients',
 	initialState,
-	reducers: {
-		setIngredients: (state, action: PayloadAction<Ingredients>) => {
-			state.ingredients = action.payload;
-		},
-	},
+	reducers: actions,
 	extraReducers: (builder) => {
 		builder
 			.addCase(fetchIngredients.fulfilled, (state, action) => {
@@ -51,13 +40,11 @@ const ingredientsSlice = createSlice({
 				state.status = 'pending';
 			});
 	},
-	selectors: {
-		ingredientsSelector: (state) => state,
-	},
+	selectors: selectors,
 });
 
-export const {} = ingredientsSlice.actions;
-
-export const { ingredientsSelector } = ingredientsSlice.selectors;
-
-export default ingredientsSlice.reducer;
+export const {
+	reducer: ingredientsReducer,
+	actions: ingredientsActions,
+	selectors: ingredientsSelectors,
+} = ingredientsSlice;

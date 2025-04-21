@@ -16,6 +16,7 @@ export function Header({}: HeaderProps) {
 								<Link
 									to='/'
 									leftIcon='burger'
+									isNavLink
 								>
 									Конструктор
 								</Link>
@@ -24,6 +25,7 @@ export function Header({}: HeaderProps) {
 								<Link
 									to='/orders'
 									leftIcon='list'
+									isNavLink
 								>
 									Лента заказов
 								</Link>
@@ -31,7 +33,10 @@ export function Header({}: HeaderProps) {
 						</div>
 						<div className={styles.logoContainer}>
 							<li>
-								<Link to='/'>
+								<Link
+									to='/'
+									isNavLink
+								>
 									<Logo />
 								</Link>
 							</li>
@@ -41,6 +46,7 @@ export function Header({}: HeaderProps) {
 								<Link
 									to='/profile'
 									leftIcon='profile'
+									isNavLink
 								>
 									Личный кабинет
 								</Link>

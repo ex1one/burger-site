@@ -3,3 +3,6 @@ export * from './get-key';
 export * from './get-params';
 export * from './api-has-error';
 export * from './is-valid-json';
+export * from './get-cookie';
+export * from './set-cookie';
+export * from './delete-cookie';
