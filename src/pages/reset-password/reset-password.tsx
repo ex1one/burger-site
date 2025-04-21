@@ -1,22 +1,17 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Layout } from '@src/features';
 import { Link } from '@src/components';
 import { PAGES } from '@src/consts';
+import API from '@src/api';
 
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import styles from './reset-password.module.css';
-import API from '@src/api';
-import { getCookie } from '@src/api/utils';
-import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '@src/hooks';
-import { userSelectors } from '@src/services/user';
 
 export function ResetPassword() {
 	const navigate = useNavigate();
-
-	const accessToken = useAppSelector(userSelectors.accessTokenSelector);
 
 	const [password, setPassword] = useState('');
 	const [code, setCode] = useState('');

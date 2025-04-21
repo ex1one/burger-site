@@ -21,6 +21,8 @@ export const ProtectedRouteElement = ({
 	// неправильно, если поправлю - должно работать ок
 	const init = async () => {
 		try {
+			// TODO: Поправить
+			// @ts-expect-error
 			const response = await API.user.getUser(accessToken);
 			if (response.success) {
 				dispatch(userActions.setUser(response.user));

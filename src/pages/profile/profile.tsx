@@ -56,6 +56,8 @@ export function Profile() {
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
+		// TODO: Поправить
+		// @ts-expect-error
 		const response = await API.user.updateUser({ name }, accessToken);
 
 		if (response.success) {

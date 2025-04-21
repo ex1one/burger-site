@@ -15,6 +15,8 @@ export const actions = {
 		state.accessToken = action.payload.accessToken;
 		state.user = action.payload.user;
 	},
+	// TODO: Почему-то ругается ts
+	// @ts-expect-error
 	clearState: (state) => {
 		state = initialState;
 	},

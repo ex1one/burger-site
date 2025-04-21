@@ -2,7 +2,7 @@ import myFetch from '@src/api/my-fetch';
 
 import { YandexApi } from '../config/urls';
 import { User } from './types';
-import { deleteCookie, getCookie, setCookie } from '../utils';
+import { getCookie } from '../utils';
 
 const BASE_URL = YandexApi;
 
