@@ -1,20 +1,15 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { userThunks } from '@src/services/user';
 import { useAppDispatch } from '@src/hooks';
 
-import { Layout } from '@src/features';
 import { Link } from '@src/components';
 import { PAGES } from '@src/consts';
 
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import styles from './sign-up.module.css';
-import API from '@src/api';
-import { userActions } from '@src/services/user';
-import { setCookie } from '@src/api/utils';
 
 export function SignUp() {
-	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
 	const [name, setName] = useState('');
@@ -45,72 +40,58 @@ export function SignUp() {
 		setTypePassword((prev) => (prev === 'password' ? 'text' : 'password'));
 	};
 
-	// TODO: Переписать на thunk
-	const handleSubmit = async (event: FormEvent) => {
+	const handleSubmit = (event: FormEvent) => {
 		event.preventDefault();
 
 		// TODO: Добавить валидацию
-
-		const response = await API.user.signUp({ email, name, password });
-
-		if (response.success) {
-			const { accessToken, refreshToken, user } = response;
-
-			setCookie('token', refreshToken);
-			dispatch(userActions.changeState({ accessToken, user }));
-			navigate(PAGES.HOME);
-		} else {
-			alert('Произошла ошибка');
-		}
+		dispatch(userThunks.signUp({ email, name, password }));
 	};
 
 	return (
-		<Layout>
-			<div className={styles.container}>
-				<div className={styles.contentWrapper}>
-					<form
-						className={styles.contentBody}
-						onSubmit={handleSubmit}
+		<div className={styles.container}>
+			<div className={styles.contentWrapper}>
+				<form
+					className={styles.contentBody}
+					onSubmit={handleSubmit}
+				>
+					<h2 className='text text_type_main-medium'>Регистрация</h2>
+					<Input
+						type='text'
+						placeholder='Имя'
+						onChange={handleChangeName}
+						value={name}
+						name='name'
+					/>
+					<Input
+						type='email'
+						placeholder='E-mail'
+						onChange={handleChangeEmail}
+						value={email}
+						name='email'
+					/>
+					<Input
+						type={typePassword}
+						placeholder='Пароль'
+						onChange={handleChangePassword}
+						value={password}
+						icon={typePassword === 'password' ? 'ShowIcon' : 'HideIcon'}
+						onIconClick={handleChangeTypePassword}
+						name='password'
+						error={false}
+					/>
+					<Button
+						type='primary'
+						htmlType='submit'
 					>
-						<h2 className='text text_type_main-medium'>Регистрация</h2>
-						<Input
-							type='text'
-							placeholder='Имя'
-							onChange={handleChangeName}
-							value={name}
-							name='name'
-						/>
-						<Input
-							type='email'
-							placeholder='E-mail'
-							onChange={handleChangeEmail}
-							value={email}
-							name='email'
-						/>
-						<Input
-							type={typePassword}
-							placeholder='Пароль'
-							onChange={handleChangePassword}
-							value={password}
-							icon={typePassword === 'password' ? 'ShowIcon' : 'HideIcon'}
-							onIconClick={handleChangeTypePassword}
-							name='password'
-							error={false}
-						/>
-						<Button
-							type='primary'
-							htmlType='submit'
-						>
-							Зарегистрироваться
-						</Button>
-					</form>
-					<div className={styles.contentFooter}>
-						<div className={styles.wrapperText}>
-							Уже зарегистрированы? <Link to={PAGES.SIGN_IN}>Войти</Link>
-						</div>
+						Зарегистрироваться
+					</Button>
+				</form>
+				<div className={styles.contentFooter}>
+					<div className={styles.wrapperText}>
+						Уже зарегистрированы? <Link to={PAGES.SIGN_IN}>Войти</Link>
 					</div>
 				</div>
 			</div>
-		</Layout>
+		</div>
 	);
 }

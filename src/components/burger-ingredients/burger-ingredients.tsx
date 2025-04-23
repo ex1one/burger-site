@@ -1,12 +1,13 @@
-import { useAppSelector } from '@src/hooks';
+import { useAppDispatch, useAppSelector } from '@src/hooks';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import styles from './burger-ingredients.module.css';
 import { IngredientsList } from '../ingredients-list';
-import { ingredientsSelectors } from '@src/services/ingredients';
+import { ingredientsSelectors, ingredientsThunks } from '@src/services/ingredients';
 
 export function BurgerIngredients() {
+	const dispatch = useAppDispatch();
 	const { ingredients, isLoading, error } = useAppSelector(ingredientsSelectors.ingredientsSelector);
 
 	const [selectedTab, setSelectedTab] = useState('rolls');
@@ -46,6 +47,10 @@ export function BurgerIngredients() {
 			targetItem.scrollIntoView({ behavior: 'smooth' });
 		}
 	};
+
+	useEffect(() => {
+		dispatch(ingredientsThunks.fetchIngredients());
+	}, []);
 
 	if (isLoading) {
 		return 'Загрузка...';

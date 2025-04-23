@@ -4,7 +4,7 @@ import API from '@src/api';
 
 // TODO: Может быть такое, что запрос на получение вызывается 2 раза из-за strict-mode
 // Смотри решение - https://redux-toolkit.js.org/api/createAsyncThunk#cancellation
-export const fetchIngredients = createAsyncThunk('ingredients/fetchIngredients', async () => {
+const fetchIngredients = createAsyncThunk('ingredients/fetchIngredients', async () => {
 	const response = await API.ingredients.getIngredients();
 
 	if (!response.success) {
@@ -13,3 +13,7 @@ export const fetchIngredients = createAsyncThunk('ingredients/fetchIngredients',
 
 	return response.data;
 });
+
+export const thunks = {
+	fetchIngredients,
+};

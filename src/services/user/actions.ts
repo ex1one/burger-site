@@ -1,6 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 
-import { TInitialState, initialState } from './slice';
+import { TInitialState } from './slice';
 import { TSliceReducerActions } from '@src/types';
 import { User } from '@src/api/user/types';
 
@@ -15,9 +15,8 @@ export const actions = {
 		state.accessToken = action.payload.accessToken;
 		state.user = action.payload.user;
 	},
-	// TODO: Почему-то ругается ts
-	// @ts-expect-error
 	clearState: (state) => {
-		state = initialState;
+		state.accessToken = null;
+		state.user = null;
 	},
 } satisfies TSliceReducerActions<TInitialState>;

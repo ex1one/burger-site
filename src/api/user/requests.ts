@@ -10,7 +10,7 @@ export const forgotPassword = (email: string) => {
 	return myFetch.post<{ success: boolean; message: string }>(BASE_URL + '/password-reset', { data: { email } });
 };
 
-export const resetPassword = ({ password, token }: { password: string; token: string }) => {
+export const changePassword = ({ password, token }: { password: string; token: string }) => {
 	return myFetch.post<{ success: boolean; message: string }>(BASE_URL + '/password-reset/reset', {
 		data: { password, token },
 	});

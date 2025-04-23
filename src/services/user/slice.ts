@@ -3,6 +3,7 @@ import { User } from '@src/api/user/types';
 
 import { selectors } from './selectors';
 import { actions } from './actions';
+import { thunks } from './thunks';
 
 export interface TInitialState {
 	user: User | null;
@@ -22,3 +23,5 @@ const userSlice = createSlice({
 });
 
 export const { reducer: userReducer, actions: userActions, selectors: userSelectors } = userSlice;
+
+export const userThunks = thunks;

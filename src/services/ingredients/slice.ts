@@ -3,7 +3,7 @@ import { Ingredients } from '@src/api/ingredients/types';
 
 import { selectors } from './selectors';
 import { actions } from './actions';
-import { fetchIngredients } from './thunks';
+import { thunks } from './thunks';
 
 export interface TInitialState {
 	ingredients: Ingredients;
@@ -25,17 +25,17 @@ const ingredientsSlice = createSlice({
 	reducers: actions,
 	extraReducers: (builder) => {
 		builder
-			.addCase(fetchIngredients.fulfilled, (state, action) => {
+			.addCase(thunks.fetchIngredients.fulfilled, (state, action) => {
 				state.ingredients = action.payload;
 				state.isLoading = false;
 				state.status = 'success';
 			})
-			.addCase(fetchIngredients.rejected, (state, action) => {
+			.addCase(thunks.fetchIngredients.rejected, (state, action) => {
 				state.isLoading = false;
 				state.status = 'error';
 				state.error = action.error.message;
 			})
-			.addCase(fetchIngredients.pending, (state) => {
+			.addCase(thunks.fetchIngredients.pending, (state) => {
 				state.isLoading = true;
 				state.status = 'pending';
 			});
@@ -48,3 +48,5 @@ export const {
 	actions: ingredientsActions,
 	selectors: ingredientsSelectors,
 } = ingredientsSlice;
+
+export const ingredientsThunks = thunks;

@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { router } from '@src/router';
+import { history } from '@src/router';
 import { rootReducer } from '@src/services';
 import { compose } from 'redux';
 
@@ -11,7 +11,7 @@ const composeEnhancers =
 		: compose;
 
 export const extraArgument = {
-	router,
+	history,
 };
 
 export const store = configureStore({

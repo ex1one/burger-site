@@ -5,12 +5,12 @@ import { ingredientDetailActions } from '@src/services/ingredientDetail/slice';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IngredientDetails } from '..';
 import { useEffect, useMemo } from 'react';
-import { ingredientsSelectors } from '@src/services/ingredients';
-import { fetchIngredients } from '@src/services/ingredients/thunks';
+import { ingredientsSelectors, ingredientsThunks } from '@src/services/ingredients';
 
 export function IngredientDetailsModal() {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
+
 	const { ingredientId } = useParams();
 
 	const { ingredients, isLoading, error } = useAppSelector(ingredientsSelectors.ingredientsSelector);
@@ -22,7 +22,7 @@ export function IngredientDetailsModal() {
 
 	useEffect(() => {
 		if (ingredientId && ingredients.length === 0) {
-			dispatch(fetchIngredients())
+			dispatch(ingredientsThunks.fetchIngredients())
 				.unwrap()
 				.then((res) => {
 					const selectedIngredient = res.find((ingredient) => ingredient._id === ingredientId);

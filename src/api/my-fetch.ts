@@ -67,7 +67,6 @@ class HTTPTransport {
 
 			xhr.onload = async () => {
 				try {
-					console.log({ xhr });
 					if (xhr.status === 403) {
 						const responseData = isValidJSON(xhr.response) ? JSON.parse(xhr.response) : xhr.response;
 
@@ -76,9 +75,8 @@ class HTTPTransport {
 							const token = getCookie('token');
 
 							if (token) {
-								const { accessToken, refreshToken } = await API.user.refreshAccessToken(token);
+								const { refreshToken } = await API.user.refreshAccessToken(token);
 								setCookie(refreshToken, 'token');
-								console.log({ accessToken, refreshToken });
 
 								xhr.open(method, isGet && !!data ? `${url}${queryStringify(data)}` : url, true);
 
