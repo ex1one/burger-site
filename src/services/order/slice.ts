@@ -1,25 +1,17 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { createOrder } from '@src/api/order';
+import { createSlice } from '@reduxjs/toolkit';
 
-// TODO: Вынести
-export const createOrderThunk = createAsyncThunk('order/createOrder', async (ingredients: string[]) => {
-	const response = await createOrder(ingredients);
+import { selectors } from './selectors';
+import { actions } from './actions';
+import { createOrderThunk } from './thunks';
 
-	if (!response.success) {
-		throw new Error('Error while request ingredients');
-	}
-
-	return response;
-});
-
-interface OrderState {
+export interface TInitialState {
 	status: string;
 	order: { number: number; name: string } | null;
 	isLoading: boolean;
 	error: any;
 }
 
-const initialState: OrderState = {
+export const initialState: TInitialState = {
 	status: 'pending',
 	order: null,
 	isLoading: false,
@@ -29,14 +21,8 @@ const initialState: OrderState = {
 const orderSlice = createSlice({
 	name: 'order',
 	initialState,
-	reducers: {
-		clearOrder: () => {
-			return initialState;
-		},
-	},
-	selectors: {
-		orderSelector: (state) => state,
-	},
+	reducers: actions,
+	// TODO: Разобраться с extraReducers. Их тоже вынести
 	extraReducers: (builder) => {
 		builder
 			.addCase(createOrderThunk.fulfilled, (state, action) => {
@@ -54,10 +40,7 @@ const orderSlice = createSlice({
 				state.status = 'pending';
 			});
 	},
+	selectors,
 });
 
-export const { clearOrder } = orderSlice.actions;
-
-export const { orderSelector } = orderSlice.selectors;
-
-export default orderSlice.reducer;
+export const { reducer: orderReducer, actions: orderActions, selectors: orderSelectors } = orderSlice;

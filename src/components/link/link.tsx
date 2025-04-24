@@ -1,6 +1,6 @@
 import { icons } from '@src/consts';
 import { ReactNode, Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link as BaseLink } from 'react-router-dom';
 
 import styles from './link.module.css';
 
@@ -8,26 +8,57 @@ interface LinkProps {
 	to: string;
 	children: ReactNode;
 	leftIcon?: keyof typeof icons;
+	isNavLink?: boolean;
+	className?: string;
+	activeClassName?: string;
+	// TODO: Необходимо extends от NavLinkProps, BaseLinkProps. Возможное решение разделить эти компоненты NavLink, Link
+	onClick?: VoidFunction;
 }
 
-export function Link({ to, children, leftIcon }: LinkProps) {
-	const LeftIcon = leftIcon ? icons[leftIcon] : null;
+export function Link({
+	to,
+	children,
+	leftIcon,
+	isNavLink = false,
+	className,
+	activeClassName = '',
+	onClick,
+}: LinkProps) {
+	if (isNavLink) {
+		const LeftIcon = leftIcon ? icons[leftIcon] : null;
+
+		return (
+			<NavLink
+				to={to}
+				className={styles.link}
+				onClick={onClick}
+			>
+				{({ isActive }) => {
+					// TODO: Не нравится работа с className, тяжело перенастраивать стили из вне
+					return (
+						<Fragment>
+							{LeftIcon && <LeftIcon type={isActive ? 'primary' : 'secondary'} />}
+							<span
+								className={`${className ? className : 'text text_type_main-small'} ${
+									isActive ? activeClassName : 'text_color_inactive'
+								} `}
+							>
+								{children}
+							</span>
+						</Fragment>
+					);
+				}}
+			</NavLink>
+		);
+	}
 
 	return (
-		<NavLink
+		<BaseLink
 			to={to}
-			className={styles.link}
+			className={`${styles.link} ${className}`}
+			onClick={onClick}
 		>
-			{({ isActive }) => {
-				return (
-					<Fragment>
-						{LeftIcon && <LeftIcon type={isActive ? 'primary' : 'secondary'} />}
-						<span className={`text text_type_main-small ${isActive ? '' : 'text_color_inactive'}`}>
-							{children}
-						</span>
-					</Fragment>
-				);
-			}}
-		</NavLink>
+			<span className={styles.baseLinkText}>{children}</span>
+		</BaseLink>
 	);
 }

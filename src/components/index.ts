@@ -7,3 +7,5 @@ export * from './order-details-modal';
 export * from './burger-constructor';
 export * from './checkout-button';
 export * from './burger-ingredients';
+export * from './protected-route';
+export * from './ingredient-details';

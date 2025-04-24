@@ -1,26 +1,17 @@
-import { Ingredient } from '@src/api/ingredients/types';
-import { NAMES_OF_MODALS } from '@src/consts';
 import { useAppDispatch, useAppSelector } from '@src/hooks';
-import { setIngredientDetail } from '@src/services/ingredientDetail/ingredientDetailSlice';
-import { ingredientsSelector } from '@src/services/ingredients/ingredientsSlice';
-import { openModal } from '@src/services/modals/modalsSlice';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import styles from './burger-ingredients.module.css';
 import { IngredientsList } from '../ingredients-list';
+import { ingredientsSelectors, ingredientsThunks } from '@src/services/ingredients';
 
 export function BurgerIngredients() {
 	const dispatch = useAppDispatch();
-	const { ingredients, isLoading, error } = useAppSelector(ingredientsSelector);
+	const { ingredients, isLoading, error } = useAppSelector(ingredientsSelectors.ingredientsSelector);
 
 	const [selectedTab, setSelectedTab] = useState('rolls');
 	const menuItemsRef = useRef<HTMLDivElement>(null);
-
-	const handleIngredientClick = (ingredient: Ingredient) => {
-		dispatch(setIngredientDetail(ingredient));
-		dispatch(openModal(NAMES_OF_MODALS.INGREDIENT_DETAIL_MODAL));
-	};
 
 	// TODO: Переписать
 	const handleScroll = () => {
@@ -56,6 +47,10 @@ export function BurgerIngredients() {
 			targetItem.scrollIntoView({ behavior: 'smooth' });
 		}
 	};
+
+	useEffect(() => {
+		dispatch(ingredientsThunks.fetchIngredients());
+	}, []);
 
 	if (isLoading) {
 		return 'Загрузка...';
@@ -106,21 +101,18 @@ export function BurgerIngredients() {
 						name='rolls'
 						title='Булки'
 						items={burgers}
-						onClickItem={handleIngredientClick}
 					/>
 					<IngredientsList
 						key='sauces'
 						name='sauces'
 						title='Соусы'
 						items={sauces}
-						onClickItem={handleIngredientClick}
 					/>
 					<IngredientsList
 						key='toppings'
 						name='toppings'
 						title='Начинки'
 						items={toppings}
-						onClickItem={handleIngredientClick}
 					/>
 				</div>
 			</div>
