@@ -10,6 +10,8 @@ const ContentApp = () => {
 	const location = useLocation();
 	const background = location.state && location.state.background;
 
+	console.log('hello');
+
 	return (
 		<>
 			<Routes location={background || location}>
