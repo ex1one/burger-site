@@ -8,13 +8,13 @@ import { thunks } from './thunks';
 export interface TInitialState {
 	ingredients: Ingredients;
 	isLoading: boolean;
-	status: 'pending' | 'success' | 'error';
+	status: 'pending' | 'success' | 'error' | 'idle';
 	error: any;
 }
 
 export const initialState: TInitialState = {
 	ingredients: [],
-	status: 'pending',
+	status: 'idle',
 	isLoading: false,
 	error: null,
 };
@@ -31,6 +31,10 @@ const ingredientsSlice = createSlice({
 				state.status = 'success';
 			})
 			.addCase(thunks.fetchIngredients.rejected, (state, action) => {
+				if (action.meta.aborted) {
+					return;
+				}
+
 				state.isLoading = false;
 				state.status = 'error';
 				state.error = action.error.message;

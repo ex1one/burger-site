@@ -1,5 +1,5 @@
 import API from '@src/api';
-import { getCookie, setCookie } from '@src/api/utils';
+import { getCookie, getItemFromLocalStorage, setCookie, setItemToLocalStorage } from '@src/api/utils';
 import { PAGES } from '@src/consts';
 import { useAppDispatch, useAppSelector } from '@src/hooks';
 import { userSelectors, userActions } from '@src/services/user';
@@ -15,7 +15,6 @@ export const ProtectedRoute = ({
 }) => {
 	const dispatch = useAppDispatch();
 	const user = useAppSelector(userSelectors.userSelector);
-	const accessToken = useAppSelector(userSelectors.accessTokenSelector);
 	const [isUserLoaded, setUserLoaded] = useState(false);
 
 	const location = useLocation();
@@ -23,31 +22,38 @@ export const ProtectedRoute = ({
 
 	const init = async () => {
 		try {
-			if (user && accessToken) {
+			if (user) {
 				setUserLoaded(true);
 				return;
 			}
 
-			const refreshToken = getCookie('token');
+			let accessToken = getItemFromLocalStorage('accessToken');
+			let refreshToken = getCookie('token');
 
 			if (refreshToken) {
-				// TODO: Не очень хорошо перезапрашивать снова токен. Но я не хочу хранить его в localStorage. Из-за DRY
-				const {
-					accessToken,
-					refreshToken: newRefreshToken,
-					success,
-				} = await API.user.refreshAccessToken(refreshToken);
+				if (!accessToken) {
+					const {
+						accessToken: refreshedAccessToken,
+						refreshToken: refreshedRefreshToken,
+						success,
+					} = await API.user.refreshAccessToken(refreshToken);
 
-				if (success) {
-					setCookie('token', newRefreshToken);
-					dispatch(userActions.setAccessToken(accessToken));
-					const response = await API.user.getUser(accessToken);
+					//TODO: Не нравится, что получаем success. Нужно ли это? Нужно сверху обрабатывать ошибку и показывать ее наверное.
+					if (success) {
+						accessToken = refreshedAccessToken;
+						refreshToken = refreshedRefreshToken;
 
-					if (response.success) {
-						dispatch(userActions.setUser(response.user));
+						setCookie('token', refreshedRefreshToken);
+						setItemToLocalStorage('accessToken', refreshedAccessToken);
 					}
-					setUserLoaded(true);
 				}
+
+				const response = await API.user.getUser(accessToken);
+
+				if (response.success) {
+					dispatch(userActions.setUser(response.user));
+				}
+				setUserLoaded(true);
 			}
 		} finally {
 			setUserLoaded(true);

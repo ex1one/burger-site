@@ -1,17 +1,22 @@
 import { useAppDispatch, useAppSelector } from '@src/hooks';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, RefObject, Dispatch, SetStateAction } from 'react';
 
 import styles from './burger-ingredients.module.css';
 import { IngredientsList } from '../ingredients-list';
 import { ingredientsSelectors, ingredientsThunks } from '@src/services/ingredients';
 
-export function BurgerIngredients() {
+const CommonIngredientsList = ({
+	menuItemsRef,
+	selectedTab,
+	setSelectedTab,
+}: {
+	menuItemsRef: RefObject<HTMLDivElement>;
+	selectedTab: string;
+	setSelectedTab: Dispatch<SetStateAction<string>>;
+}) => {
 	const dispatch = useAppDispatch();
 	const { ingredients, isLoading, error } = useAppSelector(ingredientsSelectors.ingredientsSelector);
-
-	const [selectedTab, setSelectedTab] = useState('rolls');
-	const menuItemsRef = useRef<HTMLDivElement>(null);
 
 	// TODO: Переписать
 	const handleScroll = () => {
@@ -40,20 +45,25 @@ export function BurgerIngredients() {
 		}
 	};
 
-	const handleTabClick = (value: string) => {
-		setSelectedTab(value);
-		const targetItem = menuItemsRef.current?.querySelector(`[data-tab="${value}"]`);
-		if (targetItem) {
-			targetItem.scrollIntoView({ behavior: 'smooth' });
-		}
-	};
-
 	useEffect(() => {
 		dispatch(ingredientsThunks.fetchIngredients());
 	}, []);
 
 	if (isLoading) {
-		return 'Загрузка...';
+		const array = new Array(4).fill(1);
+
+		return (
+			<div className={styles.loadingWrapper}>
+				{array.map(() => {
+					return (
+						<div className={styles.loading}>
+							<div className={styles.imageLoading} />
+							<div className={styles.itemContentWrapperLoading} />
+						</div>
+					);
+				})}
+			</div>
+		);
 	}
 
 	if (error) {
@@ -63,6 +73,46 @@ export function BurgerIngredients() {
 	const burgers = ingredients.filter((el) => el.type === 'bun');
 	const sauces = ingredients.filter((el) => el.type === 'sauce');
 	const toppings = ingredients.filter((el) => el.type === 'main');
+
+	return (
+		<div
+			className={styles.burgerIngredientsWrapper}
+			ref={menuItemsRef}
+			onScroll={handleScroll}
+		>
+			<IngredientsList
+				key='rolls'
+				name='rolls'
+				title='Булки'
+				items={burgers}
+			/>
+			<IngredientsList
+				key='sauces'
+				name='sauces'
+				title='Соусы'
+				items={sauces}
+			/>
+			<IngredientsList
+				key='toppings'
+				name='toppings'
+				title='Начинки'
+				items={toppings}
+			/>
+		</div>
+	);
+};
+
+export function BurgerIngredients() {
+	const [selectedTab, setSelectedTab] = useState('rolls');
+	const menuItemsRef = useRef<HTMLDivElement>(null);
+
+	const handleTabClick = (value: string) => {
+		setSelectedTab(value);
+		const targetItem = menuItemsRef.current?.querySelector(`[data-tab="${value}"]`);
+		if (targetItem) {
+			targetItem.scrollIntoView({ behavior: 'smooth' });
+		}
+	};
 
 	return (
 		<section className={styles.menuSection}>
@@ -91,30 +141,11 @@ export function BurgerIngredients() {
 						Начинки
 					</Tab>
 				</div>
-				<div
-					className={styles.burgerIngredientsWrapper}
-					ref={menuItemsRef}
-					onScroll={handleScroll}
-				>
-					<IngredientsList
-						key='rolls'
-						name='rolls'
-						title='Булки'
-						items={burgers}
-					/>
-					<IngredientsList
-						key='sauces'
-						name='sauces'
-						title='Соусы'
-						items={sauces}
-					/>
-					<IngredientsList
-						key='toppings'
-						name='toppings'
-						title='Начинки'
-						items={toppings}
-					/>
-				</div>
+				<CommonIngredientsList
+					selectedTab={selectedTab}
+					setSelectedTab={setSelectedTab}
+					menuItemsRef={menuItemsRef}
+				/>
 			</div>
 		</section>
 	);

@@ -1,18 +1,31 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { RootState } from '@src/types';
 
 import API from '@src/api';
 
-// TODO: Может быть такое, что запрос на получение вызывается 2 раза из-за strict-mode
-// Смотри решение - https://redux-toolkit.js.org/api/createAsyncThunk#cancellation
-const fetchIngredients = createAsyncThunk('ingredients/fetchIngredients', async () => {
-	const response = await API.ingredients.getIngredients();
+const fetchIngredients = createAsyncThunk(
+	'ingredients/fetchIngredients',
+	async () => {
+		const response = await API.ingredients.getIngredients();
 
-	if (!response.success) {
-		throw new Error('Error while request ingredients');
-	}
+		if (!response.success) {
+			throw new Error('Error while request ingredients');
+		}
 
-	return response.data;
-});
+		return response.data;
+	},
+	{
+		condition: (_, { getState }) => {
+			const {
+				ingredients: { status },
+			} = getState() as RootState;
+
+			if (status === 'pending') return false;
+
+			return true;
+		},
+	},
+);
 
 export const thunks = {
 	fetchIngredients,
