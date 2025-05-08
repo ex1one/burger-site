@@ -8,15 +8,10 @@ export const actions = {
 	setUser: (state, action: PayloadAction<User>) => {
 		state.user = action.payload;
 	},
-	setAccessToken: (state, action: PayloadAction<string>) => {
-		state.accessToken = action.payload;
-	},
 	changeState: (state, action: PayloadAction<TInitialState>) => {
-		state.accessToken = action.payload.accessToken;
 		state.user = action.payload.user;
 	},
 	clearState: (state) => {
-		state.accessToken = null;
 		state.user = null;
 	},
 } satisfies TSliceReducerActions<TInitialState>;

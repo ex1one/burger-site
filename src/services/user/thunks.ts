@@ -1,19 +1,20 @@
 import API from '@src/api';
 import { PAGES } from '@src/consts';
 
-import { deleteCookie, setCookie } from '@src/api/utils';
+import { deleteCookie, getItemFromLocalStorage, setCookie, setItemToLocalStorage } from '@src/api/utils';
 import { createAppAsyncThunk } from '@src/store/shared';
 
 import { selectors } from './selectors';
 import { userActions } from './slice';
 
+// TODO: Проблема в том, что отмену запрсов необходимо выполнять вручную. Если мы запустим 2 раза подряд logout, то он вызовется 2 раза подряд.
+// Надо как-нибудь обрабатывать этот кейс. В сагах очень хорошо реализована отмена выполнения функции. Сюда мы прикрутить ее + автоматическое отмену запросов в thunk текущем
 const logout = createAppAsyncThunk('user/logout', async (_, { dispatch, extra }) => {
 	const response = await API.user.logout();
 
 	if (response.success) {
 		deleteCookie('token');
 		dispatch(userActions.clearState());
-		// extra.router.navigate(PAGES.HOME);
 		extra.history.push(PAGES.HOME);
 	} else {
 		alert('Произошла ошибка');
@@ -22,7 +23,7 @@ const logout = createAppAsyncThunk('user/logout', async (_, { dispatch, extra })
 
 const update = createAppAsyncThunk('user/update', async (_, { dispatch, getState }) => {
 	const user = selectors.userSelector(getState().user);
-	const accessToken = selectors.accessTokenSelector(getState().user);
+	const accessToken = getItemFromLocalStorage('accessToken');
 
 	if (!user || !accessToken) return;
 
@@ -40,7 +41,6 @@ const changePassword = createAppAsyncThunk(
 
 		if (response.success) {
 			alert(response.message);
-			// extra.router.navigate(PAGES.HOME);
 			extra.history.push(PAGES.HOME);
 		}
 	},
@@ -55,8 +55,10 @@ const signIn = createAppAsyncThunk(
 			const { accessToken, refreshToken, user } = response;
 
 			setCookie('token', refreshToken);
-			dispatch(userActions.changeState({ accessToken, user }));
-			// extra.router.navigate(PAGES.HOME);
+			setItemToLocalStorage('accessToken', accessToken);
+
+			dispatch(userActions.changeState({ user }));
+
 			extra.history.push(PAGES.HOME);
 		} else {
 			alert('Произошла ошибка');
@@ -73,8 +75,10 @@ const signUp = createAppAsyncThunk(
 			const { accessToken, refreshToken, user } = response;
 
 			setCookie('token', refreshToken);
-			dispatch(userActions.changeState({ accessToken, user }));
-			// extra.router.navigate(PAGES.HOME, { replace: true });
+			setItemToLocalStorage('accessToken', accessToken);
+
+			dispatch(userActions.changeState({ user }));
+
 			extra.history.replace(PAGES.HOME);
 		} else {
 			alert('Произошла ошибка');
@@ -89,7 +93,6 @@ const forgotPassword = createAppAsyncThunk(
 
 		if (response.success) {
 			alert(response.message);
-			// extra.router.navigate(PAGES.RESET_PASSWORD);
 			extra.history.push(PAGES.RESET_PASSWORD);
 		}
 	},

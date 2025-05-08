@@ -6,3 +6,5 @@ export * from './is-valid-json';
 export * from './get-cookie';
 export * from './set-cookie';
 export * from './delete-cookie';
+export * from './get-item-from-local-storage';
+export * from './set-item-from-local-storage';

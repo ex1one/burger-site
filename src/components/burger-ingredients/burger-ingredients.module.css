@@ -23,3 +23,52 @@
 	overflow: auto;
 	max-height: 664px;
 }
+
+.loadingWrapper {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	row-gap: 48px;
+	column-gap: 24px;
+}
+
+.loading {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.loading .imageLoading,
+.loading .itemContentWrapperLoading {
+	background-color: #1c1c21;
+	background: linear-gradient(
+			100deg,
+			rgba(255, 255, 255, 0) 40%,
+			rgba(255, 255, 255, 0.5) 50%,
+			rgba(255, 255, 255, 0) 60%
+		)
+		#1c1c21;
+	background-size: 200% 100%;
+	background-position-x: 180%;
+	animation: 1s loading ease-in-out infinite;
+}
+
+@keyframes loading {
+	to {
+		background-position-x: -20%;
+	}
+}
+
+.loading .imageLoading {
+	border-radius: 50%;
+	width: 120px;
+	height: 120px;
+	margin: 0 auto;
+}
+
+.loading .itemContentWrapperLoading {
+	min-height: 36px;
+	width: 80%;
+	margin: 0 auto;
+	border-radius: 4px;
+	animation-delay: 0.06s;
+}

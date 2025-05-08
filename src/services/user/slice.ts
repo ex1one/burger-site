@@ -7,12 +7,10 @@ import { thunks } from './thunks';
 
 export interface TInitialState {
 	user: User | null;
-	accessToken: string | null;
 }
 
 export const initialState: TInitialState = {
 	user: null,
-	accessToken: null,
 };
 
 const userSlice = createSlice({
