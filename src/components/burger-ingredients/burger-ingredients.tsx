@@ -6,6 +6,7 @@ import styles from './burger-ingredients.module.css';
 import { IngredientsList } from '../ingredients-list';
 import { ingredientsSelectors, ingredientsThunks } from '@src/services/ingredients';
 
+// TODO: Вынести
 const CommonIngredientsList = ({
 	menuItemsRef,
 	selectedTab,
@@ -54,9 +55,12 @@ const CommonIngredientsList = ({
 
 		return (
 			<div className={styles.loadingWrapper}>
-				{array.map(() => {
+				{array.map((_, index) => {
 					return (
-						<div className={styles.loading}>
+						<div
+							key={index}
+							className={styles.loading}
+						>
 							<div className={styles.imageLoading} />
 							<div className={styles.itemContentWrapperLoading} />
 						</div>

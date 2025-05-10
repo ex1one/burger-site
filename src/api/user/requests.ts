@@ -16,8 +16,9 @@ export const changePassword = ({ password, token }: { password: string; token: s
 	});
 };
 
+// TODO: Возможно лучше будет реализовать такой подход:
+// return { body, error }
 export const signUp = ({ name, email, password }: { name: string; email: string; password: string }) => {
-	// TODO: Будет ли в ответе при неуспешном запросе поле message? Проверить
 	return myFetch.post<{ success: boolean; user: User; accessToken: string; refreshToken: string }>(
 		BASE_URL + '/auth/register',
 		{

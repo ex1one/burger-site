@@ -1,15 +1,14 @@
 import { useAppDispatch, useAppSelector } from '@src/hooks';
 import { CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useMemo } from 'react';
-
-import styles from './checkout-button.module.css';
-import { NAMES_OF_MODALS } from '@src/consts';
+import { NAMES_OF_MODALS, PAGES } from '@src/consts';
 import { constructorIngredientsSelectors } from '@src/services/constructorIngredients';
-import { createOrderThunk } from '@src/services/order/thunks';
 import { modalsActions } from '@src/services/modals';
 import { userSelectors } from '@src/services/user';
 import { useNavigate } from 'react-router-dom';
-import { PAGES } from '../../consts/pages';
+import { orderThunks } from '@src/services/order';
+
+import styles from './checkout-button.module.css';
 
 export const CheckoutButton = () => {
 	const dispatch = useAppDispatch();
@@ -28,7 +27,7 @@ export const CheckoutButton = () => {
 			return;
 		}
 
-		dispatch(createOrderThunk(ingredients.map((el) => el._id)));
+		dispatch(orderThunks.createOrderThunk(ingredients.map((el) => el._id)));
 		dispatch(modalsActions.openModal(NAMES_OF_MODALS.ORDER_DETAIL_MODAL));
 	};
 

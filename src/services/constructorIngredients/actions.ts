@@ -6,8 +6,6 @@ import { TInitialState } from './slice';
 import { TSliceReducerActions } from '@src/types';
 
 export const actions = {
-	// TODO: Можно в будущем использовать prepareReducer, чтобы улучшить код тут
-	// Посмотри курс по использованию redux-toolkit на официальном сайте
 	addIngredient: {
 		reducer(state, action: PayloadAction<IngredientWithUniqueId>) {
 			state.ingredients.splice(state.ingredients.length - 1, 0, action.payload);
