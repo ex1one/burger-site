@@ -1,40 +1,24 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
-
-import { Link } from '@src/components';
-import { PAGES } from '@src/consts';
+import { Link, PasswordInput } from '@src/components';
+import { PAGES, schemas } from '@src/consts';
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import styles from './reset-password.module.css';
 import { useAppDispatch } from '@src/hooks';
 import { userThunks } from '@src/services/user';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Controller, useForm } from 'react-hook-form';
+
+const defaultValues = {
+	password: '',
+	code: '',
+};
 
 export function ResetPassword() {
 	const dispatch = useAppDispatch();
 
-	const [password, setPassword] = useState('');
-	const [code, setCode] = useState('');
+	const form = useForm({ defaultValues, resolver: yupResolver(schemas.auth.resetPassword) });
 
-	const [typePassword, setTypePassword] = useState<'password' | 'text' | 'email'>('password');
-
-	const handleChangePassword = (event: ChangeEvent<HTMLInputElement>) => {
-		const value = event.target.value;
-
-		setPassword(value);
-	};
-
-	const handleChangeTypePassword = () => {
-		setTypePassword((prev) => (prev === 'password' ? 'text' : 'password'));
-	};
-
-	const handleChangeCode = (event: ChangeEvent<HTMLInputElement>) => {
-		const value = event.target.value;
-
-		setCode(value);
-	};
-
-	const handleSubmit = (event: FormEvent) => {
-		event.preventDefault();
-
+	const handleSubmit = ({ password, code }: typeof defaultValues) => {
 		dispatch(userThunks.changePassword({ password, code }));
 	};
 
@@ -43,25 +27,36 @@ export function ResetPassword() {
 			<div className={styles.contentWrapper}>
 				<form
 					className={styles.contentBody}
-					onSubmit={handleSubmit}
+					onSubmit={form.handleSubmit(handleSubmit)}
 				>
 					<h2 className='text text_type_main-medium'>Восстановление пароля</h2>
-					<Input
-						type={typePassword}
-						placeholder='Введите новый пароль'
-						onChange={handleChangePassword}
-						value={password}
-						icon={typePassword === 'password' ? 'ShowIcon' : 'HideIcon'}
-						onIconClick={handleChangeTypePassword}
+					<Controller
 						name='password'
-						error={false}
+						control={form.control}
+						render={({ field, formState }) => {
+							return (
+								<PasswordInput
+									placeholder='Введите новый пароль'
+									error={Boolean(formState.errors.password)}
+									errorText={formState.errors.password?.message}
+									{...field}
+								/>
+							);
+						}}
 					/>
-					<Input
-						type='text'
-						placeholder='Введите код из письма'
-						onChange={handleChangeCode}
-						value={code}
+					<Controller
 						name='code'
+						control={form.control}
+						render={({ field, formState }) => {
+							return (
+								<Input
+									placeholder='Введите код из письма'
+									error={Boolean(formState.errors.code)}
+									errorText={formState.errors.code?.message}
+									{...field}
+								/>
+							);
+						}}
 					/>
 					<Button
 						type='primary'

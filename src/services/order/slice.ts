@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { selectors } from './selectors';
 import { actions } from './actions';
-import { createOrderThunk } from './thunks';
+import { extraReducers } from './extraReducers';
+import { thunks } from './thunks';
 
 export interface TInitialState {
 	status: string;
@@ -22,25 +23,10 @@ const orderSlice = createSlice({
 	name: 'order',
 	initialState,
 	reducers: actions,
-	// TODO: Разобраться с extraReducers. Их тоже вынести
-	extraReducers: (builder) => {
-		builder
-			.addCase(createOrderThunk.fulfilled, (state, action) => {
-				state.order = { name: action.payload.name, number: action.payload.order.number };
-				state.isLoading = false;
-				state.status = 'success';
-			})
-			.addCase(createOrderThunk.rejected, (state, action) => {
-				state.isLoading = false;
-				state.status = 'error';
-				state.error = action.error.message;
-			})
-			.addCase(createOrderThunk.pending, (state) => {
-				state.isLoading = true;
-				state.status = 'pending';
-			});
-	},
+	extraReducers,
 	selectors,
 });
 
 export const { reducer: orderReducer, actions: orderActions, selectors: orderSelectors } = orderSlice;
+
+export const orderThunks = thunks;

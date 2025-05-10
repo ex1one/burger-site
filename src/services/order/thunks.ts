@@ -1,8 +1,8 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAppAsyncThunk } from '@src/store/shared';
 
 import API from '@src/api';
 
-export const createOrderThunk = createAsyncThunk('order/createOrder', async (ingredients: string[]) => {
+const createOrderThunk = createAppAsyncThunk('order/createOrder', async (ingredients: string[]) => {
 	const response = await API.order.createOrder(ingredients);
 
 	if (!response.success) {
@@ -11,3 +11,7 @@ export const createOrderThunk = createAsyncThunk('order/createOrder', async (ing
 
 	return response;
 });
+
+export const thunks = {
+	createOrderThunk,
+};

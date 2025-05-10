@@ -1,7 +1,7 @@
 import { TKeyofMethods } from './types/methods';
 import { queryStringify } from './utils/query-stringify';
 import METHODS from './config/methods';
-import { getCookie, isValidJSON, setCookie } from '@src/api/utils';
+import { getCookie, handleError as handleApiError, isValidJSON, setCookie } from '@src/api/utils';
 import API from '.';
 
 export interface Options {
@@ -61,9 +61,14 @@ class HTTPTransport {
 				xhr.setRequestHeader(key, value);
 			});
 
-			xhr.onabort = reject;
-			xhr.onerror = reject;
-			xhr.ontimeout = reject;
+			const handleError = (error: any) => {
+				console.log({ error });
+				return isValidJSON(error) ? reject(handleApiError(JSON.parse(error))) : reject(handleApiError(error));
+			};
+
+			xhr.onabort = handleError;
+			xhr.onerror = handleError;
+			xhr.ontimeout = handleError;
 
 			xhr.onload = async () => {
 				try {
@@ -101,11 +106,13 @@ class HTTPTransport {
 					}
 
 					if (xhr.status > 299) {
-						reject(xhr.responseText);
+						handleError(xhr.responseText);
 					}
+					// TODO: Вынести в отдельную функцию проверку для isValidJSON тут. Чтобы избавиться от повторения кода.
+					// Смотри выше
 					resolve(isValidJSON(xhr.response) ? JSON.parse(xhr.response) : xhr.response);
 				} catch (error) {
-					reject(error);
+					handleError(error);
 				}
 			};
 

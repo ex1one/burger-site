@@ -1,23 +1,38 @@
 import API from '@src/api';
-import { PAGES } from '@src/consts';
+import { ERROR_MESSAGE, PAGES } from '@src/consts';
 
-import { deleteCookie, getItemFromLocalStorage, setCookie, setItemToLocalStorage } from '@src/api/utils';
+import {
+	deleteCookie,
+	deleteItemFromLocalStorage,
+	getItemFromLocalStorage,
+	setCookie,
+	setItemToLocalStorage,
+} from '@src/api/utils';
 import { createAppAsyncThunk } from '@src/store/shared';
 
 import { selectors } from './selectors';
 import { userActions } from './slice';
+import { toast } from 'react-toastify';
+import { ApiErrorClass } from '@src/api/types/errors';
 
 // TODO: Проблема в том, что отмену запрсов необходимо выполнять вручную. Если мы запустим 2 раза подряд logout, то он вызовется 2 раза подряд.
 // Надо как-нибудь обрабатывать этот кейс. В сагах очень хорошо реализована отмена выполнения функции. Сюда мы прикрутить ее + автоматическое отмену запросов в thunk текущем
 const logout = createAppAsyncThunk('user/logout', async (_, { dispatch, extra }) => {
-	const response = await API.user.logout();
+	try {
+		await API.user.logout();
 
-	if (response.success) {
 		deleteCookie('token');
+		deleteItemFromLocalStorage('accessToken');
 		dispatch(userActions.clearState());
+
 		extra.history.push(PAGES.HOME);
-	} else {
-		alert('Произошла ошибка');
+	} catch (error) {
+		if (error instanceof ApiErrorClass) {
+			toast.error(`${error.message}`);
+			return;
+		}
+
+		toast.error(ERROR_MESSAGE);
 	}
 });
 
@@ -49,19 +64,21 @@ const changePassword = createAppAsyncThunk(
 const signIn = createAppAsyncThunk(
 	'user/signIn',
 	async ({ email, password }: { email: string; password: string }, { dispatch, extra }) => {
-		const response = await API.user.signIn({ email, password });
-
-		if (response.success) {
-			const { accessToken, refreshToken, user } = response;
+		try {
+			const { accessToken, refreshToken, user } = await API.user.signIn({ email, password });
 
 			setCookie('token', refreshToken);
 			setItemToLocalStorage('accessToken', accessToken);
-
-			dispatch(userActions.changeState({ user }));
+			dispatch(userActions.changeState({ user, error: null }));
 
 			extra.history.push(PAGES.HOME);
-		} else {
-			alert('Произошла ошибка');
+		} catch (error) {
+			if (error instanceof ApiErrorClass) {
+				toast.error(`${error.message}`);
+				return;
+			}
+
+			toast.error(ERROR_MESSAGE);
 		}
 	},
 );
@@ -69,19 +86,22 @@ const signIn = createAppAsyncThunk(
 const signUp = createAppAsyncThunk(
 	'user/signUp',
 	async ({ email, name, password }: { email: string; name: string; password: string }, { dispatch, extra }) => {
-		const response = await API.user.signUp({ email, name, password });
-
-		if (response.success) {
-			const { accessToken, refreshToken, user } = response;
+		try {
+			const { accessToken, refreshToken, user } = await API.user.signUp({ email, name, password });
 
 			setCookie('token', refreshToken);
 			setItemToLocalStorage('accessToken', accessToken);
 
-			dispatch(userActions.changeState({ user }));
+			dispatch(userActions.changeState({ user, error: null }));
 
 			extra.history.replace(PAGES.HOME);
-		} else {
-			alert('Произошла ошибка');
+		} catch (error) {
+			if (error instanceof ApiErrorClass) {
+				toast.error(`${error.message}`);
+				return;
+			}
+
+			toast.error(ERROR_MESSAGE);
 		}
 	},
 );

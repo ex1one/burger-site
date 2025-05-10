@@ -11,6 +11,7 @@
 	},
 	"dependencies": {
 		"@babel/runtime": "7.25.4",
+		"@hookform/resolvers": "5.0.1",
 		"@reduxjs/toolkit": "2.5.1",
 		"@ya.praktikum/react-developer-burger-ui-components": "1.14.2",
 		"core-js": "3.38.1",
@@ -21,9 +22,12 @@
 		"react-dnd": "16.0.1",
 		"react-dnd-html5-backend": "16.0.1",
 		"react-dom": "18.2.0",
+		"react-hook-form": "7.56.3",
 		"react-redux": "9.2.0",
 		"react-router-dom": "7.1.5",
-		"uuid": "11.1.0"
+		"react-toastify": "11.0.5",
+		"uuid": "11.1.0",
+		"yup": "1.6.1"
 	},
 	"devDependencies": {
 		"@types/node": "22.13.1",
