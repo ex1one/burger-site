@@ -34,4 +34,13 @@ export const schemas = {
 			})
 			.required(),
 	},
+	user: {
+		update: yup
+			.object({
+				name: yup.string().required(errorMessages.required),
+				login: yup.string().required(errorMessages.required),
+				password: yup.string().min(1, errorMessages.required).required(errorMessages.required),
+			})
+			.required(),
+	},
 };

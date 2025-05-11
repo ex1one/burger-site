@@ -10,3 +10,4 @@ export * from './burger-ingredients';
 export * from './protected-route';
 export * from './ingredient-details';
 export * from './password-input';
+export * from './burger-ingredients-list';

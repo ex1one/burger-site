@@ -62,8 +62,15 @@ class HTTPTransport {
 			});
 
 			const handleError = (error: any) => {
-				console.log({ error });
 				return isValidJSON(error) ? reject(handleApiError(JSON.parse(error))) : reject(handleApiError(error));
+			};
+
+			const handleResponse = (response: any) => {
+				try {
+					return isValidJSON(response) ? JSON.parse(response) : response;
+				} catch {
+					return response;
+				}
 			};
 
 			xhr.onabort = handleError;
@@ -73,15 +80,14 @@ class HTTPTransport {
 			xhr.onload = async () => {
 				try {
 					if (xhr.status === 403) {
-						const responseData = isValidJSON(xhr.response) ? JSON.parse(xhr.response) : xhr.response;
+						const responseData = handleResponse(xhr.response);
 
 						if (responseData.message === 'jwt expired') {
-							// TODO: Сюда надо пихать refreshToken
-							const token = getCookie('token');
+							const refreshToken = getCookie('token');
 
-							if (token) {
-								const { refreshToken } = await API.user.refreshAccessToken(token);
-								setCookie(refreshToken, 'token');
+							if (refreshToken) {
+								const { refreshToken: refreshedRefreshToken } = await API.user.refreshAccessToken(refreshToken);
+								setCookie('token', refreshedRefreshToken);
 
 								xhr.open(method, isGet && !!data ? `${url}${queryStringify(data)}` : url, true);
 
@@ -108,9 +114,8 @@ class HTTPTransport {
 					if (xhr.status > 299) {
 						handleError(xhr.responseText);
 					}
-					// TODO: Вынести в отдельную функцию проверку для isValidJSON тут. Чтобы избавиться от повторения кода.
-					// Смотри выше
-					resolve(isValidJSON(xhr.response) ? JSON.parse(xhr.response) : xhr.response);
+
+					resolve(handleResponse(xhr.response));
 				} catch (error) {
 					handleError(error);
 				}
