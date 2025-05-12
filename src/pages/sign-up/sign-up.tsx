@@ -1,49 +1,29 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
-import { userThunks } from '@src/services/user';
-import { useAppDispatch } from '@src/hooks';
-
-import { Link } from '@src/components';
-import { PAGES } from '@src/consts';
-
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import styles from './sign-up.module.css';
+
+import { userThunks } from '@src/services/user';
+import { useAppDispatch } from '@src/hooks';
+import { Link, PasswordInput } from '@src/components';
+import { PAGES, schemas } from '@src/consts';
+
+
+
+
+const defaultValues = {
+	name: '',
+	email: '',
+	password: '',
+};
 
 export function SignUp() {
 	const dispatch = useAppDispatch();
 
-	const [name, setName] = useState('');
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
+	const form = useForm({ defaultValues, resolver: yupResolver(schemas.auth.signUp) });
 
-	const [typePassword, setTypePassword] = useState<'password' | 'text' | 'email'>('password');
-
-	const handleChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
-		const value = event.target.value;
-
-		setEmail(value);
-	};
-
-	const handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
-		const value = event.target.value;
-
-		setName(value);
-	};
-
-	const handleChangePassword = (event: ChangeEvent<HTMLInputElement>) => {
-		const value = event.target.value;
-
-		setPassword(value);
-	};
-
-	const handleChangeTypePassword = () => {
-		setTypePassword((prev) => (prev === 'password' ? 'text' : 'password'));
-	};
-
-	const handleSubmit = (event: FormEvent) => {
-		event.preventDefault();
-
-		// TODO: Добавить валидацию
+	const handleSubmit = ({ email, name, password }: typeof defaultValues) => {
 		dispatch(userThunks.signUp({ email, name, password }));
 	};
 
@@ -52,36 +32,54 @@ export function SignUp() {
 			<div className={styles.contentWrapper}>
 				<form
 					className={styles.contentBody}
-					onSubmit={handleSubmit}
+					onSubmit={form.handleSubmit(handleSubmit)}
 				>
 					<h2 className='text text_type_main-medium'>Регистрация</h2>
-					<Input
-						type='text'
-						placeholder='Имя'
-						onChange={handleChangeName}
-						value={name}
+					<Controller
 						name='name'
+						control={form.control}
+						render={({ field, formState }) => {
+							return (
+								<Input
+									placeholder='Имя'
+									error={Boolean(formState.errors.name)}
+									errorText={formState.errors.name?.message}
+									{...field}
+								/>
+							);
+						}}
 					/>
-					<Input
-						type='email'
-						placeholder='E-mail'
-						onChange={handleChangeEmail}
-						value={email}
+					<Controller
 						name='email'
+						control={form.control}
+						render={({ field, formState }) => {
+							return (
+								<Input
+									placeholder='E-mail'
+									error={Boolean(formState.errors.email)}
+									errorText={formState.errors.email?.message}
+									{...field}
+								/>
+							);
+						}}
 					/>
-					<Input
-						type={typePassword}
-						placeholder='Пароль'
-						onChange={handleChangePassword}
-						value={password}
-						icon={typePassword === 'password' ? 'ShowIcon' : 'HideIcon'}
-						onIconClick={handleChangeTypePassword}
+					<Controller
 						name='password'
-						error={false}
+						control={form.control}
+						render={({ field, formState }) => {
+							return (
+								<PasswordInput
+									error={Boolean(formState.errors.password)}
+									errorText={formState.errors.password?.message}
+									{...field}
+								/>
+							);
+						}}
 					/>
 					<Button
 						type='primary'
 						htmlType='submit'
+						disabled={form.formState.isSubmitting}
 					>
 						Зарегистрироваться
 					</Button>

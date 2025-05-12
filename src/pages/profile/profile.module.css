@@ -38,6 +38,6 @@
 
 .contentFooter {
 	display: grid;
-	grid-template-columns: auto;
+	grid-template-columns: repeat(2, 1fr);
 	gap: 8px;
 }

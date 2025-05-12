@@ -1,9 +1,8 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAppAsyncThunk } from '@src/store/shared';
 import { RootState } from '@src/types';
-
 import API from '@src/api';
 
-const fetchIngredients = createAsyncThunk(
+const fetchIngredients = createAppAsyncThunk(
 	'ingredients/fetchIngredients',
 	async () => {
 		const response = await API.ingredients.getIngredients();

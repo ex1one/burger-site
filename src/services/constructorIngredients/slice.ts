@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IngredientWithUniqueId } from '@src/api/ingredients/types';
+
 import { selectors } from './selectors';
 import { actions } from './actions';
+
+import { IngredientWithUniqueId } from '@src/api/ingredients/types';
 
 export interface TInitialState {
 	ingredients: IngredientWithUniqueId[];

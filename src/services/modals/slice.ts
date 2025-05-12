@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { NAMES_OF_MODALS } from '@src/consts';
+
 
 import { selectors } from './selectors';
 import { actions } from './actions';
+
+import { NAMES_OF_MODALS } from '@src/consts';
 
 export type TInitialState = Record<keyof typeof NAMES_OF_MODALS, boolean>;
 

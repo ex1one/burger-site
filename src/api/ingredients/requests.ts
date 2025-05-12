@@ -1,7 +1,9 @@
-import myFetch from '@src/api/my-fetch';
 
 import { YandexApi } from '../config/urls';
+
 import { Ingredients } from './types';
+
+import myFetch from '@src/api/my-fetch';
 
 const BASE_URL = YandexApi;
 

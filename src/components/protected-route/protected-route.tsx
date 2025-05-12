@@ -1,10 +1,11 @@
+import { useState, useEffect } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+
 import API from '@src/api';
 import { getCookie, getItemFromLocalStorage, setCookie, setItemToLocalStorage } from '@src/api/utils';
 import { PAGES } from '@src/consts';
 import { useAppDispatch, useAppSelector } from '@src/hooks';
 import { userSelectors, userActions } from '@src/services/user';
-import { useState, useEffect } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
 
 export const ProtectedRoute = ({
 	element,
@@ -32,20 +33,14 @@ export const ProtectedRoute = ({
 
 			if (refreshToken) {
 				if (!accessToken) {
-					const {
-						accessToken: refreshedAccessToken,
-						refreshToken: refreshedRefreshToken,
-						success,
-					} = await API.user.refreshAccessToken(refreshToken);
+					const { accessToken: refreshedAccessToken, refreshToken: refreshedRefreshToken } =
+						await API.user.refreshAccessToken(refreshToken);
 
-					//TODO: Не нравится, что получаем success. Нужно ли это? Нужно сверху обрабатывать ошибку и показывать ее наверное.
-					if (success) {
-						accessToken = refreshedAccessToken;
-						refreshToken = refreshedRefreshToken;
+					accessToken = refreshedAccessToken;
+					refreshToken = refreshedRefreshToken;
 
-						setCookie('token', refreshedRefreshToken);
-						setItemToLocalStorage('accessToken', refreshedAccessToken);
-					}
+					setCookie('token', refreshedRefreshToken);
+					setItemToLocalStorage('accessToken', refreshedAccessToken);
 				}
 
 				const response = await API.user.getUser(accessToken);

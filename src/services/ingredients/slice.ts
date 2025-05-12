@@ -1,9 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Ingredients } from '@src/api/ingredients/types';
+
 
 import { selectors } from './selectors';
 import { actions } from './actions';
 import { thunks } from './thunks';
+import { extraReducers } from './extraReducers';
+
+import { Ingredients } from '@src/api/ingredients/types';
 
 export interface TInitialState {
 	ingredients: Ingredients;
@@ -23,27 +26,7 @@ const ingredientsSlice = createSlice({
 	name: 'ingredients',
 	initialState,
 	reducers: actions,
-	extraReducers: (builder) => {
-		builder
-			.addCase(thunks.fetchIngredients.fulfilled, (state, action) => {
-				state.ingredients = action.payload;
-				state.isLoading = false;
-				state.status = 'success';
-			})
-			.addCase(thunks.fetchIngredients.rejected, (state, action) => {
-				if (action.meta.aborted) {
-					return;
-				}
-
-				state.isLoading = false;
-				state.status = 'error';
-				state.error = action.error.message;
-			})
-			.addCase(thunks.fetchIngredients.pending, (state) => {
-				state.isLoading = true;
-				state.status = 'pending';
-			});
-	},
+	extraReducers,
 	selectors: selectors,
 });
 

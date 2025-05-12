@@ -1,8 +1,10 @@
-import myFetch from '@src/api/my-fetch';
 
 import { YandexApi } from '../config/urls';
-import { User } from './types';
 import { getCookie } from '../utils';
+
+import { User } from './types';
+
+import myFetch from '@src/api/my-fetch';
 
 const BASE_URL = YandexApi;
 
@@ -16,8 +18,9 @@ export const changePassword = ({ password, token }: { password: string; token: s
 	});
 };
 
+// TODO: Возможно лучше будет реализовать такой подход:
+// return { body, error }
 export const signUp = ({ name, email, password }: { name: string; email: string; password: string }) => {
-	// TODO: Будет ли в ответе при неуспешном запросе поле message? Проверить
 	return myFetch.post<{ success: boolean; user: User; accessToken: string; refreshToken: string }>(
 		BASE_URL + '/auth/register',
 		{

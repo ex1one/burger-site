@@ -1,10 +1,11 @@
 import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useMemo } from 'react';
 
 import { Modal } from '../modal';
 
 import styles from './order-details-modal.module.css';
+
 import { useAppDispatch, useAppSelector } from '@src/hooks';
-import { useMemo } from 'react';
 import { NAMES_OF_MODALS } from '@src/consts';
 import { orderActions, orderSelectors } from '@src/services/order/slice';
 import { constructorIngredientsActions } from '@src/services/constructorIngredients';

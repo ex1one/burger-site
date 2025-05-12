@@ -1,7 +1,8 @@
-import { Link } from '@src/components';
-import { PAGES } from '@src/consts';
 
 import styles from './not-found.module.css';
+
+import { Link } from '@src/components';
+import { PAGES } from '@src/consts';
 
 export function NotFound() {
 	return (

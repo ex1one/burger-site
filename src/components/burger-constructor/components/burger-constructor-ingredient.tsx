@@ -1,8 +1,9 @@
-import { IngredientWithUniqueId } from '@src/api/ingredients/types';
 import { DragIcon, ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDrag, useDrop } from 'react-dnd';
 
 import styles from './burger-constructor-ingredient.module.css';
+
+import { IngredientWithUniqueId } from '@src/api/ingredients/types';
 
 interface BurgerConstructorIngredientProps {
 	ingredient: IngredientWithUniqueId;

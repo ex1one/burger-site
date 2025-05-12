@@ -1,47 +1,68 @@
-import API from '@src/api';
-import { PAGES } from '@src/consts';
+import { toast } from 'react-toastify';
 
-import { deleteCookie, getItemFromLocalStorage, setCookie, setItemToLocalStorage } from '@src/api/utils';
-import { createAppAsyncThunk } from '@src/store/shared';
-
-import { selectors } from './selectors';
 import { userActions } from './slice';
+
+import API from '@src/api';
+import { ERROR_MESSAGE, PAGES } from '@src/consts';
+import {
+	deleteCookie,
+	deleteItemFromLocalStorage,
+	getItemFromLocalStorage,
+	setCookie,
+	setItemToLocalStorage,
+} from '@src/api/utils';
+import { createAppAsyncThunk } from '@src/store/shared';
+import { User } from '@src/api/user/types';
+import { ApiErrorClass } from '@src/api/config/api-error';
+
+const handleError = (error: unknown) => {
+	if (error instanceof ApiErrorClass) {
+		toast.error(`${error.message}`);
+		return;
+	}
+
+	toast.error(ERROR_MESSAGE);
+};
 
 // TODO: Проблема в том, что отмену запрсов необходимо выполнять вручную. Если мы запустим 2 раза подряд logout, то он вызовется 2 раза подряд.
 // Надо как-нибудь обрабатывать этот кейс. В сагах очень хорошо реализована отмена выполнения функции. Сюда мы прикрутить ее + автоматическое отмену запросов в thunk текущем
 const logout = createAppAsyncThunk('user/logout', async (_, { dispatch, extra }) => {
-	const response = await API.user.logout();
+	try {
+		await API.user.logout();
 
-	if (response.success) {
 		deleteCookie('token');
+		deleteItemFromLocalStorage('accessToken');
 		dispatch(userActions.clearState());
+
 		extra.history.push(PAGES.HOME);
-	} else {
-		alert('Произошла ошибка');
+	} catch (error) {
+		handleError(error);
 	}
 });
 
-const update = createAppAsyncThunk('user/update', async (_, { dispatch, getState }) => {
-	const user = selectors.userSelector(getState().user);
+const update = createAppAsyncThunk('user/update', async (updatedFields: Partial<User>, { dispatch }) => {
 	const accessToken = getItemFromLocalStorage('accessToken');
 
-	if (!user || !accessToken) return;
+	if (!accessToken) return;
 
-	const response = await API.user.updateUser({ name: user.name }, accessToken);
+	try {
+		const response = await API.user.updateUser(updatedFields, accessToken);
 
-	if (response.success) {
 		dispatch(userActions.setUser(response.user));
+	} catch (error) {
+		handleError(error);
 	}
 });
 
 const changePassword = createAppAsyncThunk(
 	'user/resetPassword',
 	async ({ password, code }: { password: string; code: string }, { extra }) => {
-		const response = await API.user.changePassword({ password, token: code });
+		try {
+			await API.user.changePassword({ password, token: code });
 
-		if (response.success) {
-			alert(response.message);
 			extra.history.push(PAGES.HOME);
+		} catch (error) {
+			handleError(error);
 		}
 	},
 );
@@ -49,19 +70,16 @@ const changePassword = createAppAsyncThunk(
 const signIn = createAppAsyncThunk(
 	'user/signIn',
 	async ({ email, password }: { email: string; password: string }, { dispatch, extra }) => {
-		const response = await API.user.signIn({ email, password });
-
-		if (response.success) {
-			const { accessToken, refreshToken, user } = response;
+		try {
+			const { accessToken, refreshToken, user } = await API.user.signIn({ email, password });
 
 			setCookie('token', refreshToken);
 			setItemToLocalStorage('accessToken', accessToken);
-
-			dispatch(userActions.changeState({ user }));
+			dispatch(userActions.changeState({ user, error: null }));
 
 			extra.history.push(PAGES.HOME);
-		} else {
-			alert('Произошла ошибка');
+		} catch (error) {
+			handleError(error);
 		}
 	},
 );
@@ -69,19 +87,17 @@ const signIn = createAppAsyncThunk(
 const signUp = createAppAsyncThunk(
 	'user/signUp',
 	async ({ email, name, password }: { email: string; name: string; password: string }, { dispatch, extra }) => {
-		const response = await API.user.signUp({ email, name, password });
-
-		if (response.success) {
-			const { accessToken, refreshToken, user } = response;
+		try {
+			const { accessToken, refreshToken, user } = await API.user.signUp({ email, name, password });
 
 			setCookie('token', refreshToken);
 			setItemToLocalStorage('accessToken', accessToken);
 
-			dispatch(userActions.changeState({ user }));
+			dispatch(userActions.changeState({ user, error: null }));
 
 			extra.history.replace(PAGES.HOME);
-		} else {
-			alert('Произошла ошибка');
+		} catch (error) {
+			handleError(error);
 		}
 	},
 );
@@ -89,11 +105,12 @@ const signUp = createAppAsyncThunk(
 const forgotPassword = createAppAsyncThunk(
 	'user/forgotPassword',
 	async ({ email }: { email: string }, { extra }) => {
-		const response = await API.user.forgotPassword(email);
+		try {
+			await API.user.forgotPassword(email);
 
-		if (response.success) {
-			alert(response.message);
 			extra.history.push(PAGES.RESET_PASSWORD);
+		} catch (error) {
+			handleError(error);
 		}
 	},
 );

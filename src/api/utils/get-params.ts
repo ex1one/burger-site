@@ -1,6 +1,7 @@
+import { getKey } from './get-key';
+
 import { isArrayOrObject } from '@src/guards';
 import { PlainObject } from '@src/types';
-import { getKey } from './get-key';
 
 export const getParams = (data: PlainObject | [], parentKey?: string) => {
 	const result: [string, string][] = [];

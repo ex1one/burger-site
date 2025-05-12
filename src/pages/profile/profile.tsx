@@ -1,68 +1,38 @@
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@src/hooks';
-
-import { Link } from '@src/components';
-import { PAGES } from '@src/consts';
-import { userSelectors, userThunks } from '@src/services/user';
-
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import styles from './profile.module.css';
+
+import { useAppDispatch, useAppSelector } from '@src/hooks';
+import { Link, PasswordInput } from '@src/components';
+import { PAGES, schemas } from '@src/consts';
+import { userSelectors, userThunks } from '@src/services/user';
+
+
+
+const defaultValues = {
+	name: '',
+	login: '',
+	password: '',
+};
 
 export function Profile() {
 	const dispatch = useAppDispatch();
 
 	const user = useAppSelector(userSelectors.userSelector);
 
-	const [name, setName] = useState('');
-	const [login, setLogin] = useState('');
-	const [password, setPassword] = useState('');
+	const form = useForm({
+		values: { ...defaultValues, name: user?.name || '' },
+		resolver: yupResolver(schemas.user.update),
+	});
 
-	const [isEdited, setIsEdited] = useState(false);
-
-	const refInputName = useRef<HTMLInputElement>(null);
-	const refInputLogin = useRef<HTMLInputElement>(null);
-	const refInputPassword = useRef<HTMLInputElement>(null);
-
-	useEffect(() => {
-		setName(user?.name || '');
-	}, [user]);
-
-	const handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
-		const value = event.target.value;
-
-		setName(value);
-	};
-
-	const handleChangeLogin = (event: ChangeEvent<HTMLInputElement>) => {
-		const value = event.target.value;
-
-		setLogin(value);
-	};
-
-	const handleChangePassword = (event: ChangeEvent<HTMLInputElement>) => {
-		const value = event.target.value;
-
-		setPassword(value);
-	};
-
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-
-		dispatch(userThunks.update());
-	};
-
-	const handleClickEdit = () => {
-		setIsEdited(true);
-		refInputName.current?.focus();
+	const handleSubmit = (updatedFields: typeof defaultValues) => {
+		dispatch(userThunks.update(updatedFields));
 	};
 
 	const handleClickCancelEdit = () => {
-		setIsEdited(false);
-
-		setName(user?.name || '');
-		setLogin('');
-		setPassword('');
+		form.reset();
 	};
 
 	const handleClickLogout = () => {
@@ -103,59 +73,69 @@ export function Profile() {
 			</div>
 			<form
 				className={styles.content}
-				onSubmit={handleSubmit}
+				onSubmit={form.handleSubmit(handleSubmit)}
 			>
-				<Input
-					ref={refInputName}
-					type='text'
-					placeholder='Имя'
-					onChange={handleChangeName}
-					value={name}
+				<Controller
 					name='name'
-					disabled={!isEdited}
+					control={form.control}
+					render={({ field, formState }) => {
+						return (
+							<Input
+								placeholder='Имя'
+								error={Boolean(formState.errors.name)}
+								errorText={formState.errors.name?.message}
+								{...field}
+							/>
+						);
+					}}
 				/>
-				<Input
-					ref={refInputLogin}
-					type='text'
-					placeholder='Логин'
-					onChange={handleChangeLogin}
-					value={login}
+				<Controller
 					name='login'
-					disabled={!isEdited}
+					control={form.control}
+					render={({ field, formState }) => {
+						return (
+							<Input
+								placeholder='Логин'
+								error={Boolean(formState.errors.login)}
+								errorText={formState.errors.login?.message}
+								{...field}
+							/>
+						);
+					}}
 				/>
-				<Input
-					ref={refInputPassword}
-					type='password'
-					placeholder='Пароль'
-					onChange={handleChangePassword}
-					value={password}
+				<Controller
 					name='password'
-					disabled={!isEdited}
+					control={form.control}
+					render={({ field, formState }) => {
+						return (
+							<PasswordInput
+								error={Boolean(formState.errors.password)}
+								errorText={formState.errors.password?.message}
+								{...field}
+							/>
+						);
+					}}
 				/>
 				<div className={styles.contentFooter}>
-					<Button
-						htmlType='button'
-						type='primary'
-						size='medium'
-						onClick={handleClickEdit}
-					>
-						Редактировать
-					</Button>
-					<Button
-						htmlType='submit'
-						type='primary'
-						size='medium'
-					>
-						Сохранить
-					</Button>
-					<Button
-						htmlType='button'
-						type='primary'
-						size='medium'
-						onClick={handleClickCancelEdit}
-					>
-						Отменить
-					</Button>
+					{form.formState.isDirty && (
+						<>
+							<Button
+								htmlType='submit'
+								type='primary'
+								size='medium'
+							>
+								Сохранить
+							</Button>
+							<Button
+								htmlType='reset'
+								type='primary'
+								size='medium'
+								onClick={handleClickCancelEdit}
+							>
+								Отменить
+							</Button>
+						</>
+					)}
 				</div>
 			</form>
 		</div>

@@ -1,8 +1,10 @@
 import { PayloadAction } from '@reduxjs/toolkit';
+
+import { TInitialState } from './slice';
+
 import { TSliceReducerActions } from '@src/types';
 import { NAMES_OF_MODALS } from '@src/consts';
 
-import { TInitialState } from './slice';
 
 export const actions = {
 	openModal: (state, action: PayloadAction<keyof typeof NAMES_OF_MODALS>) => {
