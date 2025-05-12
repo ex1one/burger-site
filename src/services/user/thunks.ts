@@ -1,6 +1,9 @@
+import { toast } from 'react-toastify';
+
+import { userActions } from './slice';
+
 import API from '@src/api';
 import { ERROR_MESSAGE, PAGES } from '@src/consts';
-
 import {
 	deleteCookie,
 	deleteItemFromLocalStorage,
@@ -9,9 +12,6 @@ import {
 	setItemToLocalStorage,
 } from '@src/api/utils';
 import { createAppAsyncThunk } from '@src/store/shared';
-
-import { userActions } from './slice';
-import { toast } from 'react-toastify';
 import { User } from '@src/api/user/types';
 import { ApiErrorClass } from '@src/api/config/api-error';
 

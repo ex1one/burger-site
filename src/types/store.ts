@@ -1,4 +1,5 @@
 import { ThunkAction, Action } from '@reduxjs/toolkit';
+
 import { extraArgument, store } from '@src/store';
 
 export type AppStore = typeof store;

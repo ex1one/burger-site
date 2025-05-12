@@ -1,6 +1,5 @@
 import { createAppAsyncThunk } from '@src/store/shared';
 import { RootState } from '@src/types';
-
 import API from '@src/api';
 
 const fetchIngredients = createAppAsyncThunk(

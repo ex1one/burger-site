@@ -1,5 +1,4 @@
 import { createAppAsyncThunk } from '@src/store/shared';
-
 import API from '@src/api';
 
 const createOrderThunk = createAppAsyncThunk('order/createOrder', async (ingredients: string[]) => {

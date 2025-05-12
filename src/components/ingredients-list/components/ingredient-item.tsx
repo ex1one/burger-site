@@ -1,14 +1,16 @@
-import { Ingredient } from '@src/api/ingredients/types';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDrag } from 'react-dnd';
-import { useAppDispatch, useAppSelector } from '@src/hooks';
-import { constructorIngredientsSelectors } from '@src/services/constructorIngredients';
+import { Link, useLocation } from 'react-router-dom';
 
 import styles from '../ingredients-list.module.css';
+
+import { Ingredient } from '@src/api/ingredients/types';
+import { useAppDispatch, useAppSelector } from '@src/hooks';
+import { constructorIngredientsSelectors } from '@src/services/constructorIngredients';
 import { ingredientDetailActions } from '@src/services/ingredientDetail';
 import { modalsActions } from '@src/services/modals';
 import { NAMES_OF_MODALS } from '@src/consts';
-import { Link, useLocation } from 'react-router-dom';
+
 
 interface IngredientItemProps {
 	ingredient: Ingredient;

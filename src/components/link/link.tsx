@@ -1,8 +1,9 @@
-import { icons } from '@src/consts';
 import { ReactNode, Fragment } from 'react';
 import { NavLink, Link as BaseLink } from 'react-router-dom';
 
 import styles from './link.module.css';
+
+import { icons } from '@src/consts';
 
 interface LinkProps {
 	to: string;

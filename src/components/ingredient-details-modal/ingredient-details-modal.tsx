@@ -1,10 +1,11 @@
-import { useAppDispatch, useAppSelector } from '@src/hooks';
-import { Modal } from '../modal';
-
-import { ingredientDetailActions } from '@src/services/ingredientDetail/slice';
 import { useNavigate, useParams } from 'react-router-dom';
-import { IngredientDetails } from '..';
 import { useEffect, useMemo } from 'react';
+
+import { Modal } from '../modal';
+import { IngredientDetails } from '..';
+
+import { useAppDispatch, useAppSelector } from '@src/hooks';
+import { ingredientDetailActions } from '@src/services/ingredientDetail/slice';
 import { ingredientsSelectors, ingredientsThunks } from '@src/services/ingredients';
 
 export function IngredientDetailsModal() {

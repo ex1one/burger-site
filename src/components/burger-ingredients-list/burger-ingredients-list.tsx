@@ -1,10 +1,12 @@
-import { ingredientsSelectors, ingredientsThunks } from '@src/services/ingredients';
-import { useAppDispatch, useAppSelector } from '@src/hooks';
 import { useEffect, RefObject, Dispatch, SetStateAction } from 'react';
 import { v4 as uuid4 } from 'uuid';
+
 import { IngredientsList } from '../ingredients-list';
 
 import styles from './burger-ingredients-list.module.css';
+
+import { useAppDispatch, useAppSelector } from '@src/hooks';
+import { ingredientsSelectors, ingredientsThunks } from '@src/services/ingredients';
 
 interface BurgerIngredientsListProps {
 	menuItemsRef: RefObject<HTMLDivElement>;
@@ -19,7 +21,6 @@ export function BurgerIngredientsList({ menuItemsRef, selectedTab, setSelectedTa
 	// TODO: Переписать
 	const handleScroll = () => {
 		const wrapperRect = menuItemsRef.current?.getBoundingClientRect();
-		// @ts-expect-error
 		const itemElements = Array.from(menuItemsRef.current?.children);
 
 		let closestTab = undefined;
@@ -47,7 +48,7 @@ export function BurgerIngredientsList({ menuItemsRef, selectedTab, setSelectedTa
 		dispatch(ingredientsThunks.fetchIngredients());
 	}, []);
 
-	if (!isLoading) {
+	if (isLoading) {
 		const array = new Array(4).fill(1);
 
 		return (

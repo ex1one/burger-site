@@ -1,8 +1,9 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { Ingredient, IngredientWithUniqueId } from '@src/api/ingredients/types';
 import { v4 as uuid4 } from 'uuid';
 
 import { TInitialState } from './slice';
+
+import { Ingredient, IngredientWithUniqueId } from '@src/api/ingredients/types';
 import { TSliceReducerActions } from '@src/types';
 
 export const actions = {

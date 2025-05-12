@@ -1,10 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Ingredients } from '@src/api/ingredients/types';
+
 
 import { selectors } from './selectors';
 import { actions } from './actions';
 import { thunks } from './thunks';
 import { extraReducers } from './extraReducers';
+
+import { Ingredients } from '@src/api/ingredients/types';
 
 export interface TInitialState {
 	ingredients: Ingredients;

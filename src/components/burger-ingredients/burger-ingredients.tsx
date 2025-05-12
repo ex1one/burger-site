@@ -1,5 +1,6 @@
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState, useRef } from 'react';
+
 import { BurgerIngredientsList } from '..';
 
 import styles from './burger-ingredients.module.css';

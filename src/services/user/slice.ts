@@ -1,10 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { APIError } from '@src/api/types/errors';
-import { User } from '@src/api/user/types';
+
 
 import { selectors } from './selectors';
 import { actions } from './actions';
 import { thunks } from './thunks';
+
+import { User } from '@src/api/user/types';
+import { APIError } from '@src/api/types/errors';
 
 export interface TInitialState {
 	user: User | null;

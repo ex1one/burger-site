@@ -1,7 +1,7 @@
-import { Ingredients } from '@src/api/ingredients/types';
 import { IngredientItem } from './components';
-
 import styles from './ingredients-list.module.css';
+
+import { Ingredients } from '@src/api/ingredients/types';
 
 interface IngredientsListProps {
 	title: string;

@@ -1,14 +1,15 @@
-import { useAppDispatch, useAppSelector } from '@src/hooks';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 
+import styles from './profile.module.css';
+
+import { useAppDispatch, useAppSelector } from '@src/hooks';
 import { Link, PasswordInput } from '@src/components';
 import { PAGES, schemas } from '@src/consts';
 import { userSelectors, userThunks } from '@src/services/user';
 
-import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 
-import styles from './profile.module.css';
 
 const defaultValues = {
 	name: '',

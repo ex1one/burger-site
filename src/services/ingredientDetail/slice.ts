@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Ingredient } from '@src/api/ingredients/types';
+
 
 import { actions } from './actions';
 import { selectors } from './selectors';
+
+import { Ingredient } from '@src/api/ingredients/types';
 
 export interface TInitialState {
 	ingredient: Ingredient | null;

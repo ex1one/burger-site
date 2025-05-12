@@ -1,11 +1,12 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
+import { PAGES } from './consts';
+import { Layout } from './features';
+
 import { ForgotPassword, Home, NotFound, Profile, ResetPassword, SignIn, SignUp } from '@src/pages';
 import { IngredientDetailsModal, OrderDetailModal, ProtectedRoute } from '@src/components';
 
-import { PAGES } from './consts';
-import { Layout } from './features';
 
 const Root = () => {
 	const location = useLocation();

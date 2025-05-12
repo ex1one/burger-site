@@ -1,12 +1,14 @@
-import { Link, PasswordInput } from '@src/components';
-import { PAGES, schemas } from '@src/consts';
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
-
-import styles from './reset-password.module.css';
-import { useAppDispatch } from '@src/hooks';
-import { userThunks } from '@src/services/user';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
+
+import styles from './reset-password.module.css';
+
+import { Link, PasswordInput } from '@src/components';
+import { PAGES, schemas } from '@src/consts';
+import { useAppDispatch } from '@src/hooks';
+import { userThunks } from '@src/services/user';
+
 
 const defaultValues = {
 	password: '',

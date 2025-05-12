@@ -1,7 +1,8 @@
+import styles from './ingredient-details.module.css';
+
 import { useAppSelector } from '@src/hooks';
 import { ingredientDetailSelectors } from '@src/services/ingredientDetail/slice';
 
-import styles from './ingredient-details.module.css';
 
 export function IngredientDetails() {
 	const ingredient = useAppSelector(ingredientDetailSelectors.ingredientDetailSelector);

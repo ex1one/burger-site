@@ -1,14 +1,16 @@
+import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+import styles from './sign-up.module.css';
+
 import { userThunks } from '@src/services/user';
 import { useAppDispatch } from '@src/hooks';
-
 import { Link, PasswordInput } from '@src/components';
 import { PAGES, schemas } from '@src/consts';
 
-import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 
-import styles from './sign-up.module.css';
-import { Controller, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+
 
 const defaultValues = {
 	name: '',

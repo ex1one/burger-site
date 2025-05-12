@@ -1,14 +1,16 @@
-import { useAppDispatch, useAppSelector } from '@src/hooks';
 import { CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import styles from './checkout-button.module.css';
+
+import { useAppDispatch, useAppSelector } from '@src/hooks';
 import { NAMES_OF_MODALS, PAGES } from '@src/consts';
 import { constructorIngredientsSelectors } from '@src/services/constructorIngredients';
 import { modalsActions } from '@src/services/modals';
 import { userSelectors } from '@src/services/user';
-import { useNavigate } from 'react-router-dom';
 import { orderThunks } from '@src/services/order';
 
-import styles from './checkout-button.module.css';
 
 export const CheckoutButton = () => {
 	const dispatch = useAppDispatch();

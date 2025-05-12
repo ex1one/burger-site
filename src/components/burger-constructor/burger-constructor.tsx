@@ -1,13 +1,15 @@
+import { useDrop } from 'react-dnd';
+
+import { BurgerConstructorIngredient } from './components';
+import styles from './burger-constructor.module.css';
+
 import { Ingredient } from '@src/api/ingredients/types';
 import { useActionCreator, useAppSelector } from '@src/hooks';
-import { useDrop } from 'react-dnd';
-import { BurgerConstructorIngredient } from './components';
 import {
 	constructorIngredientsActions,
 	constructorIngredientsSelectors,
 } from '@src/services/constructorIngredients';
 
-import styles from './burger-constructor.module.css';
 
 export const BurgerConstructor = () => {
 	const { ingredients } = useAppSelector(constructorIngredientsSelectors.constructorIngredientsSelector);

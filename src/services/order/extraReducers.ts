@@ -1,6 +1,8 @@
-import { TExtraReducers } from '@src/types';
-import { TInitialState } from '.';
 import { thunks } from './thunks';
+
+import { TInitialState } from '.';
+
+import { TExtraReducers } from '@src/types';
 
 export const extraReducers: TExtraReducers<TInitialState> = (builder) => {
 	builder
