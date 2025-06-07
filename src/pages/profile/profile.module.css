@@ -1,43 +1,41 @@
 .container {
-	display: flex;
-	justify-content: space-between;
-	gap: 60px;
-	max-width: 860px;
-	padding: 60px 0;
+  display: grid;
+  grid-template-columns: 320px auto;
+  gap: 60px;
+  padding: 60px 0;
 }
 
 .navigationMenu {
-	display: flex;
-	flex-direction: column;
-	gap: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
 }
 
 .navigationMenuList {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .navigationMenuLink {
-	display: flex;
-	height: 64px;
-	align-items: center;
-	justify-content: center;
-	composes: text text_type_main-medium from global;
+  display: flex;
+  height: 64px;
+  align-items: center;
+  justify-content: center;
+  composes: text text_type_main-medium from global;
 }
 
 .navigationMenuDescription {
-	composes: text text_type_main-default text_color_inactive from global;
+  composes: text text_type_main-default text_color_inactive from global;
 }
 
 .content {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .contentFooter {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
 }

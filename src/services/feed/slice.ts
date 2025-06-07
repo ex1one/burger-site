@@ -2,27 +2,29 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { selectors } from "./selectors";
 import { actions } from "./actions";
-import { thunks } from "./thunks";
 import { extraReducers } from "./extraReducers";
 
-import { Ingredients } from "@src/api/ingredients/types";
+import { FeedOrder } from "@src/api/order/types";
+import { APIError } from "@src/api/types/errors";
 
 export interface TInitialState {
-  ingredients: Ingredients;
-  isLoading: boolean;
+  orders: FeedOrder[];
+  total: number;
+  totalToday: number;
   status: "pending" | "success" | "error" | "idle";
-  error: any;
+  error: APIError | null;
 }
 
 export const initialState: TInitialState = {
-  ingredients: [],
+  orders: [],
   status: "idle",
-  isLoading: false,
   error: null,
+  total: 0,
+  totalToday: 0,
 };
 
-const ingredientsSlice = createSlice({
-  name: "ingredients",
+const feedSlice = createSlice({
+  name: "feed",
   initialState,
   reducers: actions,
   extraReducers,
@@ -30,9 +32,7 @@ const ingredientsSlice = createSlice({
 });
 
 export const {
-  reducer: ingredientsReducer,
-  actions: ingredientsActions,
-  selectors: ingredientsSelectors,
-} = ingredientsSlice;
-
-export const ingredientsThunks = thunks;
+  reducer: feedReducer,
+  actions: feedActions,
+  selectors: feedSelectors,
+} = feedSlice;

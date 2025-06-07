@@ -1,0 +1,102 @@
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 60px;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.orderNumber {
+  text-align: center;
+  padding: 20px 0;
+  composes: text text_type_digits-default from global;
+}
+
+.orderNameAndStatusWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.orderName {
+  composes: text text_type_main-medium from global;
+}
+
+.orderStatus {
+  color: #00cccc;
+  composes: text text_type_main-default from global;
+}
+
+/* STRUCTURE */
+.orderStructure {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.orderStructureList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  max-height: 366px;
+}
+
+.orderItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  composes: text text_type_main-default from global;
+}
+
+/* TODO: Не нравится название, переименовать */
+.orderItemContent {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.orderItemImage {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1px solid purple;
+}
+
+.orderItemCount {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  composes: text text_type_digits-default from global;
+}
+
+/* FOOTER */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.time {
+  composes: text text_type_main-default text_color_inactive from global;
+}
+
+.total {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  composes: text text_type_digits-default from global;
+}
