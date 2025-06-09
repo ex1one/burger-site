@@ -115,6 +115,7 @@ export function ProfileLayout() {
           <Link
             to={PAGES.PROFILE}
             isNavLink
+            end
             className={styles.navigationMenuLink}
           >
             Профиль

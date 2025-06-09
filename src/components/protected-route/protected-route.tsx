@@ -79,11 +79,9 @@ export const ProtectedRoute = ({
           setItemToLocalStorage("accessToken", refreshedAccessToken);
         }
 
-        const response = await API.user.getUser(accessToken);
+        const { user } = await API.user.getUser(accessToken);
+        dispatch(userActions.setUser(user));
 
-        if (response.success) {
-          dispatch(userActions.setUser(response.user));
-        }
         setUserLoaded(true);
       }
     } finally {

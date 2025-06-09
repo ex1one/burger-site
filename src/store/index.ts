@@ -8,9 +8,11 @@ import { feedActions } from "@src/services/feed";
 import { orderHistoryActions } from "@src/services/order-history";
 
 const composeEnhancers =
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? // @ts-expect-error
+    ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
     : compose;
 

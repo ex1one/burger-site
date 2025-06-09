@@ -1,33 +1,57 @@
-import { useParams } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { useEffect, useMemo } from "react";
 
 import styles from "./feed-item-details.module.css";
 
 import { OrderInformation } from "@src/components";
-import { Order } from "@src/api/order/types";
+import { useAppDispatch, useAppSelector } from "@src/hooks";
+import {
+  ingredientsSelectors,
+  ingredientsThunks,
+} from "@src/services/ingredients";
+import {
+  orderHistoryActions,
+  orderHistorySelectors,
+} from "@src/services/order-history";
+import { feedActions, feedSelectors } from "@src/services/feed";
+import { WS_URL_FEED, WS_URL_ORDERS_HISTORY } from "@src/consts";
 
 export function FeedItemsDetails() {
-  const { id } = useParams();
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  const { orderId } = useParams();
 
-  const [order, setOrder] = useState<Order | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
+  const { status } = useAppSelector(ingredientsSelectors.ingredientsSelector);
+
+  const orders =
+    location.pathname === `/feed/${orderId}`
+      ? useAppSelector(feedSelectors.getOrders)
+      : useAppSelector(orderHistorySelectors.getOrders);
+
+  const order = orders.find((el) => el.number === Number(orderId));
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(ingredientsThunks.fetchIngredients());
+    }
+  }, [status]);
+
+  useEffect(() => {
+    if (location.pathname === `/feed/${orderId}`) {
+      dispatch(feedActions.connect(WS_URL_FEED));
+    } else {
+      dispatch(orderHistoryActions.connect(WS_URL_ORDERS_HISTORY));
+    }
+
+    return () => {
+      dispatch(feedActions.disconnect());
+      dispatch(orderHistoryActions.disconnect());
+    };
+  }, [dispatch, location.pathname, orderId]);
 
   const content = useMemo(() => {
-    if (isLoading) {
-      return <div>Loading order details...</div>;
-    }
-
-    if (isError) {
-      return <div>Error loading order details</div>;
-    }
-
-    if (!order) {
-      return <div>No order data found for ID: {id}</div>;
-    }
-
-    return <OrderInformation {...order} />;
-  }, [id, isError, isLoading, order]);
+    return <OrderInformation order={order} />;
+  }, [order]);
 
   return <div className={styles.wrapper}>{content}</div>;
 }

@@ -8,13 +8,8 @@ import {
   BurgerConstructor,
   CheckoutButton,
 } from "@src/components";
-import { useAppDispatch } from "@src/hooks";
-import { modalsActions } from "@src/services/modals";
-import { NAMES_OF_MODALS } from "@src/consts";
 
 export function Home() {
-  const dispatch = useAppDispatch();
-
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={styles.wrapperSections}>
@@ -24,13 +19,6 @@ export function Home() {
           <CheckoutButton />
         </section>
       </div>
-      <button
-        onClick={() =>
-          dispatch(modalsActions.openModal(NAMES_OF_MODALS.ORDER_DETAIL_MODAL))
-        }
-      >
-        Открыть модалку
-      </button>
     </DndProvider>
   );
 }

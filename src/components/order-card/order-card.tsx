@@ -1,5 +1,8 @@
-import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link } from "react-router-dom";
+import {
+  CurrencyIcon,
+  FormattedDate,
+} from "@ya.praktikum/react-developer-burger-ui-components";
+import { Link, useLocation } from "react-router-dom";
 
 import { PAGES } from "../../consts/pages";
 
@@ -8,47 +11,52 @@ import styles from "./order-card.module.css";
 import { FeedOrder } from "@src/api/order/types";
 import { useAppSelector } from "@src/hooks";
 import { ingredientsSelectors } from "@src/services/ingredients";
+import { getOrderStatusText } from "@src/utils";
+import { Ingredient } from "@src/api/ingredients/types";
 
-interface OrderCardProps extends FeedOrder {
-  isFeedItem?: boolean;
+interface OrderCardProps {
+  order: FeedOrder;
 }
 
-export function OrderCard({
-  _id,
-  number,
-  status,
-  createdAt,
-  ingredients,
-  name,
-  isFeedItem = false,
-}: OrderCardProps) {
-  const { ingredients: allIngredients } = useAppSelector(
+export function OrderCard({ order }: OrderCardProps) {
+  const location = useLocation();
+  const { ingredients } = useAppSelector(
     ingredientsSelectors.ingredientsSelector
   );
   const url =
-    (isFeedItem ? PAGES.ORDER_FEED : PAGES.PROFILE_ORDERS) + `/${_id}`;
+    (location.pathname === "/feed" ? PAGES.ORDERS_FEED : PAGES.PROFILE_ORDERS) +
+    `/${order.number}`;
 
-  const selectedIngredients = allIngredients.filter((item) =>
-    ingredients.includes(item._id)
+  const orderIngredients = ingredients
+    .filter((ingredient) => order?.ingredients.includes(ingredient._id))
+    .reduce((acc, ingredient, _, array) => {
+      const similarIngredients = array.filter(
+        (el) => el._id === ingredient._id
+      );
+
+      return [...acc, { ...ingredient, count: similarIngredients.length }];
+    }, [] as (Ingredient & { count: number })[]);
+
+  const total = orderIngredients.reduce(
+    (acc, ingredient) => acc + ingredient.price * ingredient.count,
+    0
   );
-  const selectedIngredientsCount = selectedIngredients.length;
-  const sliceSelectedIngredients = selectedIngredients.slice(0, 5);
 
-  const totalCount = selectedIngredients.reduce((acc, el) => {
-    return acc + el.price;
-  }, 0);
+  const selectedIngredientsCount = orderIngredients.length;
+  const sliceSelectedIngredients = orderIngredients.slice(0, 5);
 
   return (
-    <Link to={url}>
+    <Link to={url} state={{ background: location }}>
       <div className={styles.wrapper}>
         <div className={styles.header}>
-          <p className={styles.number}>#{number}</p>
-          <p className={styles.time}>{createdAt}</p>
+          <p className={styles.number}>#{order.number}</p>
+          <p className={styles.time}>
+            <FormattedDate date={new Date(order.createdAt)} />
+          </p>
         </div>
         <div>
-          <h3 className={styles.name}>{name}</h3>
-          {/* TODO: Создать функцию для получения текста для заказа исходя из статуса */}
-          <p>{status === "done" ? "Выполнен" : "Готовится"}</p>
+          <h3 className={styles.name}>{order.name}</h3>
+          <p>{getOrderStatusText(order.status)}</p>
         </div>
         <div className={styles.footer}>
           <div className={styles.icons}>
@@ -77,7 +85,7 @@ export function OrderCard({
             })}
           </div>
           <div className={styles.count}>
-            {totalCount}
+            {total}
             <CurrencyIcon type="primary" />
           </div>
         </div>

@@ -4,7 +4,7 @@ import {
   Middleware,
 } from "@reduxjs/toolkit";
 
-import { RootState } from "@src/types";
+import { ApiErrorClass } from "@src/api/config/api-error";
 
 export type TWsActions<R, S> = {
   connect: ActionCreatorWithPayload<string>;
@@ -12,7 +12,7 @@ export type TWsActions<R, S> = {
   onConnecting?: ActionCreatorWithoutPayload;
   onOpen?: ActionCreatorWithoutPayload;
   onClose?: ActionCreatorWithoutPayload;
-  onError: ActionCreatorWithPayload<string>;
+  onError: ActionCreatorWithPayload<ApiErrorClass>;
   sendMessage?: ActionCreatorWithPayload<S>;
   onMessage: ActionCreatorWithPayload<R>;
 };
@@ -20,9 +20,9 @@ export type TWsActions<R, S> = {
 const RECONNECT_PERIOD = 3000;
 
 export const socketMiddleware = <R, S>(
-  wsActions: TWsActions<R, S>,
-  withTokenRefresh: boolean = false
-): Middleware<object, RootState> => {
+  wsActions: TWsActions<R, S>
+  // withTokenRefresh: boolean = false
+): Middleware => {
   return (store) => {
     let socket: WebSocket | null = null;
     const {
@@ -38,25 +38,32 @@ export const socketMiddleware = <R, S>(
     const { dispatch } = store;
     let isConnected = false;
     let url = "";
-    let reconnectId = 0;
+    let reconnectId: NodeJS.Timeout | undefined;
 
     return (next) => (action) => {
       if (connect.match(action)) {
         socket = new WebSocket(action.payload);
         url = action.payload;
         isConnected = true;
-        onConnecting && dispatch(onConnecting());
+
+        if (onConnecting) {
+          dispatch(onConnecting());
+        }
 
         socket.onopen = () => {
-          onOpen && dispatch(onOpen());
+          if (onOpen) {
+            dispatch(onOpen());
+          }
         };
 
         socket.onerror = () => {
-          dispatch(onError("Unknown error"));
+          dispatch(onError(new ApiErrorClass("Error")));
         };
 
         socket.onclose = () => {
-          onClose && dispatch(onClose());
+          if (onClose) {
+            dispatch(onClose());
+          }
 
           if (isConnected) {
             reconnectId = setTimeout(() => {
@@ -87,7 +94,7 @@ export const socketMiddleware = <R, S>(
 
             dispatch(onMessage(parsedData));
           } catch (error) {
-            dispatch(onError((error as Error).message));
+            dispatch(onError(new ApiErrorClass((error as Error)?.message)));
           }
         };
 
@@ -98,7 +105,7 @@ export const socketMiddleware = <R, S>(
         try {
           socket.send(JSON.stringify(action.payload));
         } catch (error) {
-          dispatch(onError((error as Error).message));
+          dispatch(onError(new ApiErrorClass((error as Error)?.message)));
         }
 
         return;
@@ -106,7 +113,7 @@ export const socketMiddleware = <R, S>(
 
       if (disconnect.match(action)) {
         clearTimeout(reconnectId);
-        reconnectId = 0;
+        reconnectId = undefined;
         isConnected = false;
         socket?.close();
         socket = null;

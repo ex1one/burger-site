@@ -35,7 +35,8 @@
 }
 
 .contentFooter {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  width: 480px;
+  flex-direction: column;
   gap: 8px;
 }

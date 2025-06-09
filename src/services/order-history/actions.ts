@@ -30,8 +30,6 @@ export const actions = {
     state.error = payload;
   },
   onMessage: (state, { payload }: PayloadAction<FeedOrderResponse>) => {
-    console.log({ payload });
-
     state.orders = payload.orders;
     state.total = payload.total;
     state.totalToday = payload.totalToday;

@@ -15,6 +15,7 @@ import {
   Feed,
   OrdersHistory,
   ProfileLayout,
+  FeedItemsDetails,
 } from "@src/pages";
 import {
   IngredientDetailsModal,
@@ -31,7 +32,7 @@ const Root = () => {
     <>
       <Routes location={background || location}>
         <Route path={PAGES.HOME} element={<Layout />}>
-          <Route index path={PAGES.HOME} element={<Home />} />
+          <Route index element={<Home />} />
           <Route
             path={PAGES.SIGN_IN}
             element={<ProtectedRoute element={<SignIn />} isAnonymous />}
@@ -57,15 +58,28 @@ const Root = () => {
             <Route index element={<Profile />} />
             <Route path={PAGES.PROFILE_ORDERS} element={<OrdersHistory />} />
           </Route>
+
           <Route path={PAGES.NOT_FOUND} element={<NotFound />} />
+
           <Route path={PAGES.INGREDIENT} element={<IngredientDetailsModal />} />
-          <Route path={PAGES.ORDER_FEED} element={<Feed />} />
+          <Route path={PAGES.ORDERS_FEED} element={<Feed />} />
+
+          <Route path={PAGES.ORDER_FEED} element={<FeedItemsDetails />} />
+          <Route
+            path={PAGES.PROFILE_ORDER}
+            element={<ProtectedRoute element={<FeedItemsDetails />} />}
+          />
         </Route>
       </Routes>
 
       {background && (
         <Routes>
           <Route path={PAGES.INGREDIENT} element={<IngredientDetailsModal />} />
+          <Route path={PAGES.ORDER_FEED} element={<OrderInformationModal />} />
+          <Route
+            path={PAGES.PROFILE_ORDER}
+            element={<ProtectedRoute element={<OrderInformationModal />} />}
+          />
         </Routes>
       )}
 

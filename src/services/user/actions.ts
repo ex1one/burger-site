@@ -14,9 +14,11 @@ export const actions = {
     state.error = action.payload;
   },
   changeState: (state, action: PayloadAction<TInitialState>) => {
-    state = action.payload;
+    state.user = action.payload.user;
+    state.error = action.payload.error;
   },
   clearState: (state) => {
-    state = initialState;
+    state.error = initialState.error;
+    state.user = initialState.user;
   },
 } satisfies TSliceReducerActions<TInitialState>;

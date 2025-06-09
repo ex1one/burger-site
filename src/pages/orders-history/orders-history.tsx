@@ -8,21 +8,33 @@ import {
   orderHistoryActions,
   orderHistorySelectors,
 } from "@src/services/order-history";
-
-const WS_URL = "wss://norma.nomoreparties.space/orders/all";
+import { WS_URL_ORDERS_HISTORY } from "@src/consts";
+import {
+  ingredientsSelectors,
+  ingredientsThunks,
+} from "@src/services/ingredients";
 
 export function OrdersHistory() {
   const dispatch = useAppDispatch();
 
+  const ingredientsSlice = useAppSelector(
+    ingredientsSelectors.ingredientsSelector
+  );
   const { orders, status } = useAppSelector(orderHistorySelectors.getSlice);
 
   useEffect(() => {
-    dispatch(orderHistoryActions.connect(WS_URL));
+    dispatch(orderHistoryActions.connect(WS_URL_ORDERS_HISTORY));
 
     return () => {
       dispatch(orderHistoryActions.disconnect());
     };
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (ingredientsSlice.status === "idle") {
+      dispatch(ingredientsThunks.fetchIngredients());
+    }
+  }, [dispatch, ingredientsSlice.status]);
 
   if (status === "pending") {
     return <div>Loading...</div>;
@@ -35,7 +47,7 @@ export function OrdersHistory() {
   return (
     <div className={styles.wrapper}>
       {orders.map((order) => {
-        return <OrderCard {...order} />;
+        return <OrderCard key={order._id} order={order} />;
       })}
     </div>
   );

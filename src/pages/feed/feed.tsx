@@ -5,37 +5,36 @@ import styles from "./feed.module.css";
 import { OrderCard } from "@src/components";
 import { useAppDispatch, useAppSelector } from "@src/hooks";
 import { feedActions, feedSelectors } from "@src/services/feed";
-
-const WS_URL = "wss://norma.nomoreparties.space/orders/all";
-
-const splitArrayIntoChunks = <T extends any>(
-  array: Array<T>,
-  chunkSize: number
-) => {
-  const result = [];
-
-  for (let i = 0; i < array.length; i += chunkSize) {
-    const chunk = array.slice(i, i + chunkSize);
-    result.push(chunk);
-  }
-
-  return result;
-};
+import { WS_URL_FEED } from "@src/consts";
+import {
+  ingredientsSelectors,
+  ingredientsThunks,
+} from "@src/services/ingredients";
+import { splitArrayToChunks } from "@src/utils";
 
 export function Feed() {
   const dispatch = useAppDispatch();
 
+  const ingredientsSlice = useAppSelector(
+    ingredientsSelectors.ingredientsSelector
+  );
   const { orders, total, totalToday, status } = useAppSelector(
     feedSelectors.getSlice
   );
 
   useEffect(() => {
-    dispatch(feedActions.connect(WS_URL));
+    dispatch(feedActions.connect(WS_URL_FEED));
 
     return () => {
       dispatch(feedActions.disconnect());
     };
   }, []);
+
+  useEffect(() => {
+    if (ingredientsSlice.status === "idle") {
+      dispatch(ingredientsThunks.fetchIngredients());
+    }
+  }, [dispatch, ingredientsSlice.status]);
 
   if (status === "pending") {
     return <div>Loading...</div>;
@@ -45,14 +44,14 @@ export function Feed() {
     return <div>Error while getting feed</div>;
   }
 
-  const activeOrdersIds = splitArrayIntoChunks(
+  const activeOrdersIds = splitArrayToChunks(
     orders
       .filter((order) => order.status !== "done")
       .map((order) => order.number),
     10
   );
 
-  const completedOrdersIds = splitArrayIntoChunks(
+  const completedOrdersIds = splitArrayToChunks(
     orders
       .filter((order) => order.status === "done")
       .map((order) => order.number),
@@ -65,7 +64,7 @@ export function Feed() {
       <div className={styles.content}>
         <div className={styles.feedList}>
           {orders.map((order) => {
-            return <OrderCard isFeedItem {...order} />;
+            return <OrderCard key={order._id} order={order} />;
           })}
         </div>
         <div className={styles.infoAboutOrdersWrapper}>

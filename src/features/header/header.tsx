@@ -18,7 +18,7 @@ export function Header() {
                 </Link>
               </li>
               <li>
-                <Link to={PAGES.ORDER_FEED} leftIcon="list" isNavLink>
+                <Link to={PAGES.ORDERS_FEED} leftIcon="list" isNavLink end>
                   Лента заказов
                 </Link>
               </li>
