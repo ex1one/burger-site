@@ -11,7 +11,7 @@ export interface TInitialState {
   status: string;
   order: { number: number; name: string } | null;
   isLoading: boolean;
-  error: APIError | null;
+  error?: APIError | null;
 }
 
 export const initialState: TInitialState = {

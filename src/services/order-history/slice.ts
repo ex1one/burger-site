@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { selectors } from "./selectors";
 import { actions } from "./actions";
-import { extraReducers } from "./extraReducers";
 
 import { FeedOrder } from "@src/api/order/types";
 import { APIError } from "@src/api/types/errors";
@@ -27,7 +26,6 @@ const orderHistorySlice = createSlice({
   name: "feed",
   initialState,
   reducers: actions,
-  extraReducers,
   selectors: selectors,
 });
 
