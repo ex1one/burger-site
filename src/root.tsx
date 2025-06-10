@@ -21,7 +21,8 @@ import {
   IngredientDetailsModal,
   OrderSuccessModal,
   OrderInformationModal,
-  ProtectedRoute,
+  AuthorizedRoute,
+  AnonymousRoute,
 } from "@src/components";
 
 const Root = () => {
@@ -35,25 +36,24 @@ const Root = () => {
           <Route index element={<Home />} />
           <Route
             path={PAGES.SIGN_IN}
-            element={<ProtectedRoute element={<SignIn />} isAnonymous />}
+            element={<AnonymousRoute element={<SignIn />} />}
           />
           <Route
             path={PAGES.SIGN_UP}
-            element={<ProtectedRoute element={<SignUp />} isAnonymous />}
+            element={<AnonymousRoute element={<SignUp />} />}
           />
           <Route
             path={PAGES.FORGOT_PASSWORD}
-            element={
-              <ProtectedRoute element={<ForgotPassword />} isAnonymous />
-            }
+            element={<AnonymousRoute element={<ForgotPassword />} />}
           />
           <Route
             path={PAGES.RESET_PASSWORD}
-            element={<ProtectedRoute element={<ResetPassword />} isAnonymous />}
+            element={<AnonymousRoute element={<ResetPassword />} />}
           />
+
           <Route
             path={PAGES.PROFILE}
-            element={<ProtectedRoute element={<ProfileLayout />} />}
+            element={<AuthorizedRoute element={<ProfileLayout />} />}
           >
             <Route index element={<Profile />} />
             <Route path={PAGES.PROFILE_ORDERS} element={<OrdersHistory />} />
@@ -67,7 +67,7 @@ const Root = () => {
           <Route path={PAGES.ORDER_FEED} element={<FeedItemsDetails />} />
           <Route
             path={PAGES.PROFILE_ORDER}
-            element={<ProtectedRoute element={<FeedItemsDetails />} />}
+            element={<AuthorizedRoute element={<FeedItemsDetails />} />}
           />
         </Route>
       </Routes>
@@ -78,7 +78,7 @@ const Root = () => {
           <Route path={PAGES.ORDER_FEED} element={<OrderInformationModal />} />
           <Route
             path={PAGES.PROFILE_ORDER}
-            element={<ProtectedRoute element={<OrderInformationModal />} />}
+            element={<AuthorizedRoute element={<OrderInformationModal />} />}
           />
         </Routes>
       )}

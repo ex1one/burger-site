@@ -1,0 +1,9 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  /* 20px gap между header и main. 88px высота header */
+  height: calc(100vh - (20px + 88px));
+}
