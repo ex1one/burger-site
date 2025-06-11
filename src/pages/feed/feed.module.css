@@ -1,0 +1,132 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 40px 0;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 60px;
+}
+
+.feedList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ORDER FEED */
+
+.orderFeedWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  max-height: 744px;
+}
+
+.orderCardWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background-color: var(--secondary-color);
+  padding: 24px;
+  border-radius: 40px;
+}
+
+/* CARD HEADER */
+.orderCardHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+}
+
+.orderNumber {
+  composes: text text_type_digits-default from global;
+}
+
+.orderTime {
+  composes: text text_type_main-default text_color_inactive from global;
+}
+
+/* ORDER CONTENT */
+.orderCardName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  composes: text text_type_main-medium from global;
+}
+
+/* ORDER FOOTER */
+.orderCardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.ingredientsList {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ingredientIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1px solid purple;
+}
+
+.totalCount {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  composes: text text_type_digits-default from global;
+}
+
+/* INFO */
+
+.infoAboutOrdersWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.activeAndCompletedOrdersWrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 36px;
+}
+
+.completedOrdersWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  composes: text text_type_digits-default from global;
+
+  .completedOrdersList {
+    color: #00cccc;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+  }
+}
+
+.activeOrdersWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  composes: text text_type_digits-default from global;
+
+  .activeOrdersList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+  }
+}

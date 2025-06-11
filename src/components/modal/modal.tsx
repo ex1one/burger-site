@@ -7,14 +7,21 @@ import styles from "./modal.module.css";
 
 interface ModalProps {
   isOpen: boolean;
-  title?: string;
+  title?: string | { title: string; size: "md" | "xl" };
   children: ReactNode;
+  className?: string;
   onClose?: VoidFunction;
 }
 
 const parent = document.getElementById("modal-root") as HTMLElement;
 
-export function Modal({ isOpen, title, children, onClose }: ModalProps) {
+export function Modal({
+  isOpen,
+  title,
+  children,
+  className,
+  onClose,
+}: ModalProps) {
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Escape") {
       onClose?.();
@@ -36,14 +43,24 @@ export function Modal({ isOpen, title, children, onClose }: ModalProps) {
   return ReactDOM.createPortal(
     <>
       <ModalOverlay onClose={onClose} />
-      <div className={styles.modal}>
+      <div className={`${styles.modal} ${className}`}>
         <div className={styles.header}>
-          {title && <h3 className="text text_type_main-large">{title}</h3>}
+          {title && (
+            <h3
+              className={`text ${
+                typeof title !== "string" && title.size === "md"
+                  ? "text_type_digits-default"
+                  : "text_type_main-large"
+              }`}
+            >
+              {typeof title === "string" ? title : title.title}
+            </h3>
+          )}
           <button className={styles.close} onClick={onClose}>
             <CloseIcon type="primary" />
           </button>
         </div>
-        <div>{children}</div>
+        {children}
       </div>
     </>,
     parent

@@ -2,6 +2,7 @@ import { Logo } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import styles from "./header.module.css";
 
+import { PAGES } from "@src/consts";
 import { Container, Link } from "@src/components";
 
 export function Header() {
@@ -12,26 +13,26 @@ export function Header() {
           <ul className={styles.nav}>
             <div className={styles.navList}>
               <li>
-                <Link to="/" leftIcon="burger" isNavLink>
+                <Link to={PAGES.HOME} leftIcon="burger" isNavLink>
                   Конструктор
                 </Link>
               </li>
               <li>
-                <Link to="/orders" leftIcon="list" isNavLink>
+                <Link to={PAGES.ORDERS_FEED} leftIcon="list" isNavLink end>
                   Лента заказов
                 </Link>
               </li>
             </div>
             <div className={styles.logoContainer}>
               <li>
-                <Link to="/" isNavLink>
+                <Link to={PAGES.HOME} isNavLink>
                   <Logo />
                 </Link>
               </li>
             </div>
             <div>
               <li>
-                <Link to="/profile" leftIcon="profile" isNavLink>
+                <Link to={PAGES.PROFILE} leftIcon="profile" isNavLink>
                   Личный кабинет
                 </Link>
               </li>

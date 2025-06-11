@@ -1,37 +1,37 @@
 .container {
-	width: 100%;
-	max-width: 480px;
-	margin: 0 auto;
-	padding: 60px 0;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 60px 0;
 }
 
 .contentWrapper {
-	display: flex;
-	flex-direction: column;
-	gap: 80px;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .contentBody {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
 }
 
 .contentFooter {
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
-	composes: text_color_inactive from global;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  composes: text_color_inactive from global;
 
-	.wrapperText {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 8px;
-	}
+  .wrapperText {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
 }
