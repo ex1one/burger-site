@@ -27,7 +27,7 @@ export const AuthorizedRoute = ({ element }: { element: JSX.Element }) => {
   }
 
   if (status === AuthStatus.Anonymous) {
-    return <Navigate to={from} />;
+    return <Navigate to={from} state={{ from: location }} />;
   }
 
   if (status === AuthStatus.Initial) {

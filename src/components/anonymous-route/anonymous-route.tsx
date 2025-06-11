@@ -22,6 +22,8 @@ export const AnonymousRoute = ({ element }: { element: JSX.Element }) => {
     </div>
   );
 
+  console.log({ from, location });
+
   if (status === AuthStatus.Authenticated) {
     return <Navigate to={from} />;
   }
