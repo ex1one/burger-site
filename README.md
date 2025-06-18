@@ -27,66 +27,66 @@
 
 1. **Клонируйте репозиторий:**
 
-   ```bash
-      git clone https://github.com/ваш-юзернейм/burger-site.git
-   ```
+```bash
+  git clone https://github.com/ваш-юзернейм/burger-site.git
+```
 
 2. **Перейдите в директорию проекта:**
 
-   ```bash
-      cd burger-site
-   ```
+```bash
+  cd burger-site
+```
 
 3. **Установите зависимости:**
 
-   ```bash
-      npm install
-   ```
+```bash
+  npm install
+```
 
-## Разработка
+## **Разработка:**
 
 Для запуска проекта в режиме разработки используйте команду:
 
-    ```bash
-        npm run dev
-    ```
+```bash
+    npm run dev
+```
 
 Это запустит локальный сервер, и вы сможете увидеть проект по адресу http://localhost:8080 (проверьте терминал для точного URL).
 
-## Сборка и просмотор публикации
+## **Сборка и просмотор публикации:**
 
 Для сборки проекта используйте:
 
-    ```bash
-      npm run build
-    ```
+```bash
+  npm run build
+```
 
 После сборки вы можете просмотреть его в режиме предпросмотра:
 
-    ```bash
-      npm run preview
-    ```
+```bash
+  npm run preview
+```
 
-## Тестирование
+## **Тестирование:**
 
 Чтобы запустить тесты, используйте команды:
 
-    ```bash
-      npm run test
-      npm run test:watch (в режиме наблюдения)
-      npm run cypress:open (cypress)
-    ```
+```bash
+  npm run test
+  npm run test:watch (в режиме наблюдения)
+  npm run cypress:open (cypress)
+```
 
-## Деплой
+## **Деплой:**
 
 Чтобы задеплоить проект на GitHub Pages, сначала постройте проект:
 
-    ```bash
-      npm run predeploy
-    ```
+```bash
+  npm run predeploy
+```
 
 Затем выполните команду:
 
-    ```bash
-      npm run deploy
-    ```
+```bash
+  npm run deploy
+```
