@@ -21,6 +21,7 @@ export function Modal({
   children,
   className,
   onClose,
+  ...other
 }: ModalProps) {
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Escape") {
@@ -43,7 +44,7 @@ export function Modal({
   return ReactDOM.createPortal(
     <>
       <ModalOverlay onClose={onClose} />
-      <div className={`${styles.modal} ${className}`}>
+      <div className={`${styles.modal} ${className}`} {...other}>
         <div className={styles.header}>
           {title && (
             <h3
@@ -56,7 +57,11 @@ export function Modal({
               {typeof title === "string" ? title : title.title}
             </h3>
           )}
-          <button className={styles.close} onClick={onClose}>
+          <button
+            className={styles.close}
+            onClick={onClose}
+            data-cy="button-modal-close"
+          >
             <CloseIcon type="primary" />
           </button>
         </div>

@@ -2,6 +2,7 @@ import { createAppAsyncThunk } from "@src/store/shared";
 import { RootState } from "@src/types";
 import API from "@src/api";
 
+// TODO: В будущем написать тесты на thunk. https://www.youtube.com/watch?v=qb7xVPVfPlQ&t=1029s
 const fetchIngredients = createAppAsyncThunk(
   "ingredients/fetchIngredients",
   async () => {

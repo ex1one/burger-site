@@ -6,7 +6,6 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
-    /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
@@ -14,7 +13,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -25,6 +23,12 @@
       "@public/*": ["public/*"]
     }
   },
-  "include": ["src", "vite.config.ts", "eslint.config.js"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "src",
+    "vite.config.ts",
+    "eslint.config.js",
+    "jest.config.ts",
+    "cypress.config.ts"
+  ],
+  "exclude": ["node_modules"]
 }

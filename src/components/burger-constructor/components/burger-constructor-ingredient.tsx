@@ -46,6 +46,7 @@ export const BurgerConstructorIngredient = ({
       className={`${styles.wrapper} ${className}`}
       ref={(node) => drag(drop(node))}
       style={{ opacity: isDragging ? 0.5 : 1 }}
+      data-cy="burger-constructor-ingredient"
     >
       {isBun ? (
         <ConstructorElement

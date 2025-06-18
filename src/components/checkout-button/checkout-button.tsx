@@ -48,6 +48,7 @@ export const CheckoutButton = () => {
         type="primary"
         size="large"
         onClick={handleClick}
+        data-cy="checkout-button"
       >
         Оформить заказ
       </Button>

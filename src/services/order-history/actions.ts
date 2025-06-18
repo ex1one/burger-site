@@ -1,18 +1,16 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import { TInitialState } from "./slice";
+import { initialState, TInitialState } from "./slice";
 
 import { TSliceReducerActions } from "@src/types";
 import { ApiErrorClass } from "@src/api/config/api-error";
 import { FeedOrderResponse } from "@src/api/order/types";
 
 export const actions = {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   connect: (state, _: PayloadAction<string>) => state,
-  disconnect: (state) => {
-    // TODO: Replace to const initialState
-    state.error = null;
-    state.status = "idle";
-    state.orders = [];
+  disconnect: () => {
+    return initialState;
   },
   onConnecting: (state) => {
     state.status = "pending";
@@ -20,18 +18,13 @@ export const actions = {
   onOpen: (state) => {
     state.status = "success";
   },
-  onClose: (state) => {
-    // TODO: Replace to const initialState
-    state.error = null;
-    state.status = "idle";
-    state.orders = [];
+  onClose: () => {
+    return initialState;
   },
   onError: (state, { payload }: PayloadAction<ApiErrorClass>) => {
     state.error = payload;
   },
   onMessage: (state, { payload }: PayloadAction<FeedOrderResponse>) => {
-    state.orders = payload.orders;
-    state.total = payload.total;
-    state.totalToday = payload.totalToday;
+    return { ...state, ...payload };
   },
 } satisfies TSliceReducerActions<TInitialState>;

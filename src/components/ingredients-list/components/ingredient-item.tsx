@@ -53,6 +53,8 @@ export const IngredientItem = ({ ingredient }: IngredientItemProps) => {
         className={styles.item}
         onClick={handleClick}
         style={{ cursor: "pointer", opacity: isDragging ? 0.5 : 1 }}
+        data-cy={`ingredient-item-${ingredient.type}`}
+        data-ingredient-id={ingredient._id}
       >
         <img loading="lazy" src={ingredient.image} className={styles.image} />
         <div className={styles.itemContentWrapper}>
