@@ -4,6 +4,8 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
+  // TODO: Расскоментировать эту строку при деплое. В будущем разобраться с этим
+  // base: "/burger-site/",
   resolve: {
     alias: {
       "@src": path.resolve(__dirname, "./src"),
