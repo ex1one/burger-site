@@ -36,6 +36,7 @@ export function IngredientDetailsModal() {
   };
 
   useEffect(() => {
+    // TODO: Переписать это
     if (ingredientId && ingredients.length === 0) {
       dispatch(ingredientsThunks.fetchIngredients())
         .unwrap()
@@ -51,7 +52,8 @@ export function IngredientDetailsModal() {
           }
 
           return res;
-        });
+        })
+        .catch(() => {});
     }
   }, [dispatch, ingredientId, ingredients]);
 
