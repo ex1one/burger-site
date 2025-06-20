@@ -10,6 +10,7 @@ import {
   ingredientsSelectors,
   ingredientsThunks,
 } from "@src/services/ingredients";
+import { PAGES } from "@src/consts";
 
 export function IngredientDetailsModal() {
   const dispatch = useAppDispatch();
@@ -22,11 +23,20 @@ export function IngredientDetailsModal() {
   );
 
   const handleClose = () => {
-    navigate(-1);
+    const referrer = document.referrer;
+    const currentHost = window.location.host;
+
+    if (referrer && new URL(referrer).host === currentHost) {
+      navigate(-1);
+    } else {
+      navigate(PAGES.HOME);
+    }
+
     dispatch(ingredientDetailActions.clearIngredientDetail());
   };
 
   useEffect(() => {
+    // TODO: Переписать это
     if (ingredientId && ingredients.length === 0) {
       dispatch(ingredientsThunks.fetchIngredients())
         .unwrap()
@@ -42,7 +52,8 @@ export function IngredientDetailsModal() {
           }
 
           return res;
-        });
+        })
+        .catch(() => {});
     }
   }, [dispatch, ingredientId, ingredients]);
 
@@ -63,6 +74,7 @@ export function IngredientDetailsModal() {
       isOpen={Boolean(ingredientId)}
       onClose={handleClose}
       title="Детали ингредиента"
+      data-cy="ingredient-detail-modal"
     >
       {content}
     </Modal>

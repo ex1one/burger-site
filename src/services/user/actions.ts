@@ -16,14 +16,10 @@ export const actions = {
   setError: (state, action: PayloadAction<APIError>) => {
     state.error = action.payload;
   },
-  changeState: (state, action: PayloadAction<TInitialState>) => {
-    state.user = action.payload.user;
-    state.error = action.payload.error;
-    state.status = action.payload.status;
+  changeState: (_, action: PayloadAction<TInitialState>) => {
+    return action.payload;
   },
-  clearState: (state) => {
-    state.error = initialState.error;
-    state.user = initialState.user;
-    state.status = initialState.status;
+  clearState: () => {
+    return initialState;
   },
 } satisfies TSliceReducerActions<TInitialState>;

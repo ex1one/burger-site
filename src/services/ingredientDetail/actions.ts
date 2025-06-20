@@ -1,16 +1,15 @@
-import { PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction } from "@reduxjs/toolkit";
 
-import { TInitialState } from './slice';
+import { initialState, TInitialState } from "./slice";
 
-import { Ingredient } from '@src/api/ingredients/types';
-import { TSliceReducerActions } from '@src/types';
-
+import { Ingredient } from "@src/api/ingredients/types";
+import { TSliceReducerActions } from "@src/types";
 
 export const actions = {
-	setIngredientDetail(state, action: PayloadAction<Ingredient>) {
-		state.ingredient = action.payload;
-	},
-	clearIngredientDetail(state) {
-		state.ingredient = null;
-	},
+  setIngredientDetail(state, action: PayloadAction<Ingredient>) {
+    state.ingredient = action.payload;
+  },
+  clearIngredientDetail() {
+    return initialState;
+  },
 } satisfies TSliceReducerActions<TInitialState>;

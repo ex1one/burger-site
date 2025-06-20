@@ -1,30 +1,92 @@
-# React + TypeScript + Vite
+# Проект "Burger Site"
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Добро пожаловать в проект "Burger Site" — интерактивное приложение для создания бургеров!
 
-Currently, two official plugins are available:
+## ⚡️ Демо
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🔗 [Посмотреть сайт](https://ex1one.github.io/burger-site)
 
-## Expanding the ESLint configuration
+![Логотип вашего проекта](https://ex1one.github.io/burger-site/logo.png)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Описание
 
-- Configure the top-level `parserOptions` property like this:
+Этот проект предоставляет возможность пользователям создавать собственные бургеры, выбирая ингредиенты из предлагаемого списка.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## Технологии
+
+- React
+- TypeScript
+- Vite
+- Jest
+- Cypress
+- Redux
+
+## Установка
+
+Чтобы запустить проект локально, выполните следующие шаги:
+
+1. **Клонируйте репозиторий:**
+
+```bash
+git clone https://github.com/ваш-юзернейм/burger-site.git
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. **Перейдите в директорию проекта:**
+
+```bash
+cd burger-site
+```
+
+3. **Установите зависимости:**
+
+```bash
+npm install
+```
+
+## **Разработка:**
+
+Для запуска проекта в режиме разработки используйте команду:
+
+```bash
+  npm run dev
+```
+
+Это запустит локальный сервер, и вы сможете увидеть проект по адресу http://localhost:8080 (проверьте терминал для точного URL).
+
+## **Сборка и просмотор публикации:**
+
+Для сборки проекта используйте:
+
+```bash
+npm run build
+```
+
+После сборки вы можете просмотреть его в режиме предпросмотра:
+
+```bash
+npm run preview
+```
+
+## **Тестирование:**
+
+Чтобы запустить тесты, используйте команды:
+
+```bash
+npm run test
+npm run test:watch (в режиме наблюдения)
+npm run cypress:open (cypress)
+```
+
+## **Деплой:**
+
+Чтобы задеплоить проект на GitHub Pages, сначала постройте проект:
+
+```bash
+npm run predeploy
+```
+
+Затем выполните команду:
+
+```bash
+npm run deploy
+```

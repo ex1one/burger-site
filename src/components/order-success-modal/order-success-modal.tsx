@@ -59,7 +59,7 @@ export function OrderSuccessModal() {
   }, [order, isLoading, error]);
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose}>
+    <Modal isOpen={isOpen} onClose={handleClose} data-cy="order-success-modal">
       {content}
     </Modal>
   );

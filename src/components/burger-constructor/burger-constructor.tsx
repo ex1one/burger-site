@@ -17,7 +17,8 @@ export const BurgerConstructor = () => {
   );
   const actions = useActionCreator(constructorIngredientsActions);
 
-  const [{ canDrop }, drop] = useDrop(() => ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, drop] = useDrop(() => ({
     accept: ["bun", "main", "sauce"],
     drop: ({ ingredient }: { ingredient: Ingredient }) => {
       if (!ingredient) return;
@@ -53,16 +54,18 @@ export const BurgerConstructor = () => {
   const [topBun, downBun] = buns;
 
   return (
-    <div className={styles.wrapper} ref={drop}>
+    <div className={styles.wrapper} ref={drop} data-cy="burger-constructor">
       {topBun ? (
-        <ConstructorElement
-          type="top"
-          text={`${topBun.name} "(верх)"`}
-          price={topBun.price}
-          thumbnail={topBun.image}
-          isLocked
-          extraClass={styles.top}
-        />
+        <div data-cy="burger-constructor-top-bun">
+          <ConstructorElement
+            type="top"
+            text={`${topBun.name} "(верх)"`}
+            price={topBun.price}
+            thumbnail={topBun.image}
+            isLocked
+            extraClass={styles.top}
+          />
+        </div>
       ) : (
         <div className={styles.topBun}>Выберите верхнюю булку</div>
       )}
@@ -84,13 +87,15 @@ export const BurgerConstructor = () => {
         </div>
       )}
       {downBun ? (
-        <ConstructorElement
-          type="bottom"
-          text={`${downBun.name} "(низ)"`}
-          price={downBun.price}
-          thumbnail={downBun.image}
-          isLocked
-        />
+        <div data-cy="burger-constructor-down-bun">
+          <ConstructorElement
+            type="bottom"
+            text={`${downBun.name} "(низ)"`}
+            price={downBun.price}
+            thumbnail={downBun.image}
+            isLocked
+          />
+        </div>
       ) : (
         <div className={styles.downBun}>Выберите нижнюю булку</div>
       )}
