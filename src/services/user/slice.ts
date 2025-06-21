@@ -19,6 +19,7 @@ export const initialState: TInitialState = {
   user: null,
   error: null,
   status: Status.Initial,
+  // Пришлось добавлять отдельный status для сессии пользователя. Другой статус для взаимодействия с пользователем
   authStatus: AuthStatus.Initial,
 };
 
