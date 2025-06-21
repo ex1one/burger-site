@@ -7,10 +7,11 @@ import {
 
 import styles from "./sign-in.module.css";
 
-import { useAppDispatch } from "@src/hooks";
-import { userThunks } from "@src/services/user";
+import { useAppDispatch, useAppSelector } from "@src/hooks";
+import { userSelectors, userThunks } from "@src/services/user";
 import { Link, PasswordInput } from "@src/components";
 import { PAGES, schemas } from "@src/consts";
+import { isPendingByStatus } from "@src/utils";
 
 // TODO: Придумать куда вынести работу с формой
 const defaultValues = {
@@ -20,6 +21,9 @@ const defaultValues = {
 
 export function SignIn() {
   const dispatch = useAppDispatch();
+
+  const status = useAppSelector(userSelectors.statusSelector);
+  const isPending = isPendingByStatus(status);
 
   const form = useForm({
     defaultValues,
@@ -61,11 +65,7 @@ export function SignIn() {
               />
             )}
           />
-          <Button
-            type="primary"
-            htmlType="submit"
-            disabled={form.formState.isSubmitting}
-          >
+          <Button type="primary" htmlType="submit" disabled={isPending}>
             Войти
           </Button>
         </form>

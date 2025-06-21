@@ -5,8 +5,8 @@ import { Loader } from "../loader";
 import styles from "./anonymous-route.module.css";
 
 import { useAppDispatch, useAppSelector } from "@src/hooks";
-import { AuthStatus, userSelectors, userThunks } from "@src/services/user";
-import { PAGES } from "@src/consts";
+import { userSelectors, userThunks } from "@src/services/user";
+import { PAGES, AuthStatus } from "@src/consts";
 
 export const AnonymousRoute = ({ element }: { element: JSX.Element }) => {
   const dispatch = useAppDispatch();
@@ -14,7 +14,7 @@ export const AnonymousRoute = ({ element }: { element: JSX.Element }) => {
   const location = useLocation();
   const from = location.state?.from || PAGES.HOME;
 
-  const status = useAppSelector(userSelectors.statusSelector);
+  const authStatus = useAppSelector(userSelectors.authStatusSelector);
 
   const loader = (
     <div className={styles.wrapper}>
@@ -22,21 +22,21 @@ export const AnonymousRoute = ({ element }: { element: JSX.Element }) => {
     </div>
   );
 
-  if (status === AuthStatus.Authenticated) {
+  if (authStatus === AuthStatus.Authenticated) {
     return <Navigate to={from} />;
   }
 
-  if (status === AuthStatus.Anonymous) {
+  if (authStatus === AuthStatus.Anonymous) {
     return element;
   }
 
-  if (status === AuthStatus.Initial) {
+  if (authStatus === AuthStatus.Initial) {
     dispatch(userThunks.sessionRequest());
 
     return loader;
   }
 
-  if (status === AuthStatus.Pending) {
+  if (authStatus === AuthStatus.Pending) {
     return loader;
   }
 
