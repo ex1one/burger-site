@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "@src/hooks";
 import { Link, PasswordInput } from "@src/components";
 import { PAGES, schemas } from "@src/consts";
 import { userSelectors, userThunks } from "@src/services/user";
+import { isPendingByStatus } from "@src/utils";
 
 const defaultValues = {
   name: "",
@@ -23,6 +24,9 @@ export function Profile() {
   const dispatch = useAppDispatch();
 
   const user = useAppSelector(userSelectors.userSelector);
+  const status = useAppSelector(userSelectors.statusSelector);
+
+  const isPending = isPendingByStatus(status);
 
   const form = useForm({
     values: { ...defaultValues, name: user?.name || "" },
@@ -83,7 +87,12 @@ export function Profile() {
       <div className={styles.contentFooter}>
         {form.formState.isDirty && (
           <>
-            <Button htmlType="submit" type="primary" size="medium">
+            <Button
+              htmlType="submit"
+              type="primary"
+              size="medium"
+              disabled={isPending}
+            >
               Сохранить
             </Button>
             <Button
@@ -91,6 +100,7 @@ export function Profile() {
               type="primary"
               size="medium"
               onClick={handleClickCancelEdit}
+              disabled={isPending}
             >
               Отменить
             </Button>

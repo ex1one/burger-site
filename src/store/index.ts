@@ -3,7 +3,10 @@ import { compose } from "redux";
 
 import { history } from "@src/router";
 import { rootReducer } from "@src/services";
-import { socketMiddleware } from "@src/services/middlewares";
+import {
+  errorHandlingMiddleware,
+  socketMiddleware,
+} from "@src/services/middlewares";
 import { feedActions } from "@src/services/feed";
 import { orderHistoryActions } from "@src/services/order-history";
 
@@ -45,7 +48,8 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: { extraArgument } }).concat(
       feedMiddleware,
-      ordersHistoryMiddleware
+      ordersHistoryMiddleware,
+      errorHandlingMiddleware
     ),
   devTools: composeEnhancers(),
 });
