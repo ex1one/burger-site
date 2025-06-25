@@ -6,18 +6,17 @@ import { thunks } from "./thunks";
 import { extraReducers } from "./extraReducers";
 
 import { Ingredients } from "@src/api/ingredients/types";
+import { Status } from "@src/consts";
 
 export interface TInitialState {
   ingredients: Ingredients;
-  isLoading: boolean;
-  status: "pending" | "success" | "error" | "idle";
-  error: any;
+  status: Status;
+  error: string | null;
 }
 
 export const initialState: TInitialState = {
   ingredients: [],
-  status: "idle",
-  isLoading: false,
+  status: Status.Initial,
   error: null,
 };
 

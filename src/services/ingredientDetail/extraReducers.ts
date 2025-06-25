@@ -7,18 +7,18 @@ import { ERROR_MESSAGE, Status } from "@src/consts";
 
 export const extraReducers: TExtraReducers<TInitialState> = (builder) => {
   builder
-    .addCase(thunks.createOrderThunk.pending, (state) => {
+    .addCase(thunks.getIngredient.pending, (state) => {
       state.status = Status.Pending;
+      state.error = null;
     })
-    .addCase(thunks.createOrderThunk.fulfilled, (state, { payload }) => {
-      state.order = {
-        name: payload.name,
-        number: payload.order.number,
-      };
+    .addCase(thunks.getIngredient.fulfilled, (state, action) => {
+      state.ingredient = action.payload;
       state.status = Status.Success;
+      state.error = null;
     })
-    .addCase(thunks.createOrderThunk.rejected, (state, { error }) => {
+    .addCase(thunks.getIngredient.rejected, (state, action) => {
       state.status = Status.Error;
-      state.error = error.message || ERROR_MESSAGE;
+      state.error = action.error.message || ERROR_MESSAGE;
+      state.ingredient = null;
     });
 };

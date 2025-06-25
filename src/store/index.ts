@@ -26,7 +26,6 @@ export const extraArgument = {
 const feedMiddleware = socketMiddleware({
   connect: feedActions.connect,
   disconnect: feedActions.disconnect,
-  onConnecting: feedActions.onConnecting,
   onOpen: feedActions.onOpen,
   onClose: feedActions.onClose,
   onError: feedActions.onError,
@@ -36,7 +35,6 @@ const feedMiddleware = socketMiddleware({
 const ordersHistoryMiddleware = socketMiddleware({
   connect: orderHistoryActions.connect,
   disconnect: orderHistoryActions.disconnect,
-  onConnecting: orderHistoryActions.onConnecting,
   onOpen: orderHistoryActions.onOpen,
   onClose: orderHistoryActions.onClose,
   onError: orderHistoryActions.onError,

@@ -1,1 +1,1 @@
-export * from './ingredient-details-modal';
+export * from "./ingredient-details-modal";

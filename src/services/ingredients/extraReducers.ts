@@ -3,27 +3,24 @@ import { thunks } from "./thunks";
 import { TInitialState } from ".";
 
 import { TExtraReducers } from "@src/types";
+import { ERROR_MESSAGE, Status } from "@src/consts";
 
-// TODO: Вынести в отдельную const статусы: "idle" | "pending" | "success" | "rejected"
 export const extraReducers: TExtraReducers<TInitialState> = (builder) => {
   builder
+    .addCase(thunks.fetchIngredients.pending, (state) => {
+      state.status = Status.Pending;
+    })
     .addCase(thunks.fetchIngredients.fulfilled, (state, action) => {
       state.ingredients = action.payload;
-      state.isLoading = false;
-      state.status = "success";
+      state.status = Status.Success;
+      state.error = null;
     })
     .addCase(thunks.fetchIngredients.rejected, (state, action) => {
       if (action.meta.aborted) {
         return;
       }
 
-      state.isLoading = false;
-      state.status = "error";
-      state.error = action.error.message;
-    })
-    .addCase(thunks.fetchIngredients.pending, (state) => {
-      state.isLoading = true;
-      state.status = "pending";
-      state.error = null;
+      state.status = Status.Error;
+      state.error = action.error.message || ERROR_MESSAGE;
     });
 };

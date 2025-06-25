@@ -5,22 +5,24 @@ import styles from "./feed.module.css";
 import { OrderCard } from "@src/components";
 import { useAppDispatch, useAppSelector } from "@src/hooks";
 import { feedActions, feedSelectors } from "@src/services/feed";
-import { WS_URL_FEED } from "@src/consts";
+import { ERROR_MESSAGE, WS_URL_FEED } from "@src/consts";
+import { ingredientsThunks } from "@src/services/ingredients";
 import {
-  ingredientsSelectors,
-  ingredientsThunks,
-} from "@src/services/ingredients";
-import { splitArrayToChunks } from "@src/utils";
+  isErrorByStatus,
+  isPendingByStatus,
+  splitArrayToChunks,
+} from "@src/utils";
+import { LoaderPage } from "@src/features";
 
 export function Feed() {
+  // TODO: Не показывается loader при первом запуске. Решить проблему
   const dispatch = useAppDispatch();
 
-  const ingredientsSlice = useAppSelector(
-    ingredientsSelectors.ingredientsSelector
+  const { orders, total, totalToday, status, error } = useAppSelector(
+    feedSelectors.sliceSelector
   );
-  const { orders, total, totalToday, status } = useAppSelector(
-    feedSelectors.getSlice
-  );
+  const isPending = isPendingByStatus(status);
+  const isError = isErrorByStatus(status);
 
   useEffect(() => {
     dispatch(feedActions.connect(WS_URL_FEED));
@@ -31,17 +33,16 @@ export function Feed() {
   }, []);
 
   useEffect(() => {
-    if (ingredientsSlice.status === "idle") {
-      dispatch(ingredientsThunks.fetchIngredients());
-    }
-  }, [dispatch, ingredientsSlice.status]);
+    dispatch(ingredientsThunks.fetchIngredients());
+  }, []);
 
-  if (status === "pending") {
-    return <div>Loading...</div>;
+  if (isPending) {
+    return <LoaderPage />;
   }
 
-  if (status === "error") {
-    return <div>Error while getting feed</div>;
+  // TODO: Вынести в отдельный компонент
+  if (isError) {
+    return <div>{error || ERROR_MESSAGE}</div>;
   }
 
   const activeOrdersIds = splitArrayToChunks(

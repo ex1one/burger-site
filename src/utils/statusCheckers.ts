@@ -1,4 +1,4 @@
-import { Status } from "@src/consts";
+import { Status, AuthStatus } from "@src/consts";
 
 export function isInitialByStatus(status: Status) {
   return status === Status.Initial;
@@ -16,10 +16,10 @@ export function isErrorByStatus(status: Status) {
   return status === Status.Error;
 }
 
-export function isAnonymousByStatus(status: Status) {
-  return status === Status.Anonymous;
+export function isAnonymousByStatus(status: AuthStatus) {
+  return status === AuthStatus.Anonymous;
 }
 
-export function isAuthenticatedByStatus(status: Status) {
-  return status === Status.Authenticated;
+export function isAuthenticatedByStatus(status: AuthStatus) {
+  return status === AuthStatus.Authenticated;
 }

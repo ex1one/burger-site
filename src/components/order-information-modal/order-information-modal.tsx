@@ -21,6 +21,7 @@ import { WS_URL_FEED, WS_URL_ORDERS_HISTORY } from "@src/consts";
 export function OrderInformationModal() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const location = useLocation();
   const { orderId } = useParams();
 

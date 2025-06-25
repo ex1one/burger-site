@@ -75,16 +75,16 @@ const Root = () => {
       {background && (
         <Routes>
           <Route path={PAGES.INGREDIENT} element={<IngredientDetailsModal />} />
-          <Route path={PAGES.ORDER_FEED} element={<OrderInformationModal />} />
-          <Route
+          {/* <Route path={PAGES.ORDER_FEED} element={<OrderInformationModal />} /> */}
+          {/* <Route
             path={PAGES.PROFILE_ORDER}
             element={<AuthorizedRoute element={<OrderInformationModal />} />}
-          />
+          /> */}
         </Routes>
       )}
 
       <OrderSuccessModal />
-      <OrderInformationModal />
+      {/* <OrderInformationModal /> */}
 
       <ToastContainer
         position="top-center"

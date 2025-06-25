@@ -10,6 +10,7 @@ import {
   ingredientsSelectors,
   ingredientsThunks,
 } from "@src/services/ingredients";
+import { isPendingByStatus } from "@src/utils";
 
 interface BurgerIngredientsListProps {
   menuItemsRef: RefObject<HTMLDivElement>;
@@ -23,9 +24,10 @@ export function BurgerIngredientsList({
   setSelectedTab,
 }: BurgerIngredientsListProps) {
   const dispatch = useAppDispatch();
-  const { ingredients, isLoading, error } = useAppSelector(
-    ingredientsSelectors.ingredientsSelector
+  const { ingredients, status, error } = useAppSelector(
+    ingredientsSelectors.sliceSelector
   );
+  const isPending = isPendingByStatus(status);
 
   // TODO: Переписать
   const handleScroll = () => {
@@ -60,7 +62,7 @@ export function BurgerIngredientsList({
     dispatch(ingredientsThunks.fetchIngredients());
   }, []);
 
-  if (isLoading) {
+  if (isPending) {
     const array = new Array(4).fill(1);
 
     return (

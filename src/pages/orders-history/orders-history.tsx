@@ -3,12 +3,12 @@ import { useEffect } from "react";
 import styles from "./orders-history.module.css";
 
 import { useAppDispatch, useAppSelector } from "@src/hooks";
-import { OrderCard } from "@src/components";
+import { Loader, OrderCard } from "@src/components";
 import {
   orderHistoryActions,
   orderHistorySelectors,
 } from "@src/services/order-history";
-import { WS_URL_ORDERS_HISTORY } from "@src/consts";
+import { ERROR_MESSAGE, Status, WS_URL_ORDERS_HISTORY } from "@src/consts";
 import {
   ingredientsSelectors,
   ingredientsThunks,
@@ -17,10 +17,10 @@ import {
 export function OrdersHistory() {
   const dispatch = useAppDispatch();
 
-  const ingredientsSlice = useAppSelector(
-    ingredientsSelectors.ingredientsSelector
+  const ingredientsStatus = useAppSelector(ingredientsSelectors.statusSelector);
+  const { orders, status, error } = useAppSelector(
+    orderHistorySelectors.getSlice
   );
-  const { orders, status } = useAppSelector(orderHistorySelectors.getSlice);
 
   useEffect(() => {
     dispatch(orderHistoryActions.connect(WS_URL_ORDERS_HISTORY));
@@ -31,17 +31,17 @@ export function OrdersHistory() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (ingredientsSlice.status === "idle") {
+    if (ingredientsStatus === Status.Initial) {
       dispatch(ingredientsThunks.fetchIngredients());
     }
-  }, [dispatch, ingredientsSlice.status]);
+  }, [dispatch, ingredientsStatus]);
 
-  if (status === "pending") {
-    return <div>Loading...</div>;
+  if (status === Status.Pending) {
+    return <Loader />;
   }
 
-  if (status === "error") {
-    return <div>Error while getting feed</div>;
+  if (status === Status.Error) {
+    return <div>{error || ERROR_MESSAGE}</div>;
   }
 
   return (

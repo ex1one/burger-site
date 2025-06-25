@@ -1,0 +1,80 @@
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.icons {
+  display: flex;
+
+  & .icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 1px solid purple;
+    flex-shrink: 0;
+    background-color: var(--main-color);
+  }
+
+  & > span {
+    position: relative;
+  }
+
+  & span:not(:first-child) {
+    margin-inline-start: -16px;
+  }
+}
+
+.remainingCount {
+  position: absolute;
+  top: 50%;
+  left: 48%;
+  transform: translate(50%, -50%);
+  composes: text text_type_main-default from global;
+}
+
+.count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  composes: text text_type_digits-default from global;
+}
+
+.skeletonIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.skeletonTotal {
+  width: 94px;
+  height: 26px;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.skeletonIcon,
+.skeletonTotal {
+  background-color: var(--secondary-color);
+  background: linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0) 40%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 60%
+    )
+    var(--secondary-color);
+  background-size: 200% 100%;
+  background-position-x: 180%;
+  animation: 1s skeleton ease-in-out infinite;
+}
+
+@keyframes skeleton {
+  to {
+    background-position-x: -20%;
+  }
+}

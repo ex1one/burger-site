@@ -8,6 +8,7 @@ import { initialState, TInitialState } from "./slice";
 import { Ingredient, IngredientWithUniqueId } from "@src/api/ingredients/types";
 import { TSliceReducerActions } from "@src/types";
 
+// TODO: Переписать по этому примеру - https://redux.js.org/usage/structuring-reducers/refactoring-reducer-example
 export const actions = {
   addIngredient: {
     reducer(state, action: PayloadAction<IngredientWithUniqueId>) {

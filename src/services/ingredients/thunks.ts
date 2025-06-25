@@ -1,18 +1,15 @@
-import { createAppAsyncThunk } from "@src/store/shared";
 import { RootState } from "@src/types";
 import API from "@src/api";
+import { Status } from "@src/consts";
+import { createAppAsyncThunk } from "@src/store/shared";
 
 // TODO: В будущем написать тесты на thunk. https://www.youtube.com/watch?v=qb7xVPVfPlQ&t=1029s
 const fetchIngredients = createAppAsyncThunk(
   "ingredients/fetchIngredients",
   async () => {
-    const response = await API.ingredients.getIngredients();
+    const { data } = await API.ingredients.getIngredients();
 
-    if (!response.success) {
-      throw new Error("Error while request ingredients");
-    }
-
-    return response.data;
+    return data;
   },
   {
     condition: (_, { getState }) => {
@@ -20,7 +17,7 @@ const fetchIngredients = createAppAsyncThunk(
         ingredients: { status },
       } = getState() as RootState;
 
-      if (status === "pending") return false;
+      if (status === Status.Pending) return false;
 
       return true;
     },

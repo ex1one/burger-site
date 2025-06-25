@@ -3,8 +3,8 @@ import { TInitialState } from "./slice";
 import { TSliceSelectors } from "@src/types";
 
 export const selectors = {
-  getOrders: (state) => state.orders,
-  getError: (state) => state.error,
-  getStatus: (state) => state.status,
-  getSlice: (state) => state,
+  ordersSelector: (state) => state.orders,
+  errorSelector: (state) => state.error,
+  statusSelector: (state) => state.status,
+  sliceSelector: (state) => state,
 } satisfies TSliceSelectors<TInitialState>;
