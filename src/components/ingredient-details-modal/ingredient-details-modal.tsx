@@ -12,7 +12,7 @@ import {
   ingredientDetailActions,
   ingredientDetailSelectors,
 } from "@src/services/ingredientDetail/slice";
-import { ERROR_MESSAGE, PAGES } from "@src/consts";
+import { ERROR_MESSAGE } from "@src/consts";
 import { isErrorByStatus, isPendingByStatus } from "@src/utils";
 
 export function IngredientDetailsModal() {
@@ -28,14 +28,7 @@ export function IngredientDetailsModal() {
   const isError = isErrorByStatus(status);
 
   const handleClose = () => {
-    const referrer = document.referrer;
-    const currentHost = window.location.host;
-
-    if (referrer && new URL(referrer).host === currentHost) {
-      navigate(-1);
-    } else {
-      navigate(PAGES.HOME);
-    }
+    navigate(-1);
 
     dispatch(ingredientDetailActions.clearIngredientDetail());
   };

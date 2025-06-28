@@ -1,3 +1,5 @@
+import { Ingredient } from "../ingredients/types";
+
 export interface Order {
   _id: string;
   status: string;
@@ -22,4 +24,9 @@ export interface FeedOrderResponse {
   success: boolean;
   total: number;
   totalToday: number;
+}
+
+export interface OrderInfo extends Omit<FeedOrder, "ingredients"> {
+  ingredients: (Ingredient & { count: number })[];
+  total: number;
 }

@@ -10,12 +10,6 @@ import { createAppAsyncThunk } from "@src/store/shared";
 import { User } from "@src/api/user/types";
 import { getAccessToken } from "@src/utils";
 
-/*
-
-    TODO: Сделать по примеру отсюда. Thunks выполняют 1 задачу. Обработка в extraReducers.
-
-*/
-
 // TODO: Проблема в том, что отмену запрсов необходимо выполнять вручную. Если мы запустим 2 раза подряд logout, то он вызовется 2 раза подряд.
 // Надо как-нибудь обрабатывать этот кейс. В сагах очень хорошо реализована отмена выполнения функции. Сюда мы прикрутить ее + автоматическое отмену запросов в thunk текущем
 const logout = createAppAsyncThunk("user/logout", async () => {

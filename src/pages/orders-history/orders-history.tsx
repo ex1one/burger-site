@@ -8,19 +8,18 @@ import {
   orderHistoryActions,
   orderHistorySelectors,
 } from "@src/services/order-history";
-import { ERROR_MESSAGE, Status, WS_URL_ORDERS_HISTORY } from "@src/consts";
-import {
-  ingredientsSelectors,
-  ingredientsThunks,
-} from "@src/services/ingredients";
+import { ERROR_MESSAGE, WS_URL_ORDERS_HISTORY } from "@src/consts";
+import { ingredientsThunks } from "@src/services/ingredients";
+import { isErrorByStatus, isPendingByStatus } from "@src/utils";
 
 export function OrdersHistory() {
   const dispatch = useAppDispatch();
 
-  const ingredientsStatus = useAppSelector(ingredientsSelectors.statusSelector);
   const { orders, status, error } = useAppSelector(
-    orderHistorySelectors.getSlice
+    orderHistorySelectors.sliceSelector
   );
+  const isPending = isPendingByStatus(status);
+  const isError = isErrorByStatus(status);
 
   useEffect(() => {
     dispatch(orderHistoryActions.connect(WS_URL_ORDERS_HISTORY));
@@ -31,16 +30,14 @@ export function OrdersHistory() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (ingredientsStatus === Status.Initial) {
-      dispatch(ingredientsThunks.fetchIngredients());
-    }
-  }, [dispatch, ingredientsStatus]);
+    dispatch(ingredientsThunks.fetchIngredients());
+  }, [dispatch]);
 
-  if (status === Status.Pending) {
+  if (isPending) {
     return <Loader />;
   }
 
-  if (status === Status.Error) {
+  if (isError) {
     return <div>{error || ERROR_MESSAGE}</div>;
   }
 

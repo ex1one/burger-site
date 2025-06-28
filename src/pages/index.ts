@@ -1,5 +1,4 @@
 export * from "./feed";
-export * from "./feed-items-details";
 export * from "./home";
 export * from "./sign-in";
 export * from "./sign-up";

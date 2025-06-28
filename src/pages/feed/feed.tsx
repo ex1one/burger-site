@@ -30,11 +30,11 @@ export function Feed() {
     return () => {
       dispatch(feedActions.disconnect());
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(ingredientsThunks.fetchIngredients());
-  }, []);
+  }, [dispatch]);
 
   if (isPending) {
     return <LoaderPage />;
