@@ -59,8 +59,12 @@ export function BurgerIngredientsList({
   };
 
   useEffect(() => {
-    dispatch(ingredientsThunks.fetchIngredients());
-  }, []);
+    const abort = dispatch(ingredientsThunks.fetchIngredients());
+
+    return () => {
+      abort.abort();
+    };
+  }, [dispatch]);
 
   if (isPending) {
     const array = new Array(4).fill(1);

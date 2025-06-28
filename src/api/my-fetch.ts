@@ -17,9 +17,10 @@ export interface Options {
   headers?: Record<string, any>;
   data?: any;
   params?: Pick<XMLHttpRequest, "responseType">;
+  signal?: AbortSignal;
 }
 
-type OptionsWithoutMethod = Omit<Options, "method">;
+export type OptionsWithoutMethod = Omit<Options, "method">;
 type HTTPMethod = <D = unknown>(
   url: string,
   options?: OptionsWithoutMethod
@@ -53,6 +54,7 @@ class HTTPTransport {
       headers = {},
       timeout = 5000,
       params = { responseType: "text" },
+      signal,
     } = options;
 
     return new Promise((resolve, reject) => {
@@ -60,7 +62,6 @@ class HTTPTransport {
 
       const isGet = method === METHODS.GET;
 
-      // TODO: Поменять на true
       xhr.withCredentials = false;
       xhr.responseType = params.responseType;
       xhr.open(
@@ -92,6 +93,10 @@ class HTTPTransport {
       xhr.onabort = handleError;
       xhr.onerror = handleError;
       xhr.ontimeout = handleError;
+
+      if (signal) {
+        signal.addEventListener("abort", () => xhr.abort());
+      }
 
       xhr.onload = async () => {
         try {
@@ -162,7 +167,6 @@ class HTTPTransport {
   }
 }
 
-// TODO: Добавить abort реализацию
 const myFetch = new HTTPTransport();
 
 export default myFetch;

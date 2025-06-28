@@ -16,10 +16,6 @@ export const extraReducers: TExtraReducers<TInitialState> = (builder) => {
       state.error = null;
     })
     .addCase(thunks.fetchIngredients.rejected, (state, action) => {
-      if (action.meta.aborted) {
-        return;
-      }
-
       state.status = Status.Error;
       state.error = action.error.message || ERROR_MESSAGE;
     });

@@ -29,8 +29,6 @@ export const changePassword = ({
   );
 };
 
-// TODO: Возможно лучше будет реализовать такой подход:
-// return { body, error }
 export const signUp = ({
   name,
   email,
