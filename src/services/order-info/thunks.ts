@@ -71,10 +71,14 @@ const getOrderFeed = createAppAsyncThunk(
 const getOrderFromHistory = createAppAsyncThunk(
   "orderInfo/getOrderFromHistory",
   async (orderNumber: string, { dispatch, getState }) => {
-    dispatch(orderHistoryActions.connect(WS_URL_ORDERS_HISTORY));
+    const orderHistoryStatus = feedSelectors.statusSelector(getState());
 
-    // TODO: Костыль, пока хз как по другому делать
-    await delay(2000);
+    if (orderHistoryStatus !== Status.Success) {
+      dispatch(orderHistoryActions.connect(WS_URL_ORDERS_HISTORY));
+
+      // TODO: Костыль, пока хз как по другому делать
+      await delay(2000);
+    }
 
     const orderHistorySlice = orderHistorySelectors.sliceSelector(getState());
     const isSuccess = isSuccessByStatus(orderHistorySlice.status);
