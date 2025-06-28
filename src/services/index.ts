@@ -8,6 +8,7 @@ import { modalsReducer } from "./modals";
 import { userReducer } from "./user";
 import { feedReducer } from "./feed";
 import { orderHistoryReducer } from "./order-history";
+import { orderInfoReducer } from "./order-info";
 
 export const rootReducer = combineReducers({
   constructorIngredients: constructorIngredientsReducer,
@@ -18,4 +19,5 @@ export const rootReducer = combineReducers({
   user: userReducer,
   feed: feedReducer,
   orderHistory: orderHistoryReducer,
+  orderInfo: orderInfoReducer,
 });

@@ -6,9 +6,9 @@ export enum PAGES {
   FORGOT_PASSWORD = "/forgot-password",
   RESET_PASSWORD = "/reset-password",
   PROFILE_ORDERS = "/profile/orders",
-  PROFILE_ORDER = `${PAGES.PROFILE_ORDERS}/:orderId`,
+  PROFILE_ORDER = `${PAGES.PROFILE_ORDERS}/:orderNumber`,
   INGREDIENT = "/ingredients/:ingredientId",
   ORDERS_FEED = "/feed",
-  ORDER_FEED = `${PAGES.ORDERS_FEED}/:orderId`,
+  ORDER_FEED = `${PAGES.ORDERS_FEED}/:orderNumber`,
   NOT_FOUND = "*",
 }

@@ -1,31 +1,24 @@
-import { ApiErrorClass } from "../../api/config/api-error";
-
 import { thunks } from "./thunks";
 
 import { TInitialState } from ".";
 
 import { TExtraReducers } from "@src/types";
-import { UNKNOWN_ERROR_MESSAGE } from "@src/consts";
+import { ERROR_MESSAGE, Status } from "@src/consts";
 
 export const extraReducers: TExtraReducers<TInitialState> = (builder) => {
   builder
-    .addCase(thunks.createOrderThunk.fulfilled, (state, action) => {
-      state.order = {
-        name: action.payload.name,
-        number: action.payload.order.number,
-      };
-      state.isLoading = false;
-      state.status = "success";
-    })
-    .addCase(thunks.createOrderThunk.rejected, (state, action) => {
-      state.isLoading = false;
-      state.status = "error";
-      state.error = new ApiErrorClass(
-        action.error.message ?? UNKNOWN_ERROR_MESSAGE
-      );
-    })
     .addCase(thunks.createOrderThunk.pending, (state) => {
-      state.isLoading = true;
-      state.status = "pending";
+      state.status = Status.Pending;
+    })
+    .addCase(thunks.createOrderThunk.fulfilled, (state, { payload }) => {
+      state.order = {
+        name: payload.name,
+        number: payload.order.number,
+      };
+      state.status = Status.Success;
+    })
+    .addCase(thunks.createOrderThunk.rejected, (state, { error }) => {
+      state.status = Status.Error;
+      state.error = error.message || ERROR_MESSAGE;
     });
 };

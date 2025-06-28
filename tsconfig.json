@@ -28,7 +28,8 @@
     "vite.config.ts",
     "eslint.config.js",
     "jest.config.ts",
-    "cypress.config.ts"
+    "cypress.config.ts",
+    "declaration.d.ts"
   ],
   "exclude": ["node_modules"]
 }

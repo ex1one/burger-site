@@ -9,7 +9,6 @@ import { ApiErrorClass } from "@src/api/config/api-error";
 export type TWsActions<R, S> = {
   connect: ActionCreatorWithPayload<string>;
   disconnect: ActionCreatorWithoutPayload;
-  onConnecting?: ActionCreatorWithoutPayload;
   onOpen?: ActionCreatorWithoutPayload;
   onClose?: ActionCreatorWithoutPayload;
   onError: ActionCreatorWithPayload<ApiErrorClass>;
@@ -32,7 +31,6 @@ export const socketMiddleware = <R, S>(
       onClose,
       onError,
       onMessage,
-      onConnecting,
       disconnect,
     } = wsActions;
     const { dispatch } = store;
@@ -42,13 +40,13 @@ export const socketMiddleware = <R, S>(
 
     return (next) => (action) => {
       if (connect.match(action)) {
+        if (isConnected) {
+          return;
+        }
+
         socket = new WebSocket(action.payload);
         url = action.payload;
         isConnected = true;
-
-        if (onConnecting) {
-          dispatch(onConnecting());
-        }
 
         socket.onopen = () => {
           if (onOpen) {
@@ -77,6 +75,7 @@ export const socketMiddleware = <R, S>(
           try {
             const parsedData = JSON.parse(data);
 
+            // TODO: Добавить реализацию
             // if (withTokenRefresh && parsedData.message === "Invalid or missing token") {
             // 	refreshToken().
             // 		then((refreshedData) => {

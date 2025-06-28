@@ -2,15 +2,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useMemo } from "react";
 
 import { Modal } from "../modal";
-import { IngredientDetails } from "..";
+import { IngredientDetails, Loader } from "..";
+import { ingredientDetailThunks } from "../../services/ingredientDetail/slice";
+
+import styles from "./ingredient-details-modal.module.css";
 
 import { useAppDispatch, useAppSelector } from "@src/hooks";
-import { ingredientDetailActions } from "@src/services/ingredientDetail/slice";
 import {
-  ingredientsSelectors,
-  ingredientsThunks,
-} from "@src/services/ingredients";
-import { PAGES } from "@src/consts";
+  ingredientDetailActions,
+  ingredientDetailSelectors,
+} from "@src/services/ingredientDetail/slice";
+import { ERROR_MESSAGE } from "@src/consts";
+import { isErrorByStatus, isPendingByStatus } from "@src/utils";
 
 export function IngredientDetailsModal() {
   const dispatch = useAppDispatch();
@@ -18,56 +21,45 @@ export function IngredientDetailsModal() {
 
   const { ingredientId } = useParams();
 
-  const { ingredients, isLoading, error } = useAppSelector(
-    ingredientsSelectors.ingredientsSelector
+  const { ingredient, status, error } = useAppSelector(
+    ingredientDetailSelectors.sliceSelector
   );
+  const isPending = isPendingByStatus(status);
+  const isError = isErrorByStatus(status);
 
   const handleClose = () => {
-    const referrer = document.referrer;
-    const currentHost = window.location.host;
-
-    if (referrer && new URL(referrer).host === currentHost) {
-      navigate(-1);
-    } else {
-      navigate(PAGES.HOME);
-    }
+    navigate(-1);
 
     dispatch(ingredientDetailActions.clearIngredientDetail());
   };
 
   useEffect(() => {
-    // TODO: Переписать это
-    if (ingredientId && ingredients.length === 0) {
-      dispatch(ingredientsThunks.fetchIngredients())
-        .unwrap()
-        .then((res) => {
-          const selectedIngredient = res.find(
-            (ingredient) => ingredient._id === ingredientId
-          );
-
-          if (selectedIngredient) {
-            dispatch(
-              ingredientDetailActions.setIngredientDetail(selectedIngredient)
-            );
-          }
-
-          return res;
-        })
-        .catch(() => {});
+    if (ingredientId && !ingredient) {
+      dispatch(ingredientDetailThunks.getIngredient(ingredientId));
     }
-  }, [dispatch, ingredientId, ingredients]);
+  }, [dispatch, ingredient, ingredientId]);
 
   const content = useMemo(() => {
-    if (isLoading) {
-      return "Loading...";
+    if (isPending) {
+      return (
+        <div className={styles.wrapperCentered}>
+          <Loader />
+        </div>
+      );
     }
 
-    if (error) {
-      return "Error";
+    if (isError) {
+      return (
+        <div className={styles.wrapperCentered}>{error || ERROR_MESSAGE}</div>
+      );
     }
 
-    return <IngredientDetails />;
-  }, [isLoading, error]);
+    if (!ingredient) {
+      return <div className={styles.wrapperCentered}>Ингредиент не найден</div>;
+    }
+
+    return <IngredientDetails ingredient={ingredient} />;
+  }, [isPending, isError, ingredient, error]);
 
   return (
     <Modal

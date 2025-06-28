@@ -1,39 +1,46 @@
+.wrapperCentered {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .content {
-	display: flex;
-	flex-direction: column;
-	gap: 60px;
-	text-align: center;
-	color: var(--primary-light);
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  text-align: center;
+  color: var(--primary-light);
 }
 
 .header {
-	display: flex;
-	flex-direction: column;
-	gap: 32px;
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+  justify-content: center;
 }
 
 .accept {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border-radius: 50%;
-	width: 120px;
-	height: 120px;
-	margin: 0 auto;
-	background: var(--secondary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  background: var(--secondary-color);
 }
 
 .image {
-	width: 60px;
-	height: 60px;
+  width: 60px;
+  height: 60px;
 }
 
 .footer {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	gap: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
 }

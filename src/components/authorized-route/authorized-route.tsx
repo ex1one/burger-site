@@ -5,8 +5,8 @@ import { Loader } from "../loader";
 import styles from "./authorized-route.module.css";
 
 import { useAppDispatch, useAppSelector } from "@src/hooks";
-import { AuthStatus, userSelectors, userThunks } from "@src/services/user";
-import { PAGES } from "@src/consts";
+import { userSelectors, userThunks } from "@src/services/user";
+import { AuthStatus, PAGES } from "@src/consts";
 
 export const AuthorizedRoute = ({ element }: { element: JSX.Element }) => {
   const dispatch = useAppDispatch();
@@ -14,7 +14,7 @@ export const AuthorizedRoute = ({ element }: { element: JSX.Element }) => {
   const location = useLocation();
   const from = location.state?.from || PAGES.SIGN_IN;
 
-  const status = useAppSelector(userSelectors.statusSelector);
+  const authStatus = useAppSelector(userSelectors.authStatusSelector);
 
   const loader = (
     <div className={styles.wrapper}>
@@ -22,21 +22,21 @@ export const AuthorizedRoute = ({ element }: { element: JSX.Element }) => {
     </div>
   );
 
-  if (status === AuthStatus.Authenticated) {
+  if (authStatus === AuthStatus.Authenticated) {
     return element;
   }
 
-  if (status === AuthStatus.Anonymous) {
+  if (authStatus === AuthStatus.Anonymous) {
     return <Navigate to={from} state={{ from: location }} />;
   }
 
-  if (status === AuthStatus.Initial) {
+  if (authStatus === AuthStatus.Initial) {
     dispatch(userThunks.sessionRequest());
 
     return loader;
   }
 
-  if (status === AuthStatus.Pending) {
+  if (authStatus === AuthStatus.Pending) {
     return loader;
   }
 

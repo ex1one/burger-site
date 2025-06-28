@@ -1,7 +1,7 @@
-import { initialState, userActions, userReducer, AuthStatus } from "../slice"; // Импортируйте ваш slice и actions
+import { initialState, userActions, userReducer } from "../slice"; // Импортируйте ваш slice и actions
 
 import { ApiErrorClass } from "@src/api/config/api-error";
-import { UNKNOWN_ERROR_MESSAGE } from "@src/consts";
+import { AuthStatus, Status, UNKNOWN_ERROR_MESSAGE } from "@src/consts";
 
 describe("userSlice reducers", () => {
   let state = initialState;
@@ -22,19 +22,21 @@ describe("userSlice reducers", () => {
     expect(newState.user).toEqual(user);
 
     expect(newState.status).toEqual(state.status);
+    expect(newState.authStatus).toEqual(state.authStatus);
     expect(newState.error).toEqual(state.error);
   });
 
   it("Reducer: setStatus. Должен обновить статус и не изменять другие поля", () => {
     const newState = userReducer(
       state,
-      userActions.setStatus(AuthStatus.Pending)
+      userActions.setAuthStatus(AuthStatus.Pending)
     );
 
-    expect(newState.status).toEqual(AuthStatus.Pending);
+    expect(newState.authStatus).toEqual(AuthStatus.Pending);
 
     expect(newState.user).toEqual(state.user);
     expect(newState.error).toEqual(state.error);
+    expect(newState.status).toEqual(state.status);
   });
 
   it("Reducer: setError. Должен обновить ошибку и не изменять другие поля", () => {
@@ -42,17 +44,19 @@ describe("userSlice reducers", () => {
 
     const newState = userReducer(state, userActions.setError(error));
 
-    expect(newState.error).toEqual(error);
+    expect(newState.error).toEqual(UNKNOWN_ERROR_MESSAGE);
 
     expect(newState.user).toEqual(state.user);
     expect(newState.status).toEqual(state.status);
+    expect(newState.authStatus).toEqual(state.authStatus);
   });
 
   it("Reducer: changeState. Должен изменить state", () => {
     const payload = {
       user: { name: "John", email: "john@mail.com" },
       error: null,
-      status: AuthStatus.Authenticated,
+      authStatus: AuthStatus.Authenticated,
+      status: Status.Initial,
     };
 
     const newState = userReducer(state, userActions.changeState(payload));
@@ -64,7 +68,8 @@ describe("userSlice reducers", () => {
     const modifiedState = {
       user: { name: "John", email: "john@mail.com" },
       error: null,
-      status: AuthStatus.Authenticated,
+      authStatus: AuthStatus.Authenticated,
+      status: Status.Success,
     };
 
     userReducer(state, userActions.changeState(modifiedState));

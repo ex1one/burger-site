@@ -2,40 +2,62 @@ import { CheckMarkIcon } from "@ya.praktikum/react-developer-burger-ui-component
 import { useMemo } from "react";
 
 import { Modal } from "../modal";
+import { Loader } from "../loader";
 
 import styles from "./order-success-modal.module.css";
 
 import { useAppDispatch, useAppSelector } from "@src/hooks";
-import { NAMES_OF_MODALS } from "@src/consts";
+import { ERROR_MESSAGE, NAMES_OF_MODALS } from "@src/consts";
 import { orderActions, orderSelectors } from "@src/services/order/slice";
 import { constructorIngredientsActions } from "@src/services/constructorIngredients";
 import { modalsActions, modalsSelectors } from "@src/services/modals";
+import { isErrorByStatus, isPendingByStatus } from "@src/utils";
 
 export function OrderSuccessModal() {
   const dispatch = useAppDispatch();
-  const { order, isLoading, error } = useAppSelector(
-    orderSelectors.orderSelector
-  );
+
+  const { order, status, error } = useAppSelector(orderSelectors.sliceSelector);
+  const isPending = isPendingByStatus(status);
+  const isError = isErrorByStatus(status);
+
+  const titleOfPendingStatus = "Формирование заказа";
+  const titleOfErrorStatus = "Ошибка";
+
+  // TODO: Не очень красиво
+  const title = isPending
+    ? titleOfPendingStatus
+    : isError
+    ? titleOfErrorStatus
+    : undefined;
+
   const isOpen = useAppSelector((state) =>
     modalsSelectors.modalSelector(state, NAMES_OF_MODALS.ORDER_SUCCESS_MODAL)
   );
 
   const handleClose = () => {
-    dispatch(orderActions.clearOrder());
-    dispatch(constructorIngredientsActions.clearConstructor());
+    if (!isError) {
+      dispatch(orderActions.clearOrder());
+      dispatch(constructorIngredientsActions.clearConstructor());
+      dispatch(modalsActions.closeModal(NAMES_OF_MODALS.ORDER_SUCCESS_MODAL));
+    }
+
     dispatch(modalsActions.closeModal(NAMES_OF_MODALS.ORDER_SUCCESS_MODAL));
   };
 
   const content = useMemo(() => {
-    if (isLoading) {
-      return "Формирование заказа...";
+    if (isPending) {
+      return (
+        <div className={styles.wrapperCentered}>
+          <Loader />
+        </div>
+      );
     }
 
-    if (error) {
-      return "Ошибка формирования заказа...";
+    if (isError || !order) {
+      return (
+        <div className={styles.wrapperCentered}>{error || ERROR_MESSAGE}</div>
+      );
     }
-
-    if (!order) return "Произошла непредвиденная ошибка...";
 
     return (
       <div className={styles.content}>
@@ -56,10 +78,15 @@ export function OrderSuccessModal() {
         </div>
       </div>
     );
-  }, [order, isLoading, error]);
+  }, [isPending, isError, order, error]);
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} data-cy="order-success-modal">
+    <Modal
+      isOpen={isOpen}
+      onClose={isPending ? undefined : handleClose}
+      data-cy="order-success-modal"
+      title={title}
+    >
       {content}
     </Modal>
   );

@@ -1,9 +1,5 @@
-import { toast } from "react-toastify";
-
-import { AuthStatus, userActions } from "./slice";
-
 import API from "@src/api";
-import { ERROR_MESSAGE, PAGES, UNKNOWN_ERROR_MESSAGE } from "@src/consts";
+import { PAGES } from "@src/consts";
 import {
   deleteCookie,
   deleteItemFromLocalStorage,
@@ -12,65 +8,38 @@ import {
 } from "@src/api/utils";
 import { createAppAsyncThunk } from "@src/store/shared";
 import { User } from "@src/api/user/types";
-import { ApiErrorClass } from "@src/api/config/api-error";
 import { getAccessToken } from "@src/utils";
-
-const handleError = (error: unknown) => {
-  if (error instanceof ApiErrorClass) {
-    toast.error(`${error.message}`);
-    return;
-  }
-
-  toast.error(ERROR_MESSAGE);
-};
 
 // TODO: Проблема в том, что отмену запрсов необходимо выполнять вручную. Если мы запустим 2 раза подряд logout, то он вызовется 2 раза подряд.
 // Надо как-нибудь обрабатывать этот кейс. В сагах очень хорошо реализована отмена выполнения функции. Сюда мы прикрутить ее + автоматическое отмену запросов в thunk текущем
-const logout = createAppAsyncThunk("user/logout", async (_, { dispatch }) => {
-  try {
-    deleteCookie("token");
-    deleteItemFromLocalStorage("accessToken");
-    dispatch(
-      userActions.changeState({
-        user: null,
-        error: null,
-        status: AuthStatus.Anonymous,
-      })
-    );
+const logout = createAppAsyncThunk("user/logout", async () => {
+  const response = await API.user.logout();
 
-    await API.user.logout();
-  } catch (error) {
-    handleError(error);
-  }
+  deleteCookie("token");
+  deleteItemFromLocalStorage("accessToken");
+
+  return response;
 });
 
 const update = createAppAsyncThunk(
   "user/update",
-  async (updatedFields: Partial<User>, { dispatch }) => {
+  async (updatedFields: Partial<User>) => {
     const accessToken = getAccessToken();
 
-    if (!accessToken) return;
+    const response = await API.user.updateUser(updatedFields, accessToken);
 
-    try {
-      const response = await API.user.updateUser(updatedFields, accessToken);
-
-      dispatch(userActions.setUser(response.user));
-    } catch (error) {
-      handleError(error);
-    }
+    return response;
   }
 );
 
 const changePassword = createAppAsyncThunk(
   "user/resetPassword",
   async ({ password, code }: { password: string; code: string }, { extra }) => {
-    try {
-      await API.user.changePassword({ password, token: code });
+    const response = await API.user.changePassword({ password, token: code });
 
-      extra.history.push(PAGES.HOME);
-    } catch (error) {
-      handleError(error);
-    }
+    extra.history.push(PAGES.HOME);
+
+    return response;
   }
 );
 
@@ -78,50 +47,23 @@ const signIn = createAppAsyncThunk(
   "user/signIn",
   async (
     { email, password }: { email: string; password: string },
-    { dispatch, extra, getState }
+    { extra }
   ) => {
-    const store = getState();
-    const userSlice = store.user;
+    const response = await API.user.signIn({
+      email,
+      password,
+    });
 
-    if (userSlice.status === AuthStatus.Initial) {
-      dispatch(userActions.setStatus(AuthStatus.Pending));
-    }
+    // TODO: Вынести в функцию, которая работает с куками браузера. Туда передавать данные accessToken, refreshToken
+    setCookie("token", response.refreshToken);
+    setItemToLocalStorage(
+      "accessToken",
+      JSON.stringify({ token: response.accessToken })
+    );
 
-    try {
-      const { accessToken, refreshToken, user } = await API.user.signIn({
-        email,
-        password,
-      });
+    extra.history.push(PAGES.HOME);
 
-      setCookie("token", refreshToken);
-      setItemToLocalStorage(
-        "accessToken",
-        JSON.stringify({ token: accessToken })
-      );
-
-      dispatch(
-        userActions.changeState({
-          user,
-          error: null,
-          status: AuthStatus.Authenticated,
-        })
-      );
-
-      extra.history.push(PAGES.HOME);
-    } catch (error) {
-      dispatch(
-        userActions.changeState({
-          user: null,
-          error:
-            error instanceof ApiErrorClass
-              ? error
-              : new ApiErrorClass(UNKNOWN_ERROR_MESSAGE),
-          status: AuthStatus.Anonymous,
-        })
-      );
-
-      handleError(error);
-    }
+    return response;
   }
 );
 
@@ -133,105 +75,43 @@ const signUp = createAppAsyncThunk(
       name,
       password,
     }: { email: string; name: string; password: string },
-    { dispatch, extra, getState }
+    { extra }
   ) => {
-    const store = getState();
-    const userSlice = store.user;
+    const response = await API.user.signUp({
+      email,
+      name,
+      password,
+    });
 
-    if (userSlice.status === AuthStatus.Initial) {
-      dispatch(userActions.setStatus(AuthStatus.Pending));
-    }
+    setCookie("token", response.refreshToken);
+    setItemToLocalStorage(
+      "accessToken",
+      JSON.stringify({ token: response.accessToken })
+    );
 
-    try {
-      const { accessToken, refreshToken, user } = await API.user.signUp({
-        email,
-        name,
-        password,
-      });
+    extra.history.replace(PAGES.HOME);
 
-      setCookie("token", refreshToken);
-      setItemToLocalStorage(
-        "accessToken",
-        JSON.stringify({ token: accessToken })
-      );
-
-      dispatch(
-        userActions.changeState({
-          user,
-          error: null,
-          status: AuthStatus.Authenticated,
-        })
-      );
-
-      extra.history.replace(PAGES.HOME);
-    } catch (error) {
-      dispatch(
-        userActions.changeState({
-          user: null,
-          error:
-            error instanceof ApiErrorClass
-              ? error
-              : new ApiErrorClass(UNKNOWN_ERROR_MESSAGE),
-          status: AuthStatus.Anonymous,
-        })
-      );
-
-      handleError(error);
-    }
+    return response;
   }
 );
 
+// TODO: Доделать эту логику. С изменением пароля
 const forgotPassword = createAppAsyncThunk(
   "user/forgotPassword",
   async ({ email }: { email: string }, { extra }) => {
-    try {
-      await API.user.forgotPassword(email);
+    const response = await API.user.forgotPassword(email);
 
-      extra.history.push(PAGES.RESET_PASSWORD);
-    } catch (error) {
-      handleError(error);
-    }
+    extra.history.push(PAGES.RESET_PASSWORD);
+
+    return response;
   }
 );
 
-const sessionRequest = createAppAsyncThunk(
-  "user/sessionRequest",
-  async (_, { dispatch, getState }) => {
-    const store = getState();
-    const userSlice = store.user;
+const sessionRequest = createAppAsyncThunk("user/sessionRequest", () => {
+  const accessToken = getAccessToken();
 
-    if (userSlice.status === AuthStatus.Initial) {
-      dispatch(userActions.setStatus(AuthStatus.Pending));
-    }
-
-    try {
-      const accessToken = getAccessToken();
-
-      const { user } = await API.user.getUser(accessToken);
-
-      dispatch(
-        userActions.changeState({
-          user,
-          error: null,
-          status: AuthStatus.Authenticated,
-        })
-      );
-    } catch (error) {
-      dispatch(
-        userActions.changeState({
-          user: null,
-          error:
-            error instanceof ApiErrorClass
-              ? error
-              : new ApiErrorClass(UNKNOWN_ERROR_MESSAGE),
-          status: AuthStatus.Anonymous,
-        })
-      );
-
-      handleError(error);
-    }
-  }
-);
+  return API.user.getUser(accessToken);
+});
 
 export const thunks = {
   changePassword,
