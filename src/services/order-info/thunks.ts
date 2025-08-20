@@ -38,7 +38,7 @@ const getOrderFeed = createAppAsyncThunk(
     if (feedStatus !== Status.Success) {
       dispatch(feedActions.connect(WS_URL_FEED));
 
-      // TODO: Костыль, пока хз как по другому делать
+      // TODO: Костыль для ожидания подключения к websockets
       await delay(2000);
     }
 
@@ -76,7 +76,7 @@ const getOrderFromHistory = createAppAsyncThunk(
     if (orderHistoryStatus !== Status.Success) {
       dispatch(orderHistoryActions.connect(WS_URL_ORDERS_HISTORY));
 
-      // TODO: Костыль, пока хз как по другому делать
+      // TODO: Костыль для ожидания подключения к websockets
       await delay(2000);
     }
 

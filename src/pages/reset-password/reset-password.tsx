@@ -8,15 +8,11 @@ import { Controller, useForm } from "react-hook-form";
 import styles from "./reset-password.module.css";
 
 import { Link, PasswordInput } from "@src/components";
-import { PAGES, schemas } from "@src/consts";
+import { PAGES } from "@src/consts";
 import { useAppDispatch, useAppSelector } from "@src/hooks";
 import { userSelectors, userThunks } from "@src/services/user";
 import { isPendingByStatus } from "@src/utils";
-
-const defaultValues = {
-  password: "",
-  code: "",
-};
+import { schemas } from "@src/schemas";
 
 export function ResetPassword() {
   const dispatch = useAppDispatch();
@@ -25,11 +21,17 @@ export function ResetPassword() {
   const isPending = isPendingByStatus(status);
 
   const form = useForm({
-    defaultValues,
-    resolver: yupResolver(schemas.auth.resetPassword),
+    defaultValues: {
+      password: "",
+      code: "",
+    },
+    resolver: yupResolver(schemas.user.auth.resetPassword),
   });
 
-  const handleSubmit = ({ password, code }: typeof defaultValues) => {
+  const handleSubmit = ({
+    password,
+    code,
+  }: Required<NonNullable<typeof form.formState.defaultValues>>) => {
     dispatch(userThunks.changePassword({ password, code }));
   };
 

@@ -11,7 +11,6 @@ import {
 
 export function Home() {
   // TODO: После того как запрос на получение упал. При следующем запросе, который отрабатывает отлично, показывается ошибка.
-  // Поправить это
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={styles.wrapperSections}>

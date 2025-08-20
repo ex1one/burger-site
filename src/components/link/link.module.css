@@ -1,10 +1,10 @@
-.link {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	composes: text text_type_main-small from global;
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  composes: text text_type_main-small from global;
 }
 
-.baseLinkText {
-	composes: text text_type_main-default button button_type_secondary from global;
+.text {
+  composes: text text_type_main-default button button_type_secondary from global;
 }

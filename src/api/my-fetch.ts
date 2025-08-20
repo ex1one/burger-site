@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TKeyofMethods } from "./types/methods";
 import { queryStringify } from "./utils/query-stringify";
 import METHODS from "./config/methods";

@@ -20,15 +20,15 @@ export function OrderSuccessModal() {
   const isPending = isPendingByStatus(status);
   const isError = isErrorByStatus(status);
 
-  const titleOfPendingStatus = "Формирование заказа";
-  const titleOfErrorStatus = "Ошибка";
+  const title = useMemo(() => {
+    if (isPending) {
+      return "Формирование заказа";
+    }
 
-  // TODO: Не очень красиво
-  const title = isPending
-    ? titleOfPendingStatus
-    : isError
-    ? titleOfErrorStatus
-    : undefined;
+    if (isError) {
+      return "Ошибка";
+    }
+  }, [isPending, isError]);
 
   const isOpen = useAppSelector((state) =>
     modalsSelectors.modalSelector(state, NAMES_OF_MODALS.ORDER_SUCCESS_MODAL)

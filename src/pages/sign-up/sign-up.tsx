@@ -10,14 +10,9 @@ import styles from "./sign-up.module.css";
 import { userSelectors, userThunks } from "@src/services/user";
 import { useAppDispatch, useAppSelector } from "@src/hooks";
 import { Link, PasswordInput } from "@src/components";
-import { PAGES, schemas } from "@src/consts";
+import { PAGES } from "@src/consts";
 import { isPendingByStatus } from "@src/utils";
-
-const defaultValues = {
-  name: "",
-  email: "",
-  password: "",
-};
+import { schemas } from "@src/schemas";
 
 export function SignUp() {
   const dispatch = useAppDispatch();
@@ -26,11 +21,20 @@ export function SignUp() {
   const isPending = isPendingByStatus(status);
 
   const form = useForm({
-    defaultValues,
-    resolver: yupResolver(schemas.auth.signUp),
+    // Можно вынести
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+    resolver: yupResolver(schemas.user.auth.signUp),
   });
 
-  const handleSubmit = ({ email, name, password }: typeof defaultValues) => {
+  const handleSubmit = ({
+    email,
+    name,
+    password,
+  }: Required<NonNullable<typeof form.formState.defaultValues>>) => {
     dispatch(userThunks.signUp({ email, name, password }));
   };
 

@@ -1,5 +1,6 @@
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDrag, useDrop } from "react-dnd";
+import clsx from "clsx";
 
 import styles from "./burger-constructor-ingredient.module.css";
 
@@ -22,11 +23,12 @@ export const BurgerConstructorIngredient = ({
 }: BurgerConstructorIngredientProps) => {
   const isBun = ingredient.type === "bun";
 
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging, isCanDrag }, drag] = useDrag(() => ({
     type: ingredient.type,
     item: { uniqueId: ingredient.uniqueId },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
+      isCanDrag: monitor.canDrag(),
     }),
   }));
 
@@ -43,7 +45,7 @@ export const BurgerConstructorIngredient = ({
 
   return (
     <div
-      className={`${styles.wrapper} ${className}`}
+      className={clsx(styles.wrapper, className)}
       ref={(node) => drag(drop(node))}
       style={{ opacity: isDragging ? 0.5 : 1 }}
       data-cy="burger-constructor-ingredient"
@@ -58,13 +60,15 @@ export const BurgerConstructorIngredient = ({
         />
       ) : (
         <>
-          {/* TODO: Добавить позже. Исправить верстку */}
-          {/* <DragIcon type="primary" className={styles.dragIcon} /> */}
           <ConstructorElement
             text={ingredient.name}
             price={ingredient.price}
             thumbnail={ingredient.image}
             handleClose={onClick}
+            extraClass={clsx({
+              [styles.isDraggable]: isCanDrag,
+              [styles.isDragging]: isDragging,
+            })}
           />
         </>
       )}

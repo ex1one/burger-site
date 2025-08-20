@@ -5,6 +5,9 @@ import {
 } from "@reduxjs/toolkit";
 
 import { ApiErrorClass } from "@src/api/config/api-error";
+import { refreshAccessToken } from "@src/api/user";
+import { getCookie } from "@src/api/utils";
+import { ERROR_MESSAGE } from "@src/consts";
 
 export type TWsActions<R, S> = {
   connect: ActionCreatorWithPayload<string>;
@@ -19,8 +22,8 @@ export type TWsActions<R, S> = {
 const RECONNECT_PERIOD = 3000;
 
 export const socketMiddleware = <R, S>(
-  wsActions: TWsActions<R, S>
-  // withTokenRefresh: boolean = false
+  wsActions: TWsActions<R, S>,
+  withTokenRefresh: boolean = false
 ): Middleware => {
   return (store) => {
     let socket: WebSocket | null = null;
@@ -55,7 +58,7 @@ export const socketMiddleware = <R, S>(
         };
 
         socket.onerror = () => {
-          dispatch(onError(new ApiErrorClass("Error")));
+          dispatch(onError(new ApiErrorClass(ERROR_MESSAGE)));
         };
 
         socket.onclose = () => {
@@ -73,23 +76,32 @@ export const socketMiddleware = <R, S>(
         socket.onmessage = (event) => {
           const { data } = event;
           try {
+            const refreshToken = getCookie("token");
             const parsedData = JSON.parse(data);
 
-            // TODO: Добавить реализацию
-            // if (withTokenRefresh && parsedData.message === "Invalid or missing token") {
-            // 	refreshToken().
-            // 		then((refreshedData) => {
-            // 			const wssUrl = new URL(url);
-            // 			wssUrl.searchParams.set("token", refreshedData.accessToken.replace("Bearer ", ""));
-            // 			dispatch(connect(wssUrl.toString()));
-            // 		})
-            // 		.catch((error) => {
-            // 			dispatch(onError((error as Error).message));
-            // 		});
+            if (
+              withTokenRefresh &&
+              refreshToken &&
+              parsedData.message === "Invalid or missing token"
+            ) {
+              refreshAccessToken(refreshToken)
+                .then((refreshedData) => {
+                  const wssUrl = new URL(url);
+                  wssUrl.searchParams.set(
+                    "token",
+                    refreshedData.accessToken.replace("Bearer ", "")
+                  );
+                  dispatch(connect(wssUrl.toString()));
+                })
+                .catch((error) => {
+                  dispatch(
+                    onError(new ApiErrorClass(error.message || ERROR_MESSAGE))
+                  );
+                });
 
-            // 	dispatch(disconnect());
-            // 	return;
-            // }
+              dispatch(disconnect());
+              return;
+            }
 
             dispatch(onMessage(parsedData));
           } catch (error) {

@@ -9,16 +9,11 @@ import { Outlet } from "react-router-dom";
 import styles from "./profile.module.css";
 
 import { useAppDispatch, useAppSelector } from "@src/hooks";
-import { Link, PasswordInput } from "@src/components";
-import { PAGES, schemas } from "@src/consts";
+import { NavLink, PasswordInput } from "@src/components";
+import { PAGES } from "@src/consts";
 import { userSelectors, userThunks } from "@src/services/user";
 import { isPendingByStatus } from "@src/utils";
-
-const defaultValues = {
-  name: "",
-  login: "",
-  password: "",
-};
+import { schemas } from "@src/schemas";
 
 export function Profile() {
   const dispatch = useAppDispatch();
@@ -29,11 +24,18 @@ export function Profile() {
   const isPending = isPendingByStatus(status);
 
   const form = useForm({
-    values: { ...defaultValues, name: user?.name || "" },
+    defaultValues: {
+      name: user?.name || "",
+      login: "",
+      password: "",
+    },
     resolver: yupResolver(schemas.user.update),
   });
 
-  const handleSubmit = (updatedFields: typeof defaultValues) => {
+  const handleSubmit = (
+    updatedFields: Required<NonNullable<typeof form.formState.defaultValues>>
+  ) => {
+    // Backend возвращает изначальную дату, поэтому данные меняться не будут
     dispatch(userThunks.update(updatedFields));
   };
 
@@ -122,30 +124,29 @@ export function ProfileLayout() {
     <div className={styles.container}>
       <div className={styles.navigationMenu}>
         <div className={styles.navigationMenuList}>
-          <Link
+          <NavLink
             to={PAGES.PROFILE}
-            isNavLink
             end
             className={styles.navigationMenuLink}
+            size="md"
           >
             Профиль
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to={PAGES.PROFILE_ORDERS}
-            isNavLink
             className={styles.navigationMenuLink}
+            size="md"
           >
             История заказов
-          </Link>
-          {/* TODO: Это вообще должна кнопка */}
-          <Link
+          </NavLink>
+          <NavLink
             to="/"
-            isNavLink
             className={styles.navigationMenuLink}
+            size="md"
             onClick={handleClickLogout}
           >
             Выход
-          </Link>
+          </NavLink>
         </div>
         <div className={styles.navigationMenuDescription}>
           В этом разделе вы можете изменить свои персональные данные

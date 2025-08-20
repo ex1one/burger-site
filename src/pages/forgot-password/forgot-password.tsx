@@ -10,12 +10,9 @@ import styles from "./forgot-password.module.css";
 import { useAppDispatch, useAppSelector } from "@src/hooks";
 import { userSelectors, userThunks } from "@src/services/user";
 import { Link } from "@src/components";
-import { PAGES, schemas } from "@src/consts";
+import { PAGES } from "@src/consts";
 import { isPendingByStatus } from "@src/utils";
-
-const defaultValues = {
-  email: "",
-};
+import { schemas } from "@src/schemas";
 
 export function ForgotPassword() {
   const dispatch = useAppDispatch();
@@ -24,11 +21,16 @@ export function ForgotPassword() {
   const isPending = isPendingByStatus(status);
 
   const form = useForm({
-    defaultValues,
-    resolver: yupResolver(schemas.auth.forgotPassword),
+    // Можно вынести
+    defaultValues: {
+      email: "",
+    },
+    resolver: yupResolver(schemas.user.auth.forgotPassword),
   });
 
-  const handleSubmit = ({ email }: typeof defaultValues) => {
+  const handleSubmit = ({
+    email,
+  }: Required<NonNullable<typeof form.formState.defaultValues>>) => {
     dispatch(userThunks.forgotPassword({ email }));
   };
 
