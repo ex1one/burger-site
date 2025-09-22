@@ -1,16 +1,12 @@
-import { YandexApi } from "../config/urls";
+import { OptionsWithoutMethodAndData } from "../my-fetch";
 
 import { Ingredients } from "./types";
 
-import myFetch, { OptionsWithoutMethod } from "@src/api/my-fetch";
+import myFetch from "@src/api/my-fetch";
 
-const BASE_URL = YandexApi;
-
-// TODO: Создать обертку над запросом, чтобы автоматически все запросы принимали options.
-// Чтобы не надо было постоянно прокидывать options
-export const getIngredients = (options: OptionsWithoutMethod) => {
+export const getIngredients = (options?: OptionsWithoutMethodAndData) => {
   return myFetch.get<{ success: boolean; data: Ingredients }>(
-    BASE_URL + "/ingredients",
+    "ingredients",
     options
   );
 };

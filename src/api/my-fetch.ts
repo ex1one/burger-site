@@ -22,6 +22,8 @@ export interface Options {
 }
 
 export type OptionsWithoutMethod = Omit<Options, "method">;
+export type OptionsWithoutMethodAndData = Omit<Options, "method" | "data">;
+
 type HTTPMethod = <D = unknown>(
   url: string,
   options?: OptionsWithoutMethod
@@ -67,7 +69,9 @@ class HTTPTransport {
       xhr.responseType = params.responseType;
       xhr.open(
         method,
-        isGet && !!data ? `${url}${queryStringify(data)}` : url,
+        isGet && !!data
+          ? `${import.meta.env.VITE_BASE_URL}/${url}${queryStringify(data)}`
+          : `${import.meta.env.VITE_BASE_URL}/${url}`,
         true
       );
 
@@ -95,9 +99,7 @@ class HTTPTransport {
       xhr.onerror = handleError;
       xhr.ontimeout = handleError;
 
-      if (signal) {
-        signal.addEventListener("abort", () => xhr.abort());
-      }
+      signal?.addEventListener("abort", () => xhr.abort());
 
       xhr.onload = async () => {
         try {

@@ -9,8 +9,7 @@ import { ERROR_MESSAGE, WS_URL_FEED, WS_URL_ORDERS_HISTORY } from "@src/consts";
 import { Ingredient } from "@src/api/ingredients/types";
 import { FeedOrder } from "@src/api/order/types";
 
-// TODO: Вынести от сюда, стоит ли тут хранить логику по обработке order?
-// Мне кажется лучше вынести в компонент.
+// TODO: Cтоит ли тут хранить логику по обработке order?
 export const prepareOrder = (ingredients: Ingredient[], order: FeedOrder) => {
   const orderIngredients = ingredients
     .filter((ingredient) => order?.ingredients.includes(ingredient._id))

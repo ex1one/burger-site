@@ -1,112 +1,132 @@
-import { YandexApi } from "../config/urls";
 import { getCookie } from "../utils";
+import { OptionsWithoutMethodAndData } from "../my-fetch";
 
 import { User } from "./types";
 
 import myFetch from "@src/api/my-fetch";
 
-const BASE_URL = YandexApi;
-
-export const forgotPassword = (email: string) => {
-  return myFetch.post<{ success: boolean; message: string }>(
-    BASE_URL + "/password-reset",
-    { data: { email } }
-  );
+export const forgotPassword = (
+  email: string,
+  options?: OptionsWithoutMethodAndData
+) => {
+  return myFetch.post<{ success: boolean; message: string }>("password-reset", {
+    ...options,
+    data: { email },
+  });
 };
 
-export const changePassword = ({
-  password,
-  token,
-}: {
-  password: string;
-  token: string;
-}) => {
+export const changePassword = (
+  {
+    password,
+    token,
+  }: {
+    password: string;
+    token: string;
+  },
+  options?: OptionsWithoutMethodAndData
+) => {
   return myFetch.post<{ success: boolean; message: string }>(
-    BASE_URL + "/password-reset/reset",
+    "password-reset/reset",
     {
+      ...options,
       data: { password, token },
     }
   );
 };
 
-export const signUp = ({
-  name,
-  email,
-  password,
-}: {
-  name: string;
-  email: string;
-  password: string;
-}) => {
+export const signUp = (
+  {
+    name,
+    email,
+    password,
+  }: {
+    name: string;
+    email: string;
+    password: string;
+  },
+  options?: OptionsWithoutMethodAndData
+) => {
   return myFetch.post<{
     success: boolean;
     user: User;
     accessToken: string;
     refreshToken: string;
-  }>(BASE_URL + "/auth/register", {
+  }>("auth/register", {
+    ...options,
     data: { name, email, password },
   });
 };
 
-export const signIn = ({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) => {
+export const signIn = (
+  {
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  },
+  options?: OptionsWithoutMethodAndData
+) => {
   return myFetch.post<{
     success: boolean;
     user: User;
     accessToken: string;
     refreshToken: string;
-  }>(BASE_URL + "/auth/login", {
+  }>("auth/login", {
+    ...options,
     data: { email, password },
   });
 };
 
-export const logout = () => {
+export const logout = (options?: OptionsWithoutMethodAndData) => {
   const refreshToken = getCookie("token");
 
-  return myFetch.post<{ success: boolean; message: string }>(
-    BASE_URL + "/auth/logout",
-    {
-      data: { token: refreshToken },
-    }
-  );
-};
-
-export const refreshAccessToken = (refreshToken: string) => {
-  return myFetch.post<{
-    success: boolean;
-    accessToken: string;
-    refreshToken: string;
-  }>(BASE_URL + "/auth/token", {
+  return myFetch.post<{ success: boolean; message: string }>("auth/logout", {
+    ...options,
     data: { token: refreshToken },
   });
 };
 
-export const getUser = (accessToken: string) => {
-  return myFetch.get<{ success: boolean; user: User }>(
-    BASE_URL + "/auth/user",
-    {
-      headers: {
-        Authorization: accessToken,
-        "Content-Type": "application/json; charset=utf-8",
-      },
-    }
-  );
+export const refreshAccessToken = (
+  refreshToken: string,
+  options?: OptionsWithoutMethodAndData
+) => {
+  return myFetch.post<{
+    success: boolean;
+    accessToken: string;
+    refreshToken: string;
+  }>("auth/token", {
+    ...options,
+    data: { token: refreshToken },
+  });
 };
 
-export const updateUser = (user: Partial<User>, accessToken: string) => {
-  return myFetch.patch<{ success: boolean; user: User }>(
-    BASE_URL + "/auth/user",
-    {
-      data: user,
-      headers: {
-        Authorization: accessToken,
-        "Content-Type": "application/json; charset=utf-8",
-      },
-    }
-  );
+export const getUser = (
+  accessToken: string,
+  options?: OptionsWithoutMethodAndData
+) => {
+  return myFetch.get<{ success: boolean; user: User }>("auth/user", {
+    ...options,
+    headers: {
+      Authorization: accessToken,
+      "Content-Type": "application/json; charset=utf-8",
+      ...options?.headers,
+    },
+  });
+};
+
+export const updateUser = (
+  user: Partial<User>,
+  accessToken: string,
+  options?: OptionsWithoutMethodAndData
+) => {
+  return myFetch.patch<{ success: boolean; user: User }>("auth/user", {
+    ...options,
+    data: user,
+    headers: {
+      Authorization: accessToken,
+      "Content-Type": "application/json; charset=utf-8",
+      ...options?.headers,
+    },
+  });
 };

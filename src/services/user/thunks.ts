@@ -54,7 +54,7 @@ const signIn = createAppAsyncThunk(
       password,
     });
 
-    // TODO: Вынести в функцию, которая работает с куками браузера. Туда передавать данные accessToken, refreshToken
+    // TODO: Вынести в функцию, которая работает с куками браузера.
     setCookie("token", response.refreshToken);
     setItemToLocalStorage(
       "accessToken",

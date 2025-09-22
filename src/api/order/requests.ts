@@ -1,19 +1,22 @@
-import { YandexApi } from "../config/urls";
+import { OptionsWithoutMethodAndData } from "../my-fetch";
 
 import { Order } from "./types";
 
 import { getAccessToken } from "@src/utils";
 import myFetch from "@src/api/my-fetch";
 
-const BASE_URL = YandexApi;
-
-export const createOrder = (ingredientsIds: string[]) => {
+export const createOrder = (
+  ingredientsIds: string[],
+  options?: OptionsWithoutMethodAndData
+) => {
   return myFetch.post<{ success: boolean; order: Order; name: string }>(
-    BASE_URL + "/orders",
+    "orders",
     {
+      ...options,
       data: { ingredients: ingredientsIds },
       headers: {
         Authorization: getAccessToken(),
+        ...options?.headers,
       },
     }
   );

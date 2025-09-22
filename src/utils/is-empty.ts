@@ -1,4 +1,13 @@
-export const isEmpty = (value: unknown) => {
+export type TReturnType =
+  | null
+  | undefined
+  | void
+  | ""
+  | never
+  | never[]
+  | { [key: string]: never };
+
+export const isEmpty = (value: unknown): value is TReturnType => {
   if (value === null || value === undefined) {
     return true;
   }
