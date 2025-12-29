@@ -16,3 +16,4 @@ export * from "./order-card";
 export * from "./loader";
 export * from "./anonymous-route";
 export * from "./authorized-route";
+export * from "./nav-link";

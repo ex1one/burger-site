@@ -7,26 +7,32 @@ import {
 
 import styles from "./sign-in.module.css";
 
-import { useAppDispatch } from "@src/hooks";
-import { userThunks } from "@src/services/user";
+import { useAppDispatch, useAppSelector } from "@src/hooks";
+import { userSelectors, userThunks } from "@src/services/user";
 import { Link, PasswordInput } from "@src/components";
-import { PAGES, schemas } from "@src/consts";
-
-// TODO: Придумать куда вынести работу с формой
-const defaultValues = {
-  email: "",
-  password: "",
-};
+import { PAGES } from "@src/consts";
+import { isPendingByStatus } from "@src/utils";
+import { schemas } from "@src/schemas";
 
 export function SignIn() {
   const dispatch = useAppDispatch();
 
+  const status = useAppSelector(userSelectors.statusSelector);
+  const isPending = isPendingByStatus(status);
+
   const form = useForm({
-    defaultValues,
-    resolver: yupResolver(schemas.auth.signIn),
+    // Это можно вынести
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    resolver: yupResolver(schemas.user.auth.signIn),
   });
 
-  const handleSubmit = ({ email, password }: typeof defaultValues) => {
+  const handleSubmit = ({
+    email,
+    password,
+  }: Required<NonNullable<typeof form.formState.defaultValues>>) => {
     dispatch(userThunks.signIn({ email, password }));
   };
 
@@ -61,11 +67,7 @@ export function SignIn() {
               />
             )}
           />
-          <Button
-            type="primary"
-            htmlType="submit"
-            disabled={form.formState.isSubmitting}
-          >
+          <Button type="primary" htmlType="submit" disabled={isPending}>
             Войти
           </Button>
         </form>

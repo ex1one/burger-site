@@ -1,5 +1,6 @@
 import { ingredientsReducer, initialState, ingredientsThunks } from "../slice";
 
+import { Status } from "@src/consts";
 import { Ingredient } from "@src/api/ingredients/types";
 
 describe("extraReducers", () => {
@@ -15,8 +16,7 @@ describe("extraReducers", () => {
       ingredientsThunks.fetchIngredients.pending()
     );
 
-    expect(newState.isLoading).toBe(true);
-    expect(newState.status).toBe("pending");
+    expect(newState.status).toBe(Status.Pending);
 
     expect(newState.ingredients).toEqual(initialState.ingredients);
     expect(newState.error).toBe(null);
@@ -35,8 +35,7 @@ describe("extraReducers", () => {
 
     expect(newState).toEqual({
       ingredients,
-      isLoading: false,
-      status: "success",
+      status: Status.Success,
       error: null,
     });
   });
@@ -51,8 +50,7 @@ describe("extraReducers", () => {
 
     expect(newState).toEqual({
       ingredients: [],
-      isLoading: false,
-      status: "error",
+      status: Status.Error,
       error: errorMessage,
     });
   });
@@ -65,8 +63,7 @@ describe("extraReducers", () => {
 
     expect(newState).toEqual({
       ingredients: initialState.ingredients,
-      isLoading: true,
-      status: "pending",
+      status: Status.Pending,
       error: null,
     });
 
@@ -82,8 +79,7 @@ describe("extraReducers", () => {
 
     expect(newState).toEqual({
       ingredients,
-      isLoading: false,
-      status: "success",
+      status: Status.Success,
       error: null,
     });
   });
@@ -96,8 +92,7 @@ describe("extraReducers", () => {
 
     expect(newState).toEqual({
       ingredients: initialState.ingredients,
-      isLoading: true,
-      status: "pending",
+      status: Status.Pending,
       error: null,
     });
 
@@ -110,8 +105,7 @@ describe("extraReducers", () => {
 
     expect(newState).toEqual({
       ingredients: [],
-      isLoading: false,
-      status: "error",
+      status: Status.Error,
       error: errorMessage,
     });
   });

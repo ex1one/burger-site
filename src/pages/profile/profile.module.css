@@ -20,8 +20,6 @@
   display: flex;
   height: 64px;
   align-items: center;
-  justify-content: center;
-  composes: text text_type_main-medium from global;
 }
 
 .navigationMenuDescription {

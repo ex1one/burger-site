@@ -1,5 +1,6 @@
 import { initialState, orderReducer, orderThunks } from "../slice";
 
+import { Status } from "@src/consts";
 import { ApiErrorClass } from "@src/api/config/api-error";
 
 describe("extraReducers for orders", () => {
@@ -15,8 +16,7 @@ describe("extraReducers for orders", () => {
       orderThunks.createOrderThunk.pending()
     );
 
-    expect(newState.isLoading).toBe(true);
-    expect(newState.status).toBe("pending");
+    expect(newState.status).toBe(Status.Pending);
     expect(newState.order).toBe(null);
     expect(newState.error).toBe(null);
   });
@@ -39,8 +39,7 @@ describe("extraReducers for orders", () => {
         name: orderPayload.name,
         number: orderPayload.order.number,
       },
-      isLoading: false,
-      status: "success",
+      status: Status.Success,
       error: null,
     });
   });
@@ -55,9 +54,8 @@ describe("extraReducers for orders", () => {
 
     expect(newState).toEqual({
       order: null,
-      isLoading: false,
-      status: "error",
-      error: new ApiErrorClass(errorMessage),
+      status: Status.Error,
+      error: errorMessage,
     });
   });
 });

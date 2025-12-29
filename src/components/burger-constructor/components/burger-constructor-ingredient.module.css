@@ -8,3 +8,11 @@
   width: 24px;
   height: 24px;
 }
+
+.isDraggable {
+  cursor: grab;
+}
+
+.isDragging {
+  cursor: grabbing;
+}

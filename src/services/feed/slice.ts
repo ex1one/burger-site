@@ -4,19 +4,19 @@ import { selectors } from "./selectors";
 import { actions } from "./actions";
 
 import { FeedOrder } from "@src/api/order/types";
-import { APIError } from "@src/api/types/errors";
+import { Status } from "@src/consts";
 
 export interface TInitialState {
   orders: FeedOrder[];
   total: number;
   totalToday: number;
-  status: "pending" | "success" | "error" | "idle";
-  error: APIError | null;
+  status: Status;
+  error: string | null;
 }
 
 export const initialState: TInitialState = {
   orders: [],
-  status: "idle",
+  status: Status.Initial,
   error: null,
   total: 0,
   totalToday: 0,

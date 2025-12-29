@@ -1,29 +1,36 @@
-// TODO: Поработать над типом props
-export function setCookie(name: string, value: string, props?: any) {
-	props = props || {};
-	let exp = props.expires;
+interface CookieProps {
+  expires?: number | Date | string;
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+  "max-age"?: number;
+}
 
-	if (typeof exp === 'number' && exp) {
-		const d = new Date();
-		d.setTime(d.getTime() + exp * 1000);
-		exp = props.expires = d;
-	}
+export function setCookie(name: string, value: string, props?: CookieProps) {
+  props = props || {};
+  let exp = props.expires;
 
-	if (exp && exp.toUTCString) {
-		props.expires = exp.toUTCString();
-	}
+  if (typeof exp === "number" && exp) {
+    const d = new Date();
+    d.setTime(d.getTime() + exp * 1000);
+    exp = props.expires = d;
+  }
 
-	value = encodeURIComponent(value);
-	let updatedCookie = name + '=' + value;
+  if (exp && exp instanceof Date && exp.toUTCString) {
+    props.expires = exp.toUTCString();
+  }
 
-	for (const propName in props) {
-		updatedCookie += '; ' + propName;
-		const propValue = props[propName];
+  value = encodeURIComponent(value);
+  let updatedCookie = name + "=" + value;
 
-		if (propValue !== true) {
-			updatedCookie += '=' + propValue;
-		}
-	}
+  for (const propName in props) {
+    updatedCookie += "; " + propName;
+    const propValue = props[propName as keyof CookieProps];
 
-	document.cookie = updatedCookie;
+    if (propValue !== true) {
+      updatedCookie += "=" + propValue;
+    }
+  }
+
+  document.cookie = updatedCookie;
 }

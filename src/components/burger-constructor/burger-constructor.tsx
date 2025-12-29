@@ -12,8 +12,8 @@ import {
 } from "@src/services/constructorIngredients";
 
 export const BurgerConstructor = () => {
-  const { ingredients } = useAppSelector(
-    constructorIngredientsSelectors.constructorIngredientsSelector
+  const ingredients = useAppSelector(
+    constructorIngredientsSelectors.ingredientsSelector
   );
   const actions = useActionCreator(constructorIngredientsActions);
 

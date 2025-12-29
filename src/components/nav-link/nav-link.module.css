@@ -1,0 +1,18 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  composes: text text_type_main-small text_color_inactive from global;
+}
+
+.textSizeSmall {
+  composes: text text_type_main-small from global;
+}
+
+.textSizeMedium {
+  composes: text text_type_main-medium from global;
+}
+
+.activeText {
+  color: var(--primary-light);
+}

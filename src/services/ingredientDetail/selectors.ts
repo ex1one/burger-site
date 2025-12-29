@@ -1,7 +1,10 @@
-import { TInitialState } from './slice';
+import { TInitialState } from "./slice";
 
-import { TSliceSelectors } from '@src/types';
+import { TSliceSelectors } from "@src/types";
 
 export const selectors = {
-	ingredientDetailSelector: (state) => state.ingredient,
+  ingredientSelector: (state) => state.ingredient,
+  statusSelector: (state) => state.status,
+  errorSelector: (state) => state.error,
+  sliceSelector: (state) => state,
 } satisfies TSliceSelectors<TInitialState>;

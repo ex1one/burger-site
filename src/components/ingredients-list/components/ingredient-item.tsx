@@ -19,8 +19,8 @@ export const IngredientItem = ({ ingredient }: IngredientItemProps) => {
   const location = useLocation();
 
   const dispatch = useAppDispatch();
-  const { ingredients } = useAppSelector(
-    constructorIngredientsSelectors.constructorIngredientsSelector
+  const ingredients = useAppSelector(
+    constructorIngredientsSelectors.ingredientsSelector
   );
 
   const countOfSelectedIngredient = ingredients.reduce((acc, el) => {

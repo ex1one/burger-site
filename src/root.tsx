@@ -15,7 +15,6 @@ import {
   Feed,
   OrdersHistory,
   ProfileLayout,
-  FeedItemsDetails,
 } from "@src/pages";
 import {
   IngredientDetailsModal,
@@ -64,10 +63,10 @@ const Root = () => {
           <Route path={PAGES.INGREDIENT} element={<IngredientDetailsModal />} />
           <Route path={PAGES.ORDERS_FEED} element={<Feed />} />
 
-          <Route path={PAGES.ORDER_FEED} element={<FeedItemsDetails />} />
+          <Route path={PAGES.ORDER_FEED} element={<OrderInformationModal />} />
           <Route
             path={PAGES.PROFILE_ORDER}
-            element={<AuthorizedRoute element={<FeedItemsDetails />} />}
+            element={<AuthorizedRoute element={<OrderInformationModal />} />}
           />
         </Route>
       </Routes>

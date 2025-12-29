@@ -5,16 +5,11 @@ import {
 
 import styles from "./order-information.module.css";
 
-import { FeedOrder } from "@src/api/order/types";
-import { useAppSelector } from "@src/hooks";
-import { ingredientsSelectors } from "@src/services/ingredients";
+import { OrderInfo } from "@src/api/order/types";
 import { getOrderStatusText } from "@src/utils";
-import { Ingredient } from "@src/api/ingredients/types";
-import { feedSelectors } from "@src/services/feed";
-import { orderHistorySelectors } from "@src/services/order-history";
 
 interface OrderInformationProps {
-  order?: FeedOrder;
+  order: OrderInfo;
   className?: string;
   hideOrderNumber?: boolean;
 }
@@ -24,52 +19,6 @@ export function OrderInformation({
   className,
   hideOrderNumber = false,
 }: OrderInformationProps) {
-  const ingredientsSlice = useAppSelector(
-    ingredientsSelectors.ingredientsSelector
-  );
-
-  // TODO: Пофиксить блик с "Не удалось найти заказ"
-  const statusOfFeed = useAppSelector(feedSelectors.getStatus);
-  const statusOfOrderHistory = useAppSelector(orderHistorySelectors.getStatus);
-
-  const isLoading =
-    ingredientsSlice.isLoading ||
-    statusOfFeed === "pending" ||
-    statusOfOrderHistory === "pending";
-  const isError =
-    ingredientsSlice.error ||
-    statusOfFeed === "error" ||
-    statusOfOrderHistory === "error";
-
-  const orderIngredients = ingredientsSlice.ingredients
-    .filter((ingredient) => order?.ingredients.includes(ingredient._id))
-    .reduce((acc, ingredient, _, array) => {
-      const similarIngredients = array.filter(
-        (el) => el._id === ingredient._id
-      );
-
-      return [...acc, { ...ingredient, count: similarIngredients.length }];
-    }, [] as (Ingredient & { count: number })[]);
-
-  const total = orderIngredients.reduce(
-    (acc, ingredient) => acc + ingredient.price * ingredient.count,
-    0
-  );
-
-  // TODO: Привести код к консистентному виду
-
-  if (isLoading) {
-    return "Loading...";
-  }
-
-  if (isError) {
-    return "Ошибка, попробуйте позже";
-  }
-
-  if (!order) {
-    return "Не удалось найти заказ";
-  }
-
   return (
     <div className={`${styles.wrapper} ${className}`}>
       <div className={styles.header}>
@@ -90,7 +39,7 @@ export function OrderInformation({
         <div className={styles.orderStructure}>
           <h2 className="text text_type_main-medium">Состав</h2>
           <div className={styles.orderStructureList}>
-            {orderIngredients.map((ingredient) => {
+            {order.ingredients.map((ingredient) => {
               return (
                 <div key={ingredient._id} className={styles.orderItem}>
                   <div key={ingredient._id} className={styles.orderItemContent}>
@@ -115,7 +64,7 @@ export function OrderInformation({
             <FormattedDate date={new Date(order.createdAt)} />
           </p>
           <p className={styles.total}>
-            {total} <CurrencyIcon type="primary" />
+            {order.total} <CurrencyIcon type="primary" />
           </p>
         </div>
       </div>

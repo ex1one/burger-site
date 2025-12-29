@@ -19,6 +19,7 @@
     "@hookform/resolvers": "5.0.1",
     "@reduxjs/toolkit": "2.5.1",
     "@ya.praktikum/react-developer-burger-ui-components": "1.14.2",
+    "clsx": "2.1.1",
     "core-js": "3.38.1",
     "lodash-es": "4.17.21",
     "path": "0.12.7",

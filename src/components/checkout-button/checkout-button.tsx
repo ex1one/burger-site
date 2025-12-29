@@ -12,14 +12,18 @@ import { NAMES_OF_MODALS, PAGES } from "@src/consts";
 import { constructorIngredientsSelectors } from "@src/services/constructorIngredients";
 import { modalsActions } from "@src/services/modals";
 import { userSelectors } from "@src/services/user";
-import { orderThunks } from "@src/services/order";
+import { orderSelectors, orderThunks } from "@src/services/order";
+import { isPendingByStatus } from "@src/utils";
 
 export const CheckoutButton = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { ingredients } = useAppSelector(
-    constructorIngredientsSelectors.constructorIngredientsSelector
+  const orderStatus = useAppSelector(orderSelectors.statusSelector);
+  const isPending = isPendingByStatus(orderStatus);
+
+  const ingredients = useAppSelector(
+    constructorIngredientsSelectors.ingredientsSelector
   );
   const user = useAppSelector(userSelectors.userSelector);
 
@@ -49,6 +53,7 @@ export const CheckoutButton = () => {
         size="large"
         onClick={handleClick}
         data-cy="checkout-button"
+        disabled={isPending}
       >
         Оформить заказ
       </Button>

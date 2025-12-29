@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TKeyofMethods } from "./types/methods";
 import { queryStringify } from "./utils/query-stringify";
 import METHODS from "./config/methods";
@@ -17,9 +18,12 @@ export interface Options {
   headers?: Record<string, any>;
   data?: any;
   params?: Pick<XMLHttpRequest, "responseType">;
+  signal?: AbortSignal;
 }
 
-type OptionsWithoutMethod = Omit<Options, "method">;
+export type OptionsWithoutMethod = Omit<Options, "method">;
+export type OptionsWithoutMethodAndData = Omit<Options, "method" | "data">;
+
 type HTTPMethod = <D = unknown>(
   url: string,
   options?: OptionsWithoutMethod
@@ -53,6 +57,7 @@ class HTTPTransport {
       headers = {},
       timeout = 5000,
       params = { responseType: "text" },
+      signal,
     } = options;
 
     return new Promise((resolve, reject) => {
@@ -60,12 +65,13 @@ class HTTPTransport {
 
       const isGet = method === METHODS.GET;
 
-      // TODO: Поменять на true
       xhr.withCredentials = false;
       xhr.responseType = params.responseType;
       xhr.open(
         method,
-        isGet && !!data ? `${url}${queryStringify(data)}` : url,
+        isGet && !!data
+          ? `${import.meta.env.VITE_BASE_URL}/${url}${queryStringify(data)}`
+          : `${import.meta.env.VITE_BASE_URL}/${url}`,
         true
       );
 
@@ -92,6 +98,8 @@ class HTTPTransport {
       xhr.onabort = handleError;
       xhr.onerror = handleError;
       xhr.ontimeout = handleError;
+
+      signal?.addEventListener("abort", () => xhr.abort());
 
       xhr.onload = async () => {
         try {
@@ -162,7 +170,6 @@ class HTTPTransport {
   }
 }
 
-// TODO: Добавить abort реализацию
 const myFetch = new HTTPTransport();
 
 export default myFetch;

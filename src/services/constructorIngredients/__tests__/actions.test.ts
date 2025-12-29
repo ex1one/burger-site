@@ -14,6 +14,7 @@ describe("ingredientSlice reducers", () => {
   });
 
   it("Если не вызвался ни один reducer, state не должен изменяться", () => {
+    // TODO: Разобраться с типами jest
     expect(constructorIngredientsReducer(undefined, {})).toEqual(state);
   });
 

@@ -3,7 +3,7 @@ import { Logo } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./header.module.css";
 
 import { PAGES } from "@src/consts";
-import { Container, Link } from "@src/components";
+import { Container, NavLink } from "@src/components";
 
 export function Header() {
   return (
@@ -13,28 +13,28 @@ export function Header() {
           <ul className={styles.nav}>
             <div className={styles.navList}>
               <li>
-                <Link to={PAGES.HOME} leftIcon="burger" isNavLink>
+                <NavLink to={PAGES.HOME} leftIcon="burger">
                   Конструктор
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link to={PAGES.ORDERS_FEED} leftIcon="list" isNavLink end>
+                <NavLink to={PAGES.ORDERS_FEED} leftIcon="list" end>
                   Лента заказов
-                </Link>
+                </NavLink>
               </li>
             </div>
             <div className={styles.logoContainer}>
               <li>
-                <Link to={PAGES.HOME} isNavLink>
+                <NavLink to={PAGES.HOME}>
                   <Logo />
-                </Link>
+                </NavLink>
               </li>
             </div>
             <div>
               <li>
-                <Link to={PAGES.PROFILE} leftIcon="profile" isNavLink>
+                <NavLink to={PAGES.PROFILE} leftIcon="profile">
                   Личный кабинет
-                </Link>
+                </NavLink>
               </li>
             </div>
           </ul>

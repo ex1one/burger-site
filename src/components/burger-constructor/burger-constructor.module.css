@@ -15,7 +15,7 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   overflow-y: auto;
   max-height: 660px;
   height: 100%;

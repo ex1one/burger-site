@@ -1,27 +1,27 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
-import { selectors } from './selectors';
-import { actions } from './actions';
+import { selectors } from "./selectors";
+import { actions } from "./actions";
 
-import { IngredientWithUniqueId } from '@src/api/ingredients/types';
+import { IngredientWithUniqueId } from "@src/api/ingredients/types";
 
 export interface TInitialState {
-	ingredients: IngredientWithUniqueId[];
+  ingredients: IngredientWithUniqueId[];
 }
 
 export const initialState: TInitialState = {
-	ingredients: [],
+  ingredients: [],
 };
 
 const constructorIngredientsSlice = createSlice({
-	name: 'constructorIngredients',
-	initialState,
-	reducers: actions,
-	selectors: selectors,
+  name: "constructorIngredients",
+  initialState,
+  reducers: actions,
+  selectors: selectors,
 });
 
 export const {
-	reducer: constructorIngredientsReducer,
-	actions: constructorIngredientsActions,
-	selectors: constructorIngredientsSelectors,
+  reducer: constructorIngredientsReducer,
+  actions: constructorIngredientsActions,
+  selectors: constructorIngredientsSelectors,
 } = constructorIngredientsSlice;

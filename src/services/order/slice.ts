@@ -5,19 +5,17 @@ import { actions } from "./actions";
 import { extraReducers } from "./extraReducers";
 import { thunks } from "./thunks";
 
-import { APIError } from "@src/api/types/errors";
+import { Status } from "@src/consts";
 
 export interface TInitialState {
-  status: string;
+  status: Status;
   order: { number: number; name: string } | null;
-  isLoading: boolean;
-  error?: APIError | null;
+  error: string | null;
 }
 
 export const initialState: TInitialState = {
-  status: "pending",
+  status: Status.Initial,
   order: null,
-  isLoading: false,
   error: null,
 };
 
